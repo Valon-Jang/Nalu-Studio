@@ -1,0 +1,1 @@
+{"take": 16, "seed": 2026521364, "ok": false, "why": ["rebound +0.0", "level +3.2st"], "metrics": {"dur": 3.477, "median_hz": 283.4, "range_st": 9.53, "end_slope": -19.79, "first_hz": 285.1, "last_hz": 206.3, "tail_delta": -5.55, "final_glide": 6.8, "final_rebound": 0.0}, "n_syl": 20, "numeric": false, "text": "긴 구간의 광 증폭기는 약해진 빛을 다시 키웁니다.", "temp": 0.87, "gen_s": 56.6}

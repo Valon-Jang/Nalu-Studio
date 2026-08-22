@@ -1,0 +1,28 @@
+{
+  "id": "B07A",
+  "picks": [
+    0,
+    16
+  ],
+  "block_end_slope_median": -11.23,
+  "total_dur": 4.79,
+  "n_phrases": 2,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "조건마다 다르지만",
+      "start": 0.0,
+      "dur": 1.383,
+      "take": 0,
+      "sentence_final": false
+    },
+    {
+      "phrase": 1,
+      "text": "대표적으로 끄너진 케이블의 두 끝을 배 위로 올립니다.",
+      "start": 1.398,
+      "dur": 3.388,
+      "take": 16,
+      "sentence_final": true
+    }
+  ]
+}

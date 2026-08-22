@@ -1,0 +1,1 @@
+{"take": 18, "seed": 2026432473, "ok": false, "why": ["rel_fall -0.26", "rebound +0.0"], "metrics": {"dur": 1.685, "median_hz": 246.8, "range_st": 11.7, "end_slope": -6.76, "first_hz": 387.2, "last_hz": 208.7, "tail_delta": -3.0, "final_glide": 4.4, "final_rebound": 0.0}, "n_syl": 12, "numeric": false, "text": "심해 해저면에는 놓기도 하죠.", "temp": 0.87, "gen_s": 39.9}

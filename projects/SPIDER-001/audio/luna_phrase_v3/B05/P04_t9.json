@@ -1,0 +1,1 @@
+{"take": 9, "seed": 520202, "ok": false, "why": ["rel_fall -0.23", "level +4.1st"], "metrics": {"dur": 2.197, "median_hz": 298.6, "range_st": 9.5, "end_slope": -10.97, "first_hz": 305.5, "last_hz": 189.2, "tail_delta": -2.35, "final_glide": -15.4, "final_rebound": 0.0}, "n_syl": 14, "numeric": false, "text": "그 자리에서 고체 섬유로 굳습니다.", "temp": 0.85, "gen_s": 44.6}

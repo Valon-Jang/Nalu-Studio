@@ -1,0 +1,1 @@
+{"take": 15, "seed": 2026408735, "ok": false, "why": ["rebound +0.7"], "metrics": {"dur": 3.797, "median_hz": 246.8, "range_st": 7.5, "end_slope": -11.55, "first_hz": 248.2, "last_hz": 208.7, "tail_delta": -3.55, "final_glide": 7.5, "final_rebound": 0.7}, "n_syl": 21, "numeric": true, "text": "대륙 사이 대규모 데이터는 주로 해저 광섬유가 맡죠.", "temp": 0.87, "gen_s": 61.6}

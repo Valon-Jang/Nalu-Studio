@@ -1,0 +1,22 @@
+[
+  {
+    "text": "정리하면 거미줄의 성분과",
+    "sentence_final": false,
+    "forced": true
+  },
+  {
+    "text": "강도는 과학이 탄탄히 받쳐 줍니다.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "다만 도시를 누비는 웹슈터는 재료가 아니라",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "아직 장치의 문제였어요.",
+    "sentence_final": true,
+    "forced": false
+  }
+]

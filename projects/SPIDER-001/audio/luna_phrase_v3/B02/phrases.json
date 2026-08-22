@@ -1,0 +1,22 @@
+[
+  {
+    "text": "거미줄은 스피드로인이라는 단백질이에요.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "아미노산이 길게 이어진 사슬이 접히면서",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "단단한 결정 부분과",
+    "sentence_final": false,
+    "forced": true
+  },
+  {
+    "text": "유연한 부분이 함께 섞인 구조가 되죠.",
+    "sentence_final": true,
+    "forced": false
+  }
+]

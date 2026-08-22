@@ -1,0 +1,1 @@
+{"take": 9, "seed": 206015, "ok": false, "why": ["rebound +1.2"], "metrics": {"dur": 2.645, "median_hz": 254.0, "range_st": 7.44, "end_slope": -8.78, "first_hz": 256.9, "last_hz": 225.0, "tail_delta": -3.65, "final_glide": 11.3, "final_rebound": 1.2}, "n_syl": 18, "numeric": false, "text": "거미 몸속에선 물에 녹은 액체 단백질이에요.", "temp": 0.85, "gen_s": 51.9}

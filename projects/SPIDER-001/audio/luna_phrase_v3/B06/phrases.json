@@ -1,0 +1,27 @@
+[
+  {
+    "text": "웹슈터는 손목 통에 담긴 액체를 쏴서",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "공기 중에 구친다는 설정이죠.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "성분과 강도는 근거가 있지만",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "순식간에 실을 만들어",
+    "sentence_final": false,
+    "forced": true
+  },
+  {
+    "text": "정확히 쏘는 장치가 가장 큰 벽입니다.",
+    "sentence_final": true,
+    "forced": false
+  }
+]

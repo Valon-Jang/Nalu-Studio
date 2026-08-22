@@ -1,0 +1,1 @@
+{"take": 20, "seed": 397849, "ok": false, "why": ["end_slope -1.14", "tail -0.8", "rel_fall -0.08"], "metrics": {"dur": 2.411, "median_hz": 252.5, "range_st": 10.23, "end_slope": -1.14, "first_hz": 389.4, "last_hz": 226.3, "tail_delta": -0.85, "final_glide": 6.9, "final_rebound": 3.2}, "n_syl": 16, "numeric": false, "text": "실제 거미줄과 하나씩 비교해봤습니다.", "temp": 0.87, "gen_s": 46.1}

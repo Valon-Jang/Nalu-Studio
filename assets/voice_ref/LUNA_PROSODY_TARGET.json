@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "created": "2026-08-05",
+  "purpose": "Target intonation-shape statistics for 공대루나 Luna narration. Derived from CEO-selected reference narration (신비한건축사전 6 shorts). INTONATION STATISTICS ONLY — no voice cloning, no audio reuse. Luna timbre stays CANDIDATE_B (B_voiced_spectral_micro_smooth.wav, sha 30C6D34...).",
+  "provenance": {
+    "reference_videos": [
+      "https://www.youtube.com/shorts/OEHliQmpm24",
+      "https://www.youtube.com/shorts/eDG3x62Bwhs",
+      "https://www.youtube.com/shorts/DnCy9y9KyE4",
+      "https://www.youtube.com/shorts/CRLFztMQXOc",
+      "https://www.youtube.com/shorts/7aIA2YH97JY",
+      "https://www.youtube.com/shorts/KY3sWQemVwM"
+    ],
+    "selection_authority": "CEO 2026-08-05: '거기 다 내가 원하는 것들이야'",
+    "method": "yt-dlp bestaudio -> demucs htdemucs two-stem vocal separation -> scripts/analyze_prosody_v1.py (adaptive Otsu VAD, librosa pyin F0, semitone normalization to speaker voiced median)",
+    "measurement_file": "readiness/youtube_ai_experiment_ledger/preproduction/_voice_naturalness_test/prosody_full_corpus_v2.json",
+    "reference_audio_retention": "downloaded full mixes deleted after measurement; separated narration stems kept only in session scratchpad until gate validation, then deleted; never used as synthesis input or in any published output",
+    "units_measured": 235,
+    "comparison_corpus": "PASS = MW-MESH-001 rebuild_v1.3_final_selected (uploaded video). FAIL = SUBSEA-001 + SPIDER-001 luna_natural_v2 (CEO: intonation broken, unreleasable)."
+  },
+  "normalization": "all pitch values in semitones (st) relative to the file's own voiced-median F0; slopes in st/s. Comparable across different narrator voices.",
+  "targets": {
+    "breath_unit_duration_s": {
+      "median": 1.49, "p10": 0.64, "p25": 0.92, "p75": 2.51, "p90": 3.48,
+      "note": "REF speaks in short punchy phrases. Luna FAIL median 3.12s, PASS 2.92s — both ~2x too long. Normalizer must split scripts into ~4-22 syllable phrases (median ~10 syllables)."
+    },
+    "pause_s": {
+      "median": 0.27, "p10": 0.17, "p25": 0.21, "p75": 0.38, "p90": 0.60,
+      "note": "8/13 Luna FAIL blocks had ZERO internal pauses. Assembler inserts pauses at phrase boundaries, jittered within [p25,p75], occasionally up to p90."
+    },
+    "syllable_rate_hz": {
+      "median": 6.54, "accept_band": [5.8, 7.0],
+      "note": "proxy = librosa onset rate inside speech. Luna FAIL 5.78 — too slow. Gate + retake below 5.8."
+    },
+    "unit_pitch_range_st": {
+      "median": 8.96, "p25": 7.28, "p75": 11.09,
+      "note": "Luna already in range (9.4-9.7). Keep as sanity bound only: reject < 5 (monotone) or > 14 (performative)."
+    },
+    "end_slope_st_s": {
+      "median": -11.9, "p25": -21.1, "p75": 0.0, "p10": -29.0, "p90": 9.0,
+      "hard_reject_above": 8.0,
+      "block_median_band": [-20.0, -5.0],
+      "note": "continuation-vs-final split showed NO difference (both med -11.7) — single distribution, wide. Luna FAIL was too shallow AND too uniform (-7.2 med). Per-unit gate: [-35, +8]. Block-level: median of unit slopes must land in [-20,-5]."
+    },
+    "unit_reset_st": {
+      "median": 4.65, "p25": 0.3, "p75": 8.8, "p10": -3.6, "p90": 12.4,
+      "gate": [-4.0, 13.0],
+      "note": "pitch of next unit start minus prev unit end. Luna FAIL erratic (file medians 2.1-8.9). Gate keeps continuity without imposing artificial declination."
+    },
+    "declination_st_per_unit": {
+      "median": 0.02,
+      "note": "HYPOTHESIS REFUTED: reference shorts narration has NO paragraph declination (~0). Do NOT impose synthetic declination. Luna FAIL erratic (-0.72..+0.30) — fix via reset gate, not declination shaping."
+    },
+    "non_differentiators": {
+      "ioi_cv": "REF 0.36 vs Luna 0.33-0.35 — overlapping, dropped from gating",
+      "energy_cv": "identical 0.40-0.41 — dropped",
+      "pause_duration_median": "similar 0.27-0.34 — pause EXISTENCE is the differentiator, not length"
+    }
+  },
+  "ceo_validated_assembly_2026_08_05": {
+    "verdict": "B(phrase pipeline) > A(block synthesis) on SUBSEA B04 A/B; then pause ladder B0>B1>B2>B3>B4 — CEO picked B4: '너무 좋다, 어긋남 안들려'",
+    "pause_continuation_s": [0.0, 0.02],
+    "pause_sentence_final_s": [0.38, 0.60],
+    "note": "measured REF pause stats (med 0.27s) OVERSTATE mid-sentence pauses: VAD only counted gaps>=0.15s, and inserted digital silence reads longer than natural gaps. Sentence-final band from REF held up. Phrase edges keep 30ms trim pad + 12ms fades, so 0s insertion still leaves ~60ms natural separation.",
+    "gate_activity_evidence": "caught 2 rising-end takes (+28,+31 st/s) and 1 slow take (3.74 syl/s) on B04; number phrases (천팔백...) run slow across ALL takes -> relax rate gate for numeral-heavy phrases instead of rejecting"
+  },
+  "luna_gap_summary": {
+    "1_unit_length": "Luna units 2x too long -> script normalizer splits to ~10-syllable phrases",
+    "2_no_internal_pauses": "insert 0.21-0.38s pauses at phrase boundaries during assembly",
+    "3_rate_too_slow": "FAIL 5.78 vs target 6.54 syl/s -> rate gate, retake slow takes",
+    "4_end_slopes_shallow_uniform": "per-unit gate [-35,+8] st/s + block median in [-20,-5]",
+    "5_resets_erratic": "continuity gate [-4,+13] st between consecutive units"
+  }
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "text": "사람이 매달릴 한 가닥은 가능할까요.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "견인사의 무게 대비 강도라면",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "이론상 여지는 있어요.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "문제는 목표에 딱 붙이고 하중을 견디고",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "다시 회수하는 메커니즘이죠.",
+    "sentence_final": true,
+    "forced": false
+  }
+]

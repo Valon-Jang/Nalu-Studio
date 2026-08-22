@@ -1,0 +1,1 @@
+{"take": 13, "seed": 2026392876, "ok": false, "why": ["glide +2.8", "rebound +2.3"], "metrics": {"dur": 2.475, "median_hz": 263.7, "range_st": 10.37, "end_slope": -12.87, "first_hz": 278.6, "last_hz": 199.3, "tail_delta": -3.4, "final_glide": 2.8, "final_rebound": 2.3}, "n_syl": 16, "numeric": true, "text": "구십구 퍼센트 이상은 바다 밑을 갑니다.", "temp": 0.87, "gen_s": 47.5}

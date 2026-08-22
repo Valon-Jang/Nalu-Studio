@@ -1,0 +1,55 @@
+{
+  "id": "B06",
+  "picks": [
+    13,
+    2,
+    4,
+    0,
+    2
+  ],
+  "block_end_slope_median": -8.37,
+  "total_dur": 10.74,
+  "n_phrases": 5,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "오늘날에도 케이블은 끈킵니다.",
+      "start": 0.0,
+      "dur": 2.087,
+      "take": 13,
+      "sentence_final": true
+    },
+    {
+      "phrase": 1,
+      "text": "이천이십오 년 전 세계에서",
+      "start": 2.504,
+      "dur": 1.895,
+      "take": 2,
+      "sentence_final": false
+    },
+    {
+      "phrase": 2,
+      "text": "보고된 수리가 백칠십 건을 넘었죠.",
+      "start": 4.411,
+      "dur": 2.236,
+      "take": 4,
+      "sentence_final": true
+    },
+    {
+      "phrase": 3,
+      "text": "수리선은 먼저 고장 위치를 좁히고",
+      "start": 7.045,
+      "dur": 2.206,
+      "take": 0,
+      "sentence_final": false
+    },
+    {
+      "phrase": 4,
+      "text": "케이블을 찾습니다.",
+      "start": 9.252,
+      "dur": 1.489,
+      "take": 2,
+      "sentence_final": true
+    }
+  ]
+}

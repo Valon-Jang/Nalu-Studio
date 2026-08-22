@@ -1,0 +1,27 @@
+[
+  {
+    "text": "오늘날에도 케이블은 끈킵니다.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "이천이십오 년 전 세계에서",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "보고된 수리가 백칠십 건을 넘었죠.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "수리선은 먼저 고장 위치를 좁히고",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "케이블을 찾습니다.",
+    "sentence_final": true,
+    "forced": false
+  }
+]

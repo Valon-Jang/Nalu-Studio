@@ -1,0 +1,1 @@
+{"take": 4, "seed": 375881, "ok": false, "why": ["rate 5.27", "end_slope 3.33"], "metrics": {"dur": 1.92, "median_hz": 230.9, "range_st": 7.88, "end_slope": 6.15, "first_hz": 234.3, "last_hz": 221.1, "tail_delta": -1.45, "final_glide": 16.9, "final_rebound": 4.0}, "n_syl": 10, "numeric": false, "text": "아직 장치의 문제였어요.", "temp": 0.72, "gen_s": 41.3}

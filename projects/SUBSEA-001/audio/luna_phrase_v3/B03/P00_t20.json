@@ -1,0 +1,1 @@
+{"take": 20, "seed": 2026238853, "ok": false, "why": ["glide -2.4", "rebound +1.8"], "metrics": {"dur": 3.371, "median_hz": 257.7, "range_st": 11.43, "end_slope": -20.06, "first_hz": 374.0, "last_hz": 173.5, "tail_delta": -6.1, "final_glide": -2.4, "final_rebound": 1.8}, "n_syl": 21, "numeric": true, "text": "케이블을 놓는 배는 선을 바다에 천천히 풀어냅니다.", "temp": 0.87, "gen_s": 54.6}

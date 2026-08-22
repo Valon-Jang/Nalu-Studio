@@ -1,0 +1,1 @@
+{"take": 25, "seed": 2026592654, "ok": false, "why": ["end_slope -16.74", "level +3.5st"], "metrics": {"dur": 2.368, "median_hz": 288.4, "range_st": 8.0, "end_slope": -16.74, "first_hz": 231.6, "last_hz": 173.5, "tail_delta": -4.2, "final_glide": -25.8, "final_rebound": 0.0}, "n_syl": 15, "numeric": false, "text": "여러 파장의 빛을 한 섬유에 함께 실어", "temp": 0.87, "gen_s": 46.2}

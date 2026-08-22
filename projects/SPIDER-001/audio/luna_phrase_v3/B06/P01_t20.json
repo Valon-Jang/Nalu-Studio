@@ -1,0 +1,1 @@
+{"take": 20, "seed": 293125, "ok": false, "why": ["glide +3.6", "level +2.5st"], "metrics": {"dur": 1.941, "median_hz": 272.2, "range_st": 8.88, "end_slope": -18.76, "first_hz": 272.2, "last_hz": 193.6, "tail_delta": -8.65, "final_glide": 3.6, "final_rebound": 2.7}, "n_syl": 12, "numeric": false, "text": "공기 중에 구친다는 설정이죠.", "temp": 0.87, "gen_s": 43.7}

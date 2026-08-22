@@ -1,0 +1,1 @@
+{"take": 15, "seed": 358260, "ok": false, "why": ["end_slope 4.42", "tail +1.1", "rel_fall +0.11"], "metrics": {"dur": 1.493, "median_hz": 231.6, "range_st": 9.42, "end_slope": 4.51, "first_hz": 231.6, "last_hz": 232.9, "tail_delta": 1.1, "final_glide": 4.5, "final_rebound": 2.6}, "n_syl": 9, "numeric": false, "text": "이론상 여지는 있어요.", "temp": 0.9, "gen_s": 40.6}

@@ -1,0 +1,1 @@
+{"take": 6, "seed": 496444, "ok": false, "why": ["level +2.8st"], "metrics": {"dur": 2.731, "median_hz": 276.2, "range_st": 9.97, "end_slope": -12.53, "first_hz": 251.1, "last_hz": 222.4, "tail_delta": -5.8, "final_glide": 10.3, "final_rebound": 3.0}, "n_syl": 17, "numeric": false, "text": "잘 끊기지 않는 질긴 성질이 아주 뛰어나죠.", "temp": 0.85, "gen_s": 50.8}

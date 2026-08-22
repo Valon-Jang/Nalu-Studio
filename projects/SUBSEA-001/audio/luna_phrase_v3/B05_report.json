@@ -1,0 +1,55 @@
+{
+  "id": "B05",
+  "picks": [
+    5,
+    4,
+    1,
+    12,
+    14
+  ],
+  "block_end_slope_median": -11.39,
+  "total_dur": 9.83,
+  "n_phrases": 5,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "천팔백 육십육 년",
+      "start": 0.0,
+      "dur": 1.545,
+      "take": 5,
+      "sentence_final": false
+    },
+    {
+      "phrase": 1,
+      "text": "새 케이블을 먼저 연결했죠.",
+      "start": 1.56,
+      "dur": 1.929,
+      "take": 4,
+      "sentence_final": true
+    },
+    {
+      "phrase": 2,
+      "text": "이어 전년의 유실 지점으로 돌아가",
+      "start": 4.013,
+      "dur": 2.257,
+      "take": 1,
+      "sentence_final": false
+    },
+    {
+      "phrase": 3,
+      "text": "갈고리로 선을 건져",
+      "start": 6.28,
+      "dur": 1.447,
+      "take": 12,
+      "sentence_final": false
+    },
+    {
+      "phrase": 4,
+      "text": "두 번째 회선도 완성했습니다.",
+      "start": 7.731,
+      "dur": 2.099,
+      "take": 14,
+      "sentence_final": true
+    }
+  ]
+}

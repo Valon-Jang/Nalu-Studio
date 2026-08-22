@@ -1,0 +1,1 @@
+{"take": 18, "seed": 2026327742, "ok": false, "why": ["q_tail -1.4", "q_rel -0.16", "rebound +2.1"], "metrics": {"dur": 1.152, "median_hz": 237.0, "range_st": 9.22, "end_slope": -2.58, "first_hz": 252.5, "last_hz": 226.3, "tail_delta": -1.45, "final_glide": 12.1, "final_rebound": 2.1}, "n_syl": 7, "numeric": false, "text": "위성으로 갈까요.", "temp": 0.87, "gen_s": 36.6}

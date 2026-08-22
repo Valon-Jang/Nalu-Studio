@@ -1,0 +1,25 @@
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Bundled local TTS runtime, model cache, and generated engine output
+engine/
+
+# Private voice reference audio (the stage gate verifies its SHA256 locally)
+assets/voice_ref/*.wav
+
+# Generated narration and review artifacts
+projects/**/*.wav
+projects/**/*.log
+projects/**/*.html
+
+# Local preparation copies; keep only the corrected distribution ZIP in Git
+references/luna_codex_stage_pack/
+references/LUNA_CODEX_STAGE_PACK.zip
+
+# Luna stage gate local completion requests are intentionally not committed.
+.codex/completion_requests/
+
+# Local experiment outputs and model caches must remain outside source control.
+experiments/luna_quality/**/outputs/
+.luna_quality_cache/

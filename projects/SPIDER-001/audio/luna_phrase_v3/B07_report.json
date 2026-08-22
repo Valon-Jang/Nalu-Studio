@@ -1,0 +1,55 @@
+{
+  "id": "B07",
+  "picks": [
+    17,
+    5,
+    17,
+    0,
+    7
+  ],
+  "block_end_slope_median": -6.05,
+  "total_dur": 11.61,
+  "n_phrases": 5,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "사람이 매달릴 한 가닥은 가능할까요.",
+      "start": 0.0,
+      "dur": 2.385,
+      "take": 17,
+      "sentence_final": true
+    },
+    {
+      "phrase": 1,
+      "text": "견인사의 무게 대비 강도라면",
+      "start": 2.926,
+      "dur": 2.023,
+      "take": 5,
+      "sentence_final": false
+    },
+    {
+      "phrase": 2,
+      "text": "이론상 여지는 있어요.",
+      "start": 4.954,
+      "dur": 1.587,
+      "take": 17,
+      "sentence_final": true
+    },
+    {
+      "phrase": 3,
+      "text": "문제는 목표에 딱 붙이고 하중을 견디고",
+      "start": 6.975,
+      "dur": 2.705,
+      "take": 0,
+      "sentence_final": false
+    },
+    {
+      "phrase": 4,
+      "text": "다시 회수하는 메커니즘이죠.",
+      "start": 9.697,
+      "dur": 1.916,
+      "take": 7,
+      "sentence_final": true
+    }
+  ]
+}

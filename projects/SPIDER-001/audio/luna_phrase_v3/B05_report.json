@@ -1,0 +1,55 @@
+{
+  "id": "B05",
+  "picks": [
+    17,
+    14,
+    1,
+    1,
+    6
+  ],
+  "block_end_slope_median": -9.32,
+  "total_dur": 11.81,
+  "n_phrases": 5,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "그럼 실은 어떻게 만들어질까요.",
+      "start": 0.0,
+      "dur": 2.121,
+      "take": 17,
+      "sentence_final": true
+    },
+    {
+      "phrase": 1,
+      "text": "거미 몸속에선 물에 녹은 액체 단백질이에요.",
+      "start": 2.583,
+      "dur": 2.663,
+      "take": 14,
+      "sentence_final": true
+    },
+    {
+      "phrase": 2,
+      "text": "방적 돌기를 지나며",
+      "start": 5.666,
+      "dur": 1.468,
+      "take": 1,
+      "sentence_final": false
+    },
+    {
+      "phrase": 3,
+      "text": "산성화와 잡아당기는 힘을 받아",
+      "start": 7.139,
+      "dur": 2.334,
+      "take": 1,
+      "sentence_final": false
+    },
+    {
+      "phrase": 4,
+      "text": "그 자리에서 고체 섬유로 굳습니다.",
+      "start": 9.488,
+      "dur": 2.321,
+      "take": 6,
+      "sentence_final": true
+    }
+  ]
+}

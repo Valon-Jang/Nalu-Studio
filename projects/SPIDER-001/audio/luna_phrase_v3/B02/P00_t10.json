@@ -1,0 +1,1 @@
+{"take": 10, "seed": 109202, "ok": false, "why": ["rel_fall -0.20"], "metrics": {"dur": 2.731, "median_hz": 252.5, "range_st": 10.4, "end_slope": -2.05, "first_hz": 242.5, "last_hz": 223.7, "tail_delta": -1.95, "final_glide": 13.1, "final_rebound": 1.4}, "n_syl": 18, "numeric": true, "text": "거미줄은 스피드로인이라는 단백질이에요.", "temp": 0.85, "gen_s": 50.7}

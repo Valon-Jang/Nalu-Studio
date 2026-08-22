@@ -1,0 +1,406 @@
+[
+  {
+    "id": "B01",
+    "picks": [
+      1,
+      1,
+      1
+    ],
+    "block_end_slope_median": -6.23,
+    "total_dur": 6.85,
+    "n_phrases": 3,
+    "timeline": [
+      {
+        "phrase": 0,
+        "text": "스파이더맨처럼 손목에서 거미줄을 쏘는 거",
+        "start": 0.0,
+        "dur": 2.641,
+        "take": 1,
+        "sentence_final": false
+      },
+      {
+        "phrase": 1,
+        "text": "진짜 가능할까요.",
+        "start": 2.647,
+        "dur": 1.289,
+        "take": 1,
+        "sentence_final": true
+      },
+      {
+        "phrase": 2,
+        "text": "실제 거미줄과 하나씩 비교해봤습니다.",
+        "start": 4.448,
+        "dur": 2.407,
+        "take": 1,
+        "sentence_final": true
+      }
+    ]
+  },
+  {
+    "id": "B02",
+    "picks": [
+      21,
+      1,
+      24,
+      13
+    ],
+    "block_end_slope_median": -6.87,
+    "total_dur": 9.5,
+    "n_phrases": 4,
+    "timeline": [
+      {
+        "phrase": 0,
+        "text": "거미줄은 스피드로인이라는 단백질이에요.",
+        "start": 0.0,
+        "dur": 2.727,
+        "take": 21,
+        "sentence_final": true
+      },
+      {
+        "phrase": 1,
+        "text": "아미노산이 길게 이어진 사슬이 접히면서",
+        "start": 3.154,
+        "dur": 2.492,
+        "take": 1,
+        "sentence_final": false
+      },
+      {
+        "phrase": 2,
+        "text": "단단한 결정 부분과",
+        "start": 5.649,
+        "dur": 1.545,
+        "take": 24,
+        "sentence_final": false
+      },
+      {
+        "phrase": 3,
+        "text": "유연한 부분이 함께 섞인 구조가 되죠.",
+        "start": 7.266,
+        "dur": 2.236,
+        "take": 13,
+        "sentence_final": true
+      }
+    ]
+  },
+  {
+    "id": "B03",
+    "picks": [
+      3,
+      5,
+      0,
+      2,
+      3
+    ],
+    "block_end_slope_median": -7.33,
+    "total_dur": 11.93,
+    "n_phrases": 5,
+    "timeline": [
+      {
+        "phrase": 0,
+        "text": "강도는 놀라워요.",
+        "start": 0.0,
+        "dur": 1.353,
+        "take": 3,
+        "sentence_final": true
+      },
+      {
+        "phrase": 1,
+        "text": "대표적인 견인사는 인장 강도가 강철에 맞먹고",
+        "start": 1.868,
+        "dur": 3.281,
+        "take": 5,
+        "sentence_final": false
+      },
+      {
+        "phrase": 2,
+        "text": "무게 대비로 보면",
+        "start": 5.16,
+        "dur": 1.212,
+        "take": 0,
+        "sentence_final": false
+      },
+      {
+        "phrase": 3,
+        "text": "오히려 강철을 넘어서죠.",
+        "start": 6.387,
+        "dur": 1.788,
+        "take": 2,
+        "sentence_final": true
+      },
+      {
+        "phrase": 4,
+        "text": "방탄으로 쓰는 케블라와 비교해도 밀리지 않습니다.",
+        "start": 8.717,
+        "dur": 3.217,
+        "take": 3,
+        "sentence_final": true
+      }
+    ]
+  },
+  {
+    "id": "B04",
+    "picks": [
+      23,
+      1,
+      3,
+      2,
+      21
+    ],
+    "block_end_slope_median": -9.35,
+    "total_dur": 10.71,
+    "n_phrases": 5,
+    "timeline": [
+      {
+        "phrase": 0,
+        "text": "다만 뻣뻣한 정도",
+        "start": 0.0,
+        "dur": 1.383,
+        "take": 23,
+        "sentence_final": false
+      },
+      {
+        "phrase": 1,
+        "text": "즉 강성은 강철보다 낮아요.",
+        "start": 1.398,
+        "dur": 2.121,
+        "take": 1,
+        "sentence_final": true
+      },
+      {
+        "phrase": 2,
+        "text": "대신 삼십 퍼센트 넘게 늘어나면서",
+        "start": 3.995,
+        "dur": 2.321,
+        "take": 3,
+        "sentence_final": false
+      },
+      {
+        "phrase": 3,
+        "text": "충격 에너지를 흡수해서",
+        "start": 6.322,
+        "dur": 1.673,
+        "take": 2,
+        "sentence_final": false
+      },
+      {
+        "phrase": 4,
+        "text": "잘 끊기지 않는 질긴 성질이 아주 뛰어나죠.",
+        "start": 8.008,
+        "dur": 2.705,
+        "take": 21,
+        "sentence_final": true
+      }
+    ]
+  },
+  {
+    "id": "B05",
+    "picks": [
+      17,
+      14,
+      1,
+      1,
+      6
+    ],
+    "block_end_slope_median": -9.32,
+    "total_dur": 11.81,
+    "n_phrases": 5,
+    "timeline": [
+      {
+        "phrase": 0,
+        "text": "그럼 실은 어떻게 만들어질까요.",
+        "start": 0.0,
+        "dur": 2.121,
+        "take": 17,
+        "sentence_final": true
+      },
+      {
+        "phrase": 1,
+        "text": "거미 몸속에선 물에 녹은 액체 단백질이에요.",
+        "start": 2.583,
+        "dur": 2.663,
+        "take": 14,
+        "sentence_final": true
+      },
+      {
+        "phrase": 2,
+        "text": "방적 돌기를 지나며",
+        "start": 5.666,
+        "dur": 1.468,
+        "take": 1,
+        "sentence_final": false
+      },
+      {
+        "phrase": 3,
+        "text": "산성화와 잡아당기는 힘을 받아",
+        "start": 7.139,
+        "dur": 2.334,
+        "take": 1,
+        "sentence_final": false
+      },
+      {
+        "phrase": 4,
+        "text": "그 자리에서 고체 섬유로 굳습니다.",
+        "start": 9.488,
+        "dur": 2.321,
+        "take": 6,
+        "sentence_final": true
+      }
+    ]
+  },
+  {
+    "id": "B06",
+    "picks": [
+      3,
+      20,
+      3,
+      6,
+      11
+    ],
+    "block_end_slope_median": -2.2,
+    "total_dur": 11.23,
+    "n_phrases": 5,
+    "timeline": [
+      {
+        "phrase": 0,
+        "text": "웹슈터는 손목 통에 담긴 액체를 쏴서",
+        "start": 0.0,
+        "dur": 2.599,
+        "take": 3,
+        "sentence_final": false
+      },
+      {
+        "phrase": 1,
+        "text": "공기 중에 구친다는 설정이죠.",
+        "start": 2.602,
+        "dur": 2.001,
+        "take": 20,
+        "sentence_final": true
+      },
+      {
+        "phrase": 2,
+        "text": "성분과 강도는 근거가 있지만",
+        "start": 5.114,
+        "dur": 2.121,
+        "take": 3,
+        "sentence_final": false
+      },
+      {
+        "phrase": 3,
+        "text": "순식간에 실을 만들어",
+        "start": 7.249,
+        "dur": 1.553,
+        "take": 6,
+        "sentence_final": false
+      },
+      {
+        "phrase": 4,
+        "text": "정확히 쏘는 장치가 가장 큰 벽입니다.",
+        "start": 8.892,
+        "dur": 2.343,
+        "take": 11,
+        "sentence_final": true
+      }
+    ]
+  },
+  {
+    "id": "B07",
+    "picks": [
+      17,
+      5,
+      17,
+      0,
+      7
+    ],
+    "block_end_slope_median": -6.05,
+    "total_dur": 11.61,
+    "n_phrases": 5,
+    "timeline": [
+      {
+        "phrase": 0,
+        "text": "사람이 매달릴 한 가닥은 가능할까요.",
+        "start": 0.0,
+        "dur": 2.385,
+        "take": 17,
+        "sentence_final": true
+      },
+      {
+        "phrase": 1,
+        "text": "견인사의 무게 대비 강도라면",
+        "start": 2.926,
+        "dur": 2.023,
+        "take": 5,
+        "sentence_final": false
+      },
+      {
+        "phrase": 2,
+        "text": "이론상 여지는 있어요.",
+        "start": 4.954,
+        "dur": 1.587,
+        "take": 17,
+        "sentence_final": true
+      },
+      {
+        "phrase": 3,
+        "text": "문제는 목표에 딱 붙이고 하중을 견디고",
+        "start": 6.975,
+        "dur": 2.705,
+        "take": 0,
+        "sentence_final": false
+      },
+      {
+        "phrase": 4,
+        "text": "다시 회수하는 메커니즘이죠.",
+        "start": 9.697,
+        "dur": 1.916,
+        "take": 7,
+        "sentence_final": true
+      }
+    ]
+  },
+  {
+    "id": "B08",
+    "picks": [
+      25,
+      5,
+      4,
+      6
+    ],
+    "block_end_slope_median": -12.97,
+    "total_dur": 9.15,
+    "n_phrases": 4,
+    "timeline": [
+      {
+        "phrase": 0,
+        "text": "정리하면 거미줄의 성분과",
+        "start": 0.0,
+        "dur": 1.758,
+        "take": 25,
+        "sentence_final": false
+      },
+      {
+        "phrase": 1,
+        "text": "강도는 과학이 탄탄히 받쳐 줍니다.",
+        "start": 1.85,
+        "dur": 2.321,
+        "take": 5,
+        "sentence_final": true
+      },
+      {
+        "phrase": 2,
+        "text": "다만 도시를 누비는 웹슈터는 재료가 아니라",
+        "start": 4.666,
+        "dur": 2.769,
+        "take": 4,
+        "sentence_final": false
+      },
+      {
+        "phrase": 3,
+        "text": "아직 장치의 문제였어요.",
+        "start": 7.444,
+        "dur": 1.703,
+        "take": 6,
+        "sentence_final": true
+      }
+    ]
+  }
+]

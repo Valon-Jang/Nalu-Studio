@@ -1,0 +1,17 @@
+[
+  {
+    "text": "해외로 가는 데이터",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "위성으로 갈까요.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "구십구 퍼센트 이상은 바다 밑을 갑니다.",
+    "sentence_final": true,
+    "forced": false
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "id": "B07B",
+  "picks": [
+    11,
+    0
+  ],
+  "block_end_slope_median": -17.35,
+  "total_dur": 5.66,
+  "n_phrases": 2,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "손상부 대신 새 구간을 이어 신호를 시험합니다.",
+      "start": 0.0,
+      "dur": 2.748,
+      "take": 11,
+      "sentence_final": true
+    },
+    {
+      "phrase": 1,
+      "text": "이상이 없으면 다시 바다에 내려놓죠.",
+      "start": 3.278,
+      "dur": 2.385,
+      "take": 0,
+      "sentence_final": true
+    }
+  ]
+}

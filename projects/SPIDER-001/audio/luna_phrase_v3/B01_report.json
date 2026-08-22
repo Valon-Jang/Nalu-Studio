@@ -1,0 +1,37 @@
+{
+  "id": "B01",
+  "picks": [
+    1,
+    1,
+    1
+  ],
+  "block_end_slope_median": -6.23,
+  "total_dur": 6.85,
+  "n_phrases": 3,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "스파이더맨처럼 손목에서 거미줄을 쏘는 거",
+      "start": 0.0,
+      "dur": 2.641,
+      "take": 1,
+      "sentence_final": false
+    },
+    {
+      "phrase": 1,
+      "text": "진짜 가능할까요.",
+      "start": 2.647,
+      "dur": 1.289,
+      "take": 1,
+      "sentence_final": true
+    },
+    {
+      "phrase": 2,
+      "text": "실제 거미줄과 하나씩 비교해봤습니다.",
+      "start": 4.448,
+      "dur": 2.407,
+      "take": 1,
+      "sentence_final": true
+    }
+  ]
+}

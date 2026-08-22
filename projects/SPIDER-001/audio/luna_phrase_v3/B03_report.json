@@ -1,0 +1,55 @@
+{
+  "id": "B03",
+  "picks": [
+    3,
+    5,
+    0,
+    2,
+    3
+  ],
+  "block_end_slope_median": -7.33,
+  "total_dur": 11.93,
+  "n_phrases": 5,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "강도는 놀라워요.",
+      "start": 0.0,
+      "dur": 1.353,
+      "take": 3,
+      "sentence_final": true
+    },
+    {
+      "phrase": 1,
+      "text": "대표적인 견인사는 인장 강도가 강철에 맞먹고",
+      "start": 1.868,
+      "dur": 3.281,
+      "take": 5,
+      "sentence_final": false
+    },
+    {
+      "phrase": 2,
+      "text": "무게 대비로 보면",
+      "start": 5.16,
+      "dur": 1.212,
+      "take": 0,
+      "sentence_final": false
+    },
+    {
+      "phrase": 3,
+      "text": "오히려 강철을 넘어서죠.",
+      "start": 6.387,
+      "dur": 1.788,
+      "take": 2,
+      "sentence_final": true
+    },
+    {
+      "phrase": 4,
+      "text": "방탄으로 쓰는 케블라와 비교해도 밀리지 않습니다.",
+      "start": 8.717,
+      "dur": 3.217,
+      "take": 3,
+      "sentence_final": true
+    }
+  ]
+}

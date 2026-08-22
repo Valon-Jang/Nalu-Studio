@@ -1,0 +1,1 @@
+{"take": 6, "seed": 2026442196, "ok": false, "why": ["level +3.2st"], "metrics": {"dur": 1.408, "median_hz": 281.9, "range_st": 11.08, "end_slope": -14.71, "first_hz": 234.3, "last_hz": 187.0}, "n_syl": 8, "numeric": false, "temp": 0.85, "gen_s": 39.6}

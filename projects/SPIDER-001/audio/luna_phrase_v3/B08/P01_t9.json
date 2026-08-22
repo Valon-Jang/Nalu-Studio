@@ -1,0 +1,1 @@
+{"take": 9, "seed": 206018, "ok": false, "why": ["glide -21.7", "rebound +0.0", "level +3.2st"], "metrics": {"dur": 2.24, "median_hz": 283.4, "range_st": 8.74, "end_slope": -26.39, "first_hz": 259.9, "last_hz": 183.8, "tail_delta": -5.5, "final_glide": -21.7, "final_rebound": 0.0}, "n_syl": 14, "numeric": false, "text": "강도는 과학이 탄탄히 받쳐 줍니다.", "temp": 0.85, "gen_s": 46.2}

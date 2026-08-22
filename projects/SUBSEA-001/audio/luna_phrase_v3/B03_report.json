@@ -1,0 +1,46 @@
+{
+  "id": "B03",
+  "picks": [
+    22,
+    2,
+    8,
+    15
+  ],
+  "block_end_slope_median": -9.83,
+  "total_dur": 11.79,
+  "n_phrases": 4,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "케이블을 놓는 배는 선을 바다에 천천히 풀어냅니다.",
+      "start": 0.0,
+      "dur": 3.388,
+      "take": 22,
+      "sentence_final": true
+    },
+    {
+      "phrase": 1,
+      "text": "해안 위험 구간은 묻거나 보호하고",
+      "start": 3.782,
+      "dur": 2.385,
+      "take": 2,
+      "sentence_final": false
+    },
+    {
+      "phrase": 2,
+      "text": "심해 해저면에는 놓기도 하죠.",
+      "start": 6.187,
+      "dur": 1.788,
+      "take": 8,
+      "sentence_final": true
+    },
+    {
+      "phrase": 3,
+      "text": "긴 구간의 광 증폭기는 약해진 빛을 다시 키웁니다.",
+      "start": 8.507,
+      "dur": 3.281,
+      "take": 15,
+      "sentence_final": true
+    }
+  ]
+}

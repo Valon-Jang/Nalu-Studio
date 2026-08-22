@@ -1,0 +1,1 @@
+{"take": 2, "seed": 45849, "ok": false, "why": ["level +2.4st"], "metrics": {"dur": 2.773, "median_hz": 270.6, "range_st": 11.1, "end_slope": -11.5, "first_hz": 380.5, "last_hz": 182.7, "tail_delta": -3.9, "final_glide": -5.1, "final_rebound": 0.0}, "n_syl": 18, "numeric": false, "text": "스파이더맨처럼 손목에서 거미줄을 쏘는 거", "temp": 0.72, "gen_s": 51.0}

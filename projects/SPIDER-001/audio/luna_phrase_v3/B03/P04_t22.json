@@ -1,0 +1,1 @@
+{"take": 22, "seed": 623147, "ok": false, "why": ["tail -0.2", "rel_fall -0.03", "rebound +1.1"], "metrics": {"dur": 3.029, "median_hz": 254.0, "range_st": 8.2, "end_slope": -2.2, "first_hz": 245.3, "last_hz": 214.8, "tail_delta": -0.25, "final_glide": 10.9, "final_rebound": 1.1}, "n_syl": 21, "numeric": false, "text": "방탄으로 쓰는 케블라와 비교해도 밀리지 않습니다.", "temp": 0.87, "gen_s": 54.3}

@@ -1,0 +1,28 @@
+{
+  "id": "B08_notag",
+  "picks": [
+    1,
+    3
+  ],
+  "block_end_slope_median": -13.54,
+  "total_dur": 5.23,
+  "n_phrases": 2,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "결국 국제 데이터의 큰길은 하늘이 아니라 바다 밑",
+      "start": 0.0,
+      "dur": 3.089,
+      "take": 1,
+      "sentence_final": false
+    },
+    {
+      "phrase": 1,
+      "text": "유리섬유를 흐르는 빛이었습니다.",
+      "start": 3.099,
+      "dur": 2.129,
+      "take": 3,
+      "sentence_final": true
+    }
+  ]
+}

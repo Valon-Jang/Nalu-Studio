@@ -1,0 +1,37 @@
+{
+  "id": "B01",
+  "picks": [
+    3,
+    18,
+    13
+  ],
+  "block_end_slope_median": -3.13,
+  "total_dur": 5.51,
+  "n_phrases": 3,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "해외로 가는 데이터",
+      "start": 0.0,
+      "dur": 1.34,
+      "take": 3,
+      "sentence_final": false
+    },
+    {
+      "phrase": 1,
+      "text": "위성으로 갈까요.",
+      "start": 1.354,
+      "dur": 1.212,
+      "take": 18,
+      "sentence_final": true
+    },
+    {
+      "phrase": 2,
+      "text": "구십구 퍼센트 이상은 바다 밑을 갑니다.",
+      "start": 2.976,
+      "dur": 2.535,
+      "take": 13,
+      "sentence_final": true
+    }
+  ]
+}

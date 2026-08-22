@@ -1,0 +1,1 @@
+{"take": 18, "seed": 382012, "ok": false, "why": ["rate 4.63"], "metrics": {"dur": 1.728, "median_hz": 254.0, "range_st": 7.58, "end_slope": -7.84, "first_hz": 269.1, "last_hz": 207.5, "tail_delta": -2.5, "final_glide": 2.1, "final_rebound": 0.7}, "n_syl": 8, "numeric": false, "text": "단단한 결정 부분과", "temp": 0.9, "gen_s": 40.1}

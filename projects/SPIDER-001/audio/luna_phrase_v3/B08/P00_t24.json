@@ -1,0 +1,1 @@
+{"take": 24, "seed": 220074, "ok": false, "why": ["end_slope -28.19", "level +2.4st"], "metrics": {"dur": 1.771, "median_hz": 270.6, "range_st": 6.56, "end_slope": -28.19, "first_hz": 255.5, "last_hz": 189.2, "tail_delta": -7.2, "final_glide": -18.4, "final_rebound": 0.0}, "n_syl": 11, "numeric": false, "text": "정리하면 거미줄의 성분과", "temp": 0.87, "gen_s": 43.3}

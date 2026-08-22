@@ -1,0 +1,1 @@
+{"take": 12, "seed": 543960, "ok": false, "why": ["rel_fall -0.19", "level +3.3st"], "metrics": {"dur": 2.539, "median_hz": 285.1, "range_st": 9.8, "end_slope": -4.04, "first_hz": 242.5, "last_hz": 213.6, "tail_delta": -1.9, "final_glide": 7.8, "final_rebound": 4.2}, "n_syl": 15, "numeric": false, "text": "정확히 쏘는 장치가 가장 큰 벽입니다.", "temp": 0.9, "gen_s": 48.4}

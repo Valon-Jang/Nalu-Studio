@@ -1,0 +1,1 @@
+{"take": 12, "seed": 543961, "ok": false, "why": ["glide -4.7", "rebound +0.4", "level +2.9st"], "metrics": {"dur": 1.792, "median_hz": 277.8, "range_st": 10.5, "end_slope": -10.92, "first_hz": 243.9, "last_hz": 208.7, "tail_delta": -3.9, "final_glide": -4.7, "final_rebound": 0.4}, "n_syl": 12, "numeric": false, "text": "다시 회수하는 메커니즘이죠.", "temp": 0.87, "gen_s": 42.2}

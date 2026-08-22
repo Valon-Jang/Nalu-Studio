@@ -1,0 +1,1 @@
+{"take": 21, "seed": 196313, "ok": false, "why": ["rate 4.69", "level +2.9st"], "metrics": {"dur": 1.493, "median_hz": 278.6, "range_st": 9.9, "end_slope": -4.14, "first_hz": 365.5, "last_hz": 225.0, "tail_delta": -1.5, "final_glide": 2.4, "final_rebound": 1.1}, "n_syl": 7, "numeric": false, "text": "다만 뻣뻣한 정도", "temp": 0.87, "gen_s": 38.1}

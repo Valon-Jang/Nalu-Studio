@@ -1,0 +1,1 @@
+{"take": 8, "seed": 407551, "ok": false, "why": ["level +2.7st"], "metrics": {"dur": 2.411, "median_hz": 274.6, "range_st": 10.93, "end_slope": -11.87, "first_hz": 252.5, "last_hz": 180.6, "tail_delta": -4.55, "final_glide": -7.9, "final_rebound": 0.1}, "n_syl": 15, "numeric": true, "text": "유연한 부분이 함께 섞인 구조가 되죠.", "temp": 0.85, "gen_s": 45.9}

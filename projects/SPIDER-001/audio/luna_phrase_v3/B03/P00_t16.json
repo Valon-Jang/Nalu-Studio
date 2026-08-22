@@ -1,0 +1,1 @@
+{"take": 16, "seed": 156717, "ok": false, "why": ["tail +0.8", "rel_fall +0.12"], "metrics": {"dur": 1.237, "median_hz": 242.5, "range_st": 6.65, "end_slope": -4.5, "first_hz": 219.8, "last_hz": 221.1, "tail_delta": -0.35, "final_glide": -11.1, "final_rebound": 0.6}, "n_syl": 7, "numeric": false, "text": "강도는 놀라워요.", "temp": 0.9, "gen_s": 37.4}

@@ -1,0 +1,1 @@
+{"take": 15, "seed": 148802, "ok": false, "why": ["q_tail +0.8", "q_rel +0.09", "glide -6.5"], "metrics": {"dur": 2.517, "median_hz": 250.3, "range_st": 8.81, "end_slope": 1.52, "first_hz": 343.0, "last_hz": 209.9, "tail_delta": 0.8, "final_glide": -6.5, "final_rebound": 3.0}, "n_syl": 15, "numeric": false, "text": "사람이 매달릴 한 가닥은 가능할까요.", "temp": 0.85, "gen_s": 48.1}

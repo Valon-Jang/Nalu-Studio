@@ -1,0 +1,91 @@
+{
+  "id": "B04",
+  "picks": [
+    17,
+    2,
+    2,
+    2,
+    2,
+    3,
+    1,
+    2,
+    3
+  ],
+  "block_end_slope_median": -7.95,
+  "total_dur": 18.83,
+  "n_phrases": 9,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "처음부터 성공한 건 아닙니다.",
+      "start": 0.0,
+      "dur": 1.937,
+      "take": 17,
+      "sentence_final": true
+    },
+    {
+      "phrase": 1,
+      "text": "천팔백 오십팔 년",
+      "start": 2.445,
+      "dur": 1.481,
+      "take": 2,
+      "sentence_final": false
+    },
+    {
+      "phrase": 2,
+      "text": "대서양 전신 교신에 성공했습니다.",
+      "start": 3.93,
+      "dur": 2.078,
+      "take": 2,
+      "sentence_final": true
+    },
+    {
+      "phrase": 3,
+      "text": "하지만 케이블 손상과 높은 전압 등이 겹쳐",
+      "start": 6.448,
+      "dur": 2.577,
+      "take": 2,
+      "sentence_final": false
+    },
+    {
+      "phrase": 4,
+      "text": "오래가지 못했죠.",
+      "start": 9.033,
+      "dur": 1.212,
+      "take": 2,
+      "sentence_final": true
+    },
+    {
+      "phrase": 5,
+      "text": "천팔백 육십오 년",
+      "start": 10.79,
+      "dur": 1.297,
+      "take": 3,
+      "sentence_final": false
+    },
+    {
+      "phrase": 6,
+      "text": "개선한 케이블로 재도전했습니다.",
+      "start": 12.094,
+      "dur": 2.129,
+      "take": 1,
+      "sentence_final": true
+    },
+    {
+      "phrase": 7,
+      "text": "그런데 결함 구간을 끌어올리다 선이 끄너져",
+      "start": 14.636,
+      "dur": 2.684,
+      "take": 2,
+      "sentence_final": false
+    },
+    {
+      "phrase": 8,
+      "text": "심해로 가라앉았습니다.",
+      "start": 17.333,
+      "dur": 1.502,
+      "take": 3,
+      "sentence_final": true
+    }
+  ]
+}

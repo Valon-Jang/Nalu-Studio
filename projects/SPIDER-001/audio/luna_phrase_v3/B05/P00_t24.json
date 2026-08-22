@@ -1,0 +1,1 @@
+{"take": 24, "seed": 220071, "ok": false, "why": ["q_tail -0.9", "q_rel -0.10"], "metrics": {"dur": 2.091, "median_hz": 254.0, "range_st": 9.52, "end_slope": -0.58, "first_hz": 369.7, "last_hz": 246.8, "tail_delta": -0.95, "final_glide": 6.6, "final_rebound": 4.8}, "n_syl": 13, "numeric": false, "text": "그럼 실은 어떻게 만들어질까요.", "temp": 0.87, "gen_s": 43.6}

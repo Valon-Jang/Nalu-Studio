@@ -1,0 +1,1 @@
+{"take": 22, "seed": 308958, "ok": false, "why": ["rate 4.97", "glide -21.3", "rebound +0.0"], "metrics": {"dur": 1.408, "median_hz": 229.6, "range_st": 6.4, "end_slope": -9.31, "first_hz": 248.2, "last_hz": 182.7, "tail_delta": -1.8, "final_glide": -21.3, "final_rebound": 0.0}, "n_syl": 7, "numeric": false, "text": "진짜 가능할까요.", "temp": 0.87, "gen_s": 37.9}

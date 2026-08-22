@@ -1,0 +1,1 @@
+{"take": 12, "seed": 229771, "ok": false, "why": ["rate 4.91", "tail -1.4", "rel_fall -0.20"], "metrics": {"dur": 2.24, "median_hz": 250.3, "range_st": 7.35, "end_slope": -3.44, "first_hz": 329.4, "last_hz": 222.4, "tail_delta": -1.4, "final_glide": 8.0, "final_rebound": 3.0}, "n_syl": 11, "numeric": false, "text": "즉 강성은 강철보다 낮아요.", "temp": 0.9, "gen_s": 45.2}

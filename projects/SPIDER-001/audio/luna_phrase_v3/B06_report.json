@@ -1,0 +1,55 @@
+{
+  "id": "B06",
+  "picks": [
+    3,
+    20,
+    3,
+    6,
+    11
+  ],
+  "block_end_slope_median": -2.2,
+  "total_dur": 11.23,
+  "n_phrases": 5,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "웹슈터는 손목 통에 담긴 액체를 쏴서",
+      "start": 0.0,
+      "dur": 2.599,
+      "take": 3,
+      "sentence_final": false
+    },
+    {
+      "phrase": 1,
+      "text": "공기 중에 구친다는 설정이죠.",
+      "start": 2.602,
+      "dur": 2.001,
+      "take": 20,
+      "sentence_final": true
+    },
+    {
+      "phrase": 2,
+      "text": "성분과 강도는 근거가 있지만",
+      "start": 5.114,
+      "dur": 2.121,
+      "take": 3,
+      "sentence_final": false
+    },
+    {
+      "phrase": 3,
+      "text": "순식간에 실을 만들어",
+      "start": 7.249,
+      "dur": 1.553,
+      "take": 6,
+      "sentence_final": false
+    },
+    {
+      "phrase": 4,
+      "text": "정확히 쏘는 장치가 가장 큰 벽입니다.",
+      "start": 8.892,
+      "dur": 2.343,
+      "take": 11,
+      "sentence_final": true
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "text": "왜 케이블일까요.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "위성은 외딴 곳과 비상 연결을 돕지만",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "대륙 사이 대규모 데이터는 주로 해저 광섬유가 맡죠.",
+    "sentence_final": true,
+    "forced": false
+  },
+  {
+    "text": "여러 파장의 빛을 한 섬유에 함께 실어",
+    "sentence_final": false,
+    "forced": true
+  },
+  {
+    "text": "데이터를 보내는데요",
+    "sentence_final": false,
+    "forced": false
+  },
+  {
+    "text": "이 가느다란 유리는 어떻게 바다를 건널까요.",
+    "sentence_final": true,
+    "forced": false
+  }
+]

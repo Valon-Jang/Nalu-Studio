@@ -1,0 +1,64 @@
+{
+  "id": "B02",
+  "picks": [
+    12,
+    4,
+    22,
+    16,
+    0,
+    1
+  ],
+  "block_end_slope_median": -5.01,
+  "total_dur": 14.92,
+  "n_phrases": 6,
+  "timeline": [
+    {
+      "phrase": 0,
+      "text": "왜 케이블일까요.",
+      "start": 0.0,
+      "dur": 1.31,
+      "take": 12,
+      "sentence_final": true
+    },
+    {
+      "phrase": 1,
+      "text": "위성은 외딴 곳과 비상 연결을 돕지만",
+      "start": 1.748,
+      "dur": 2.471,
+      "take": 4,
+      "sentence_final": false
+    },
+    {
+      "phrase": 2,
+      "text": "대륙 사이 대규모 데이터는 주로 해저 광섬유가 맡죠.",
+      "start": 4.233,
+      "dur": 3.486,
+      "take": 22,
+      "sentence_final": true
+    },
+    {
+      "phrase": 3,
+      "text": "여러 파장의 빛을 한 섬유에 함께 실어",
+      "start": 8.128,
+      "dur": 2.3,
+      "take": 16,
+      "sentence_final": false
+    },
+    {
+      "phrase": 4,
+      "text": "데이터를 보내는데요",
+      "start": 10.527,
+      "dur": 1.481,
+      "take": 0,
+      "sentence_final": false
+    },
+    {
+      "phrase": 5,
+      "text": "이 가느다란 유리는 어떻게 바다를 건널까요.",
+      "start": 12.018,
+      "dur": 2.897,
+      "take": 1,
+      "sentence_final": true
+    }
+  ]
+}
