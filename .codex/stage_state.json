@@ -1,0 +1,23 @@
+{
+  "active_stage": "S00",
+  "approved_at": "2026-08-22T23:21:44+00:00",
+  "approved_by": "USER",
+  "plan_sha256": "1a9215450ae0e3a586248463f0f9dc99b4210f4ae426c3bf3adc11597ef7f927",
+  "project_id": "luna-validator-preference-ranker",
+  "protected_hashes": {
+    ".agents/skills/luna-narration/SKILL.md": "8ec5472cbdc2336814c27b020429483842e4782de433bf257fa7445afababe39",
+    ".codex/stage_plan.json": "1a9215450ae0e3a586248463f0f9dc99b4210f4ae426c3bf3adc11597ef7f927",
+    ".github/workflows/luna-stage-gate.yml": "858887a0a02503ed4ae2773dc0b07301d7b0f2fd0de6f5219d49595356ed7654",
+    "AGENTS.md": "641d187f174724a5e802804a324494bf1e3827e347bc735eac4f1a229f9fbf94",
+    "assets/voice_ref/B_voiced_spectral_micro_smooth.wav": "30c6d3405f46684af467c7d26ff40a2fb57dd48cc84cd24cf7403d9aa00a2bb9",
+    "assets/voice_ref/LUNA_PROSODY_TARGET.json": "267e79ec088933c9c43b6584e90bd04b2b4e77eaba3134a669d151c464458bae",
+    "docs/LUNA_VALIDATOR_RANKER_BUILD_SPEC.md": "6a3cdcfc88befede9de796dc6ee787e7ac6108d48c0d13f1d4b21afd1e1561f3",
+    "docs/STAGE_MODEL_MATRIX.md": "e8b715baf3719bd237b523f8c8735d41aa3ddbb8d353ce8b2d9703d1b1c3648a",
+    "tools/stage_gate.py": "4fa113e93b575d16b294332221552e0373fbe64899c477df7b0f035c75bda147"
+  },
+  "schema_version": 1,
+  "sequence": 0,
+  "signature": "e0009fecc01a0391d249f52aa8a9a99fdcb0b9be1e29cca2e0e118e0c878825d",
+  "stage_start_commit": "d5d2a3c669af223cbe798f48a90efa34cc88b67d",
+  "status": "ACTIVE"
+}
