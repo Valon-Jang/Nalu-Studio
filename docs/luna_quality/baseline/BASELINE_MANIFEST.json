@@ -1,0 +1,315 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2026-08-23T08:30:31.5007649+09:00",
+  "git_head": "417774ab6b7177f723b8bd75f5fb56fd25b5a0b0",
+  "stage_start_commit": "d5d2a3c669af223cbe798f48a90efa34cc88b67d",
+  "entry_point": "scripts/luna_narration_pipeline_v1.py",
+  "entry_point_sha256": "1454b6ba97653a98f32253050e85f2a0a19ed0621c78bdcfc8187db6a8c446d5",
+  "skill_path": ".agents/skills/luna-narration/SKILL.md",
+  "skill_sha256": "8ec5472cbdc2336814c27b020429483842e4782de433bf257fa7445afababe39",
+  "model_loader": {
+    "call": "ChatterboxMultilingualTTS.from_pretrained(device=\"cpu\", t3_model=\"v3\")",
+    "device": "cpu",
+    "sample_rate_hz": 24000,
+    "runtime_root": "engine/chatterbox-v3",
+    "source_path": "engine/chatterbox-v3/chatterbox",
+    "source_commit": "5de7a54aa4e5e2baadb0182dde554908b48b85c2",
+    "source_remote": "https://github.com/resemble-ai/chatterbox.git",
+    "hf_cache": "engine/chatterbox-v3/hf-cache",
+    "hf_repo": "ResembleAI/chatterbox",
+    "hf_snapshot_revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+    "t3_alias": "v3",
+    "t3_resolved_filename": "t3_mtl23ls_v3.safetensors",
+    "offline": true,
+    "conditionals_cache_used_by_entry_point": false
+  },
+  "model_checkpoint_files": [
+    {
+      "filename": "t3_mtl23ls_v3.safetensors",
+      "size_bytes": 2143989928,
+      "sha256": "5abca8321ede76f8e61f1cc0d19aea6c946b28871017ce8726f8a69203f05953"
+    },
+    {
+      "filename": "s3gen.pt",
+      "size_bytes": 1057165844,
+      "sha256": "9b9ff07e60b20c136e2b1b3d7563a24604e8d2c4c267888d1ee929dd0151d2a3"
+    },
+    {
+      "filename": "ve.pt",
+      "size_bytes": 5698626,
+      "sha256": "4b16d836bc598509860f6fa068165a8bb5e9ac84f05582dfcf278a5a372879f1"
+    },
+    {
+      "filename": "Cangjie5_TC.json",
+      "size_bytes": 1920163,
+      "sha256": "7073fd9de919443ae88e0bd2449917a65fe54898a4413ed1edcc4b67f28bce8c"
+    },
+    {
+      "filename": "conds.pt",
+      "size_bytes": 107374,
+      "sha256": "6552d70568833628ba019c6b03459e77fe71ca197d5c560cef9411bee9d87f4e"
+    },
+    {
+      "filename": "grapheme_mtl_merged_expanded_v1.json",
+      "size_bytes": 69989,
+      "sha256": "69632f47220a788a52ce2661d096453c5655e9bf25289d89a8d832c46ee07dbf"
+    }
+  ],
+  "model_checkpoint_root": "engine/chatterbox-v3/hf-cache/hub/models--ResembleAI--chatterbox/snapshots/5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+  "candidate_b_path": "assets/voice_ref/B_voiced_spectral_micro_smooth.wav",
+  "candidate_b_expected_sha256": "30c6d3405f46684af467c7d26ff40a2fb57dd48cc84cd24cf7403d9aa00a2bb9",
+  "candidate_b_actual_sha256": "30c6d3405f46684af467c7d26ff40a2fb57dd48cc84cd24cf7403d9aa00a2bb9",
+  "candidate_b_format": {
+    "channels": 1,
+    "sample_width_bits": 16,
+    "sample_rate_hz": 32000,
+    "frames": 468800,
+    "duration_seconds": 14.65
+  },
+  "prosody_target_path": "assets/voice_ref/LUNA_PROSODY_TARGET.json",
+  "prosody_target_sha256": "267e79ec088933c9c43b6584e90bd04b2b4e77eaba3134a669d151c464458bae",
+  "prosody_target_schema_version": "1.0",
+  "runtime_parameter_source_of_truth": [
+    "scripts/luna_narration_pipeline_v1.py",
+    ".agents/skills/luna-narration/SKILL.md"
+  ],
+  "fixed_parameters": {
+    "takes_default": 6,
+    "takes_question_or_forced": 10,
+    "early_stop": {
+      "minimum_takes": 3,
+      "minimum_passing": 2,
+      "minimum_quality": -3.0
+    },
+    "generation": {
+      "exaggeration": 0.5,
+      "cfg_weight": 0.5,
+      "temperature": 0.72,
+      "repetition_penalty": 1.2,
+      "min_p": 0.05,
+      "top_p": 1.0,
+      "language_id": "ko"
+    },
+    "escalation": {
+      "takes": 6,
+      "temperatures": [0.85, 0.87, 0.87]
+    },
+    "rate_syllables_per_second": {
+      "target": 6.54,
+      "normal": [5.6, 7.2],
+      "numeric": [4.4, 7.2],
+      "question": [5.2, 7.2]
+    },
+    "range_st": [4.0, 15.0],
+    "level_anchor_hz": 235.0,
+    "level_tolerance_st": 2.0,
+    "statement_end_slope": [-35.0, 8.0],
+    "statement_end_slope_prior": -12.0,
+    "final_non_question_slope_upper": -2.0,
+    "block_median_slope": [-20.0, -5.0],
+    "reset_st": [-4.0, 13.0],
+    "reset_target_st": 4.65,
+    "statement_tail_st_upper": -1.5,
+    "statement_relative_tail_upper": -0.28,
+    "question_tail_st": [-4.0, -1.5],
+    "question_relative_tail": [-0.4, -0.25],
+    "question_fallback_slope": [-10.0, -5.0],
+    "question_slope_prior": -6.5,
+    "final_glide_st_minimum": 4.0,
+    "final_rebound_st_minimum": 2.5,
+    "forced_slope": [-8.0, 4.0],
+    "forced_slope_prior": -2.0,
+    "pause_seconds": {
+      "continuation": [0.0, 0.02],
+      "final": [0.38, 0.6],
+      "forced": [0.05, 0.1]
+    },
+    "output_processing": {
+      "trim_pad_ms": 30,
+      "fade_ms": 12,
+      "rms_dbfs": -20.0,
+      "peak_guard": 0.89,
+      "sample_rate_hz": 24000,
+      "channels": 1,
+      "sample_width_bits": 16
+    },
+    "seed_formula": "(seed0 + phrase_index*104729 + take*7919) mod 2^31"
+  },
+  "output_contracts": {
+    "input_jobs": {
+      "shape": {"blocks": [{"id": "string", "text": "string", "seed": "integer"}]},
+      "preserved_project_jobs_found": 0
+    },
+    "paths": {
+      "phrases": "<OUTDIR>/<id>/phrases.json",
+      "take_wav": "<OUTDIR>/<id>/P##_tK.wav",
+      "take_metrics": "<OUTDIR>/<id>/P##_tK.json",
+      "final_wav": "<OUTDIR>/<id>_luna.wav",
+      "block_report": "<OUTDIR>/<id>_report.json",
+      "pipeline_report": "<OUTDIR>/pipeline_report.json",
+      "optional_pins": "<OUTDIR>/<id>_pins.json"
+    },
+    "pins_shape": {"P02": 5},
+    "final_wav_format": "mono PCM16 24000 Hz",
+    "inventory": {
+      "projects": ["SPIDER-001", "SUBSEA-001"],
+      "json_files": 1071,
+      "json_parse_failures": 0,
+      "take_json": 1035,
+      "take_wav": 1035,
+      "missing_take_pairs": 0,
+      "take_gate_pass": 233,
+      "take_gate_reject": 802,
+      "take_unmeasurable": 0,
+      "phrases_files": 17,
+      "block_reports": 17,
+      "pipeline_reports": 2,
+      "final_wavs": 17,
+      "pins_files": 0,
+      "all_project_wavs_valid_contract": true,
+      "take_rows_missing_text": 439,
+      "take_rows_missing_temperature": 153,
+      "take_rows_missing_current_tail_glide_metrics": 229,
+      "historical_temperature_0_9_rows": 120
+    }
+  },
+  "cache_contracts": {
+    "block_skip_condition": "<id>_report.json exists",
+    "block_skip_validates_input_text_or_hash": false,
+    "block_skip_validates_final_wav_exists": false,
+    "take_reuse_condition": "paired WAV and JSON both exist",
+    "stale_text_action": "delete pair and regenerate only when cached row contains text and it differs",
+    "legacy_row_without_text_validated_for_staleness": false,
+    "legacy_metrics_action": "remeasure and update JSON when current tail/glide metrics are absent",
+    "cached_rows_regated_with_current_rules": true,
+    "provenance_hashes_recorded_in_outputs": false,
+    "pin_override_can_select_rejected_take": true,
+    "no_passing_candidate_fallback": "any measurable take",
+    "conditionals_recomputed_per_generation": true
+  },
+  "test_commands": [
+    "python -m json.tool docs/luna_quality/baseline/BASELINE_MANIFEST.json",
+    "python -X utf8 -c \"compile(open('scripts/luna_narration_pipeline_v1.py', encoding='utf-8').read(), 'scripts/luna_narration_pipeline_v1.py', 'exec'); print('PASS')\"",
+    "python -X utf8 tools/stage_gate.py verify",
+    "python -X utf8 tools/stage_gate.py check-scope",
+    "git status --short"
+  ],
+  "dependency_versions": {
+    "python": "3.12.10",
+    "torch": "2.6.0+cpu",
+    "torchaudio": "2.6.0+cpu",
+    "librosa": "0.11.0",
+    "numpy": "1.26.4",
+    "safetensors": "0.5.3",
+    "huggingface_hub": "1.26.0",
+    "chatterbox-tts": "0.1.7",
+    "resemble-perth": "1.0.1"
+  },
+  "frozen_paths": [
+    "scripts/luna_narration_pipeline_v1.py",
+    ".agents/skills/luna-narration/SKILL.md",
+    "assets/voice_ref/B_voiced_spectral_micro_smooth.wav",
+    "assets/voice_ref/LUNA_PROSODY_TARGET.json",
+    "engine/chatterbox-v3/**",
+    "projects/SPIDER-001/audio/**",
+    "projects/SUBSEA-001/audio/**",
+    "projects/SUBSEA-001/NARRATION_TIMING_v3_0p1s.csv",
+    "projects/SUBSEA-001/NARRATION_TIMING_v3_0p1s.md"
+  ],
+  "frozen_final_wav_sha256": {
+    "projects/SPIDER-001/audio/luna_phrase_v3/B01_luna.wav": "779b51076dda5ad1fe7106e4b085eb986c6ea9e294b2e6a3980188fcdbef874b",
+    "projects/SPIDER-001/audio/luna_phrase_v3/B02_luna.wav": "417791c86f0955c0b7d69241f01b1d50615af70f4227353e2977ad938be920da",
+    "projects/SPIDER-001/audio/luna_phrase_v3/B03_luna.wav": "916fdeabddc7bb4cea983cd9dc1a0962ff8b9b7264b4afbf212d9faaf7987043",
+    "projects/SPIDER-001/audio/luna_phrase_v3/B04_luna.wav": "e4dc85704910cdcdc9506383f1059760f453700ce59d7396a0e659d7d7cee4fa",
+    "projects/SPIDER-001/audio/luna_phrase_v3/B05_luna.wav": "ca67c734ec42e0f316abbf87500720eb0e5874b4c5c61b41ea155310b866ba43",
+    "projects/SPIDER-001/audio/luna_phrase_v3/B06_luna.wav": "a21a756269417d5655c37cb9713c9e945ab7e8fc34047ebe63813009c0a55759",
+    "projects/SPIDER-001/audio/luna_phrase_v3/B07_luna.wav": "3ca69cea6135f291fd67f83983958b81792975090a171dbb57937b05b86c7774",
+    "projects/SPIDER-001/audio/luna_phrase_v3/B08_luna.wav": "4b3879dedf03c422ffaf2f429aca36a43350cb5258ffec1e3a1672a2d40e73e3",
+    "projects/SUBSEA-001/audio/luna_phrase_v3/B01_luna.wav": "20396c86c042f34d24c2a18fbd98452a085a24dfcf16d74c1a98645ab729afd4",
+    "projects/SUBSEA-001/audio/luna_phrase_v3/B02_luna.wav": "44dc329b7b89e57b9d4d56fe4a8fd92773b92dfaeb79b1f85fe1dedec24e6501",
+    "projects/SUBSEA-001/audio/luna_phrase_v3/B03_luna.wav": "61b6241d66d38b8ebc6eedfba26e145d678e98a34270b506f214edde7c4d1e91",
+    "projects/SUBSEA-001/audio/luna_phrase_v3/B04_luna.wav": "cc5743fb8e0ad9d79435004f1c51631851b3ef962957e1bf2905cf9bfb78ffcb",
+    "projects/SUBSEA-001/audio/luna_phrase_v3/B05_luna.wav": "c2d5d30c329ac09f2cdb54b64919a42076bd55353a0ee07bef5cc84478a8e669",
+    "projects/SUBSEA-001/audio/luna_phrase_v3/B06_luna.wav": "a411fba488325301ffd25bfc00ce13245abf77d69d391e2d60b86681655596f1",
+    "projects/SUBSEA-001/audio/luna_phrase_v3/B07A_luna.wav": "be581ed8d85a0f8ab62d4f3b3e9fe4c8fdafcad06fffc62a0b0c813906165643",
+    "projects/SUBSEA-001/audio/luna_phrase_v3/B07B_luna.wav": "28ff0c19f0ead627ad013c732252ab0507a71a64f5790c80c37b451336e87f68",
+    "projects/SUBSEA-001/audio/luna_phrase_v3/B08_notag_luna.wav": "1dd1bba04246bdb757278711eda1b23f42086cfb75f3e7a1a392ade0d342c956"
+  },
+  "frozen_timing_sha256": {
+    "projects/SUBSEA-001/NARRATION_TIMING_v3_0p1s.csv": "a0d62a04381d6fe54206e46514ddfa3feca2b643eef9b982ac3df1282211172f",
+    "projects/SUBSEA-001/NARRATION_TIMING_v3_0p1s.md": "5b4462304c9ae8903e99d9881fc7a7c87defdbe3d3f62cef98c2f3992269943a"
+  },
+  "integration_boundaries": [
+    {
+      "stages": "S01-S09",
+      "location": "scripts/luna_quality/",
+      "contract": "independent package/CLI; read existing JSON/WAV and write shadow outputs only"
+    },
+    {
+      "stage": "S10",
+      "location": "synthesize_block after take measurement/regating and before cands/beam selection",
+      "contract": "single default-off feature-flag hook; preserve existing output and fallback contracts"
+    }
+  ],
+  "unresolved_items": [
+    {
+      "id": "missing-prosody-measurement",
+      "status": "missing",
+      "detail": "LUNA_PROSODY_TARGET.json points to historical readiness/.../prosody_full_corpus_v2.json which is absent"
+    },
+    {
+      "id": "missing-brand-assets",
+      "status": "missing-intentional",
+      "detail": "CLAUDE.md states brand outro/video assets are intentionally outside this repository"
+    },
+    {
+      "id": "missing-tests-and-lock",
+      "status": "missing",
+      "detail": "no root tests, fixtures, pyproject, requirements, pytest or tox configuration"
+    },
+    {
+      "id": "missing-project-inputs-and-pins",
+      "status": "missing",
+      "detail": "no preserved project JOBS.json or _pins.json was found"
+    },
+    {
+      "id": "skill-copy-drift",
+      "status": "observed-risk",
+      "detail": ".agents and .claude Luna skill copies have different hashes; .agents is the Codex source of truth"
+    },
+    {
+      "id": "weak-block-cache-invalidation",
+      "status": "observed-risk",
+      "detail": "block report existence bypasses text/hash/final-WAV validation; legacy rows without text cannot be staleness-checked"
+    },
+    {
+      "id": "missing-output-provenance",
+      "status": "observed-risk",
+      "detail": "production does not verify Candidate B hash at runtime or persist model/reference/code hashes in outputs"
+    },
+    {
+      "id": "ignored-frozen-asset-protection",
+      "status": "observed-risk",
+      "detail": "Git scope cannot detect ignored runtime/project WAV changes; Candidate B alone has stage-gate hash protection"
+    },
+    {
+      "id": "windows-cp949-stage-status",
+      "status": "observed",
+      "detail": "stage_gate.py status raises UnicodeEncodeError under default CP949; python -X utf8 succeeds"
+    },
+    {
+      "id": "nested-hf-cache-tree",
+      "status": "observed-no-current-effect",
+      "detail": "snapshot contains a redundant nested models--ResembleAI--chatterbox tree; loader uses top-level snapshot files"
+    }
+  ],
+  "s00_mutations": {
+    "production_code": false,
+    "tests": false,
+    "dependencies": false,
+    "audio_generated_or_regenerated": false,
+    "cache_deleted_or_modified": false,
+    "rules_modified": false,
+    "next_stage_scaffold": false
+  }
+}
