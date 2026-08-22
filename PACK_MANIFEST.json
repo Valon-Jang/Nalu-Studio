@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-23",
+  "file_count": 27,
+  "files": [
+    {
+      "path": ".agents/skills/luna-narration/SKILL.md",
+      "sha256": "8ec5472cbdc2336814c27b020429483842e4782de433bf257fa7445afababe39",
+      "size": 8994
+    },
+    {
+      "path": ".codex/prompts/S00_REPO_AUDIT.md",
+      "sha256": "a84da07c0503527bb89b97c2fe68ded26b2e10764e78e821b6e60cc80d3c552e",
+      "size": 3012
+    },
+    {
+      "path": ".codex/prompts/S01_CONTRACTS_TEST_HARNESS.md",
+      "sha256": "cfba6995efaa0165b1de48e255b1efcc522e28220907fc61bd1b9d230cf2f50d",
+      "size": 2306
+    },
+    {
+      "path": ".codex/prompts/S02_CONDITIONALS_CACHE.md",
+      "sha256": "40b246cea17fa5c25687da541e85db542cef7c7fcfd45c5ac52f9275ca07a44b",
+      "size": 2151
+    },
+    {
+      "path": ".codex/prompts/S03_AUDIO_SANITY_VALIDATOR.md",
+      "sha256": "f80fa93918e1c8f4dbb3fa59d32e3a8359c4a3c11fffe7a4bc51c41d53e0d4b6",
+      "size": 1802
+    },
+    {
+      "path": ".codex/prompts/S04_CONTENT_ASR_ALIGNMENT.md",
+      "sha256": "f2393afff0e2bfa60ab7a566a9c63a3b0511a3819076fddb7ef7339eef30ed73",
+      "size": 2572
+    },
+    {
+      "path": ".codex/prompts/S05_SPEAKER_IDENTITY.md",
+      "sha256": "5cbf972e50e89fa9aecb8c6f24bff90ff784956f73fd8259734e974b55292a1c",
+      "size": 2268
+    },
+    {
+      "path": ".codex/prompts/S06_PROSODY_BANK.md",
+      "sha256": "33b95c82d61469e09566938c3bc74b242037d2f382ad9096874a60a31c76b35d",
+      "size": 2172
+    },
+    {
+      "path": ".codex/prompts/S07_PREFERENCE_RANKER.md",
+      "sha256": "87b8748366a83f78897fb565d015df89824c6aedb94490559ec62fba4f092590",
+      "size": 2833
+    },
+    {
+      "path": ".codex/prompts/S08_SHADOW_ORCHESTRATOR.md",
+      "sha256": "3b9587e57f66ed9a353aa0c5185068f6db6c559fdad687588bcd422de14cfb37",
+      "size": 2532
+    },
+    {
+      "path": ".codex/prompts/S09_HYBRID_SYNTHESIS_EXPERIMENT.md",
+      "sha256": "fbcdc6bb03bfffee87c47c87f37e54ff81cc6c29330b825d64897d1480e1673d",
+      "size": 2569
+    },
+    {
+      "path": ".codex/prompts/S10_PRODUCTION_INTEGRATION.md",
+      "sha256": "4332b71909ae0b5540d8b2f0518c03ddebcc76fe360be8d8bbc6e0d989f584b2",
+      "size": 3054
+    },
+    {
+      "path": ".codex/prompts/S11_RELEASE_AUDIT.md",
+      "sha256": "4bce5129a891f1af79d7ae6632f2d3690aa2f9c74d1490f60c0c80637e66a2f0",
+      "size": 2847
+    },
+    {
+      "path": ".codex/reports/REPORT_TEMPLATE.md",
+      "sha256": "9f47bf1124f5c0d388f92d952abc13a2118b91f31b866fc68ce6679aefb351b3",
+      "size": 529
+    },
+    {
+      "path": ".codex/stage_plan.json",
+      "sha256": "1a9215450ae0e3a586248463f0f9dc99b4210f4ae426c3bf3adc11597ef7f927",
+      "size": 9801
+    },
+    {
+      "path": ".github/CODEOWNERS.template",
+      "sha256": "66d778398de4012d55610e64b58154bbf7de4d3124bc6fced3dd5b294887f6c3",
+      "size": 384
+    },
+    {
+      "path": ".github/workflows/luna-stage-gate.yml",
+      "sha256": "858887a0a02503ed4ae2773dc0b07301d7b0f2fd0de6f5219d49595356ed7654",
+      "size": 715
+    },
+    {
+      "path": ".gitignore.append",
+      "sha256": "02e8628a6c4487142c5ef8abab28e85b4841033f1856830202bec7e9129523bf",
+      "size": 244
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "641d187f174724a5e802804a324494bf1e3827e347bc735eac4f1a229f9fbf94",
+      "size": 5707
+    },
+    {
+      "path": "LUNA_CODEX_MASTER_SPEC.md",
+      "sha256": "c7626cc0748df65db8266ecdbc4c23f0c5f1900adebba85b2f1056c388dbaac7",
+      "size": 3609
+    },
+    {
+      "path": "README_START_HERE.md",
+      "sha256": "c487e557c384fde903c3afc496dd66c02b48b80e86105984dc42e35d498ee62e",
+      "size": 7161
+    },
+    {
+      "path": "docs/LUNA_VALIDATOR_RANKER_BUILD_SPEC.md",
+      "sha256": "6a3cdcfc88befede9de796dc6ee787e7ac6108d48c0d13f1d4b21afd1e1561f3",
+      "size": 16661
+    },
+    {
+      "path": "docs/PACK_TEST_RESULTS.md",
+      "sha256": "b15f58e8353c656f299c5f521b238e9a4676e02a438dab041bf87787fa833d40",
+      "size": 2088
+    },
+    {
+      "path": "docs/STAGE_GATE_SECURITY.md",
+      "sha256": "f9a5a720998eb05a70a6ae622f1c5036998f2701ec4b3524a4e2db4ed3ae2430",
+      "size": 1324
+    },
+    {
+      "path": "docs/STAGE_MODEL_MATRIX.md",
+      "sha256": "e8b715baf3719bd237b523f8c8735d41aa3ddbb8d353ce8b2d9703d1b1c3648a",
+      "size": 4708
+    },
+    {
+      "path": "docs/VERIFICATION_NOTES.md",
+      "sha256": "8dd25f50f61282bf176f6c67912877517a45b606fcf59ceff300f6d8c3539ff5",
+      "size": 2368
+    },
+    {
+      "path": "tools/stage_gate.py",
+      "sha256": "4fa113e93b575d16b294332221552e0373fbe64899c477df7b0f035c75bda147",
+      "size": 20878
+    }
+  ]
+}

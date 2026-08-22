@@ -1,0 +1,302 @@
+{
+  "schema_version": 1,
+  "project_id": "luna-validator-preference-ranker",
+  "policy": {
+    "one_stage_per_session": true,
+    "manual_advance_only": true,
+    "require_clean_worktree_for_completion": true,
+    "require_completion_request_for_advance": true,
+    "production_entry_point": "scripts/luna_narration_pipeline_v1.py",
+    "production_entry_point_locked_until": "S10",
+    "runtime_python": "engine/chatterbox-v3/venv/Scripts/python.exe",
+    "runtime_root": "engine/chatterbox-v3",
+    "candidate_b_reference": "assets/voice_ref/B_voiced_spectral_micro_smooth.wav",
+    "prosody_target": "assets/voice_ref/LUNA_PROSODY_TARGET.json"
+  },
+  "always_allowed_paths": [
+    ".codex/reports/**",
+    ".codex/completion_requests/**"
+  ],
+  "protected_files": [
+    "AGENTS.md",
+    ".agents/skills/luna-narration/SKILL.md",
+    "assets/voice_ref/B_voiced_spectral_micro_smooth.wav",
+    "assets/voice_ref/LUNA_PROSODY_TARGET.json",
+    "docs/LUNA_VALIDATOR_RANKER_BUILD_SPEC.md",
+    "docs/STAGE_MODEL_MATRIX.md",
+    ".codex/stage_plan.json",
+    "tools/stage_gate.py",
+    ".github/workflows/luna-stage-gate.yml"
+  ],
+  "stages": [
+    {
+      "id": "S00",
+      "name": "Repository audit and baseline freeze",
+      "prompt_file": ".codex/prompts/S00_REPO_AUDIT.md",
+      "model": "GPT-5.6 Sol",
+      "reasoning": "High",
+      "next_stage": "S01",
+      "allowed_paths": [
+        "docs/luna_quality/baseline/**"
+      ],
+      "forbidden_paths": [
+        "scripts/**",
+        "tests/**",
+        "assets/voice_ref/**",
+        "engine/chatterbox-v3/**",
+        "projects/**/audio/**"
+      ]
+    },
+    {
+      "id": "S01",
+      "name": "Contracts and deterministic test harness",
+      "prompt_file": ".codex/prompts/S01_CONTRACTS_TEST_HARNESS.md",
+      "model": "GPT-5.6 Terra",
+      "reasoning": "Standard",
+      "next_stage": "S02",
+      "allowed_paths": [
+        "scripts/luna_quality/__init__.py",
+        "scripts/luna_quality/contracts.py",
+        "scripts/luna_quality/config.py",
+        "scripts/luna_quality/hashing.py",
+        "scripts/luna_quality/capability.py",
+        "tests/luna_quality/**",
+        "docs/luna_quality/contracts/**",
+        "pyproject.toml",
+        "requirements*.txt"
+      ],
+      "forbidden_paths": [
+        "scripts/luna_narration_pipeline_v1.py",
+        "assets/voice_ref/**",
+        "engine/chatterbox-v3/**"
+      ]
+    },
+    {
+      "id": "S02",
+      "name": "Candidate B conditionals cache",
+      "prompt_file": ".codex/prompts/S02_CONDITIONALS_CACHE.md",
+      "model": "GPT-5.6 Terra",
+      "reasoning": "Standard",
+      "next_stage": "S03",
+      "allowed_paths": [
+        "scripts/luna_quality/conditionals/**",
+        "scripts/luna_quality/contracts.py",
+        "scripts/luna_quality/config.py",
+        "scripts/luna_quality/hashing.py",
+        "tests/luna_quality/**",
+        "docs/luna_quality/conditionals/**"
+      ],
+      "forbidden_paths": [
+        "scripts/luna_narration_pipeline_v1.py",
+        "assets/voice_ref/**",
+        "engine/chatterbox-v3/**"
+      ]
+    },
+    {
+      "id": "S03",
+      "name": "Audio sanity validator",
+      "prompt_file": ".codex/prompts/S03_AUDIO_SANITY_VALIDATOR.md",
+      "model": "GPT-5.6 Terra",
+      "reasoning": "Standard",
+      "next_stage": "S04",
+      "allowed_paths": [
+        "scripts/luna_quality/validators/__init__.py",
+        "scripts/luna_quality/validators/audio_sanity.py",
+        "scripts/luna_quality/contracts.py",
+        "scripts/luna_quality/config.py",
+        "tests/luna_quality/**",
+        "docs/luna_quality/validators/audio_sanity/**"
+      ],
+      "forbidden_paths": [
+        "scripts/luna_narration_pipeline_v1.py"
+      ]
+    },
+    {
+      "id": "S04",
+      "name": "Content ASR and WhisperX alignment validator",
+      "prompt_file": ".codex/prompts/S04_CONTENT_ASR_ALIGNMENT.md",
+      "model": "GPT-5.6 Terra",
+      "reasoning": "High",
+      "next_stage": "S05",
+      "allowed_paths": [
+        "scripts/luna_quality/adapters/__init__.py",
+        "scripts/luna_quality/validators/__init__.py",
+        "scripts/luna_quality/validators/content_asr.py",
+        "scripts/luna_quality/adapters/whisperx_adapter.py",
+        "scripts/luna_quality/text_normalization.py",
+        "scripts/luna_quality/contracts.py",
+        "scripts/luna_quality/config.py",
+        "tests/luna_quality/**",
+        "docs/luna_quality/validators/content_asr/**",
+        "pyproject.toml",
+        "requirements*.txt"
+      ],
+      "forbidden_paths": [
+        "scripts/luna_narration_pipeline_v1.py"
+      ]
+    },
+    {
+      "id": "S05",
+      "name": "Speaker identity validator and calibration",
+      "prompt_file": ".codex/prompts/S05_SPEAKER_IDENTITY.md",
+      "model": "GPT-5.6 Terra",
+      "reasoning": "High",
+      "next_stage": "S06",
+      "allowed_paths": [
+        "scripts/luna_quality/adapters/__init__.py",
+        "scripts/luna_quality/validators/__init__.py",
+        "scripts/luna_quality/validators/speaker_identity.py",
+        "scripts/luna_quality/adapters/speechbrain_adapter.py",
+        "scripts/luna_quality/adapters/chatterbox_ve_adapter.py",
+        "scripts/luna_quality/contracts.py",
+        "scripts/luna_quality/config.py",
+        "tests/luna_quality/**",
+        "docs/luna_quality/validators/speaker_identity/**",
+        "pyproject.toml",
+        "requirements*.txt"
+      ],
+      "forbidden_paths": [
+        "scripts/luna_narration_pipeline_v1.py"
+      ]
+    },
+    {
+      "id": "S06",
+      "name": "Prosody Bank schema and ingestion",
+      "prompt_file": ".codex/prompts/S06_PROSODY_BANK.md",
+      "model": "GPT-5.6 Sol",
+      "reasoning": "High",
+      "next_stage": "S07",
+      "allowed_paths": [
+        "scripts/luna_quality/prosody_bank/**",
+        "scripts/luna_quality/contracts.py",
+        "scripts/luna_quality/config.py",
+        "tests/luna_quality/**",
+        "docs/luna_quality/prosody_bank/**"
+      ],
+      "forbidden_paths": [
+        "scripts/luna_narration_pipeline_v1.py",
+        "assets/voice_ref/LUNA_PROSODY_TARGET.json",
+        "**/*_pins.json",
+        "*_pins.json",
+        "*_luna.wav"
+      ]
+    },
+    {
+      "id": "S07",
+      "name": "Preference Ranker training and offline evaluation",
+      "prompt_file": ".codex/prompts/S07_PREFERENCE_RANKER.md",
+      "model": "GPT-5.6 Sol",
+      "reasoning": "Extra High",
+      "next_stage": "S08",
+      "allowed_paths": [
+        "scripts/luna_quality/ranking/**",
+        "scripts/luna_quality/prosody_bank/queries.py",
+        "scripts/luna_quality/contracts.py",
+        "scripts/luna_quality/config.py",
+        "tests/luna_quality/**",
+        "docs/luna_quality/ranking/**",
+        "pyproject.toml",
+        "requirements*.txt"
+      ],
+      "forbidden_paths": [
+        "scripts/luna_narration_pipeline_v1.py"
+      ]
+    },
+    {
+      "id": "S08",
+      "name": "Shadow quality orchestrator",
+      "prompt_file": ".codex/prompts/S08_SHADOW_ORCHESTRATOR.md",
+      "model": "GPT-5.6 Terra",
+      "reasoning": "High",
+      "next_stage": "S09",
+      "allowed_paths": [
+        "scripts/luna_quality/orchestrator/**",
+        "scripts/luna_quality/cli.py",
+        "scripts/luna_quality/contracts.py",
+        "scripts/luna_quality/config.py",
+        "tests/luna_quality/**",
+        "docs/luna_quality/orchestrator/**"
+      ],
+      "forbidden_paths": [
+        "scripts/luna_narration_pipeline_v1.py"
+      ]
+    },
+    {
+      "id": "S09",
+      "name": "Hybrid synthesis isolated experiment",
+      "prompt_file": ".codex/prompts/S09_HYBRID_SYNTHESIS_EXPERIMENT.md",
+      "model": "GPT-5.6 Sol",
+      "reasoning": "Extra High",
+      "next_stage": "S10",
+      "allowed_paths": [
+        "scripts/luna_quality/experiments/__init__.py",
+        "scripts/luna_quality/experiments/hybrid_synthesis/**",
+        "scripts/luna_quality/cli.py",
+        "tests/luna_quality/**",
+        "docs/luna_quality/experiments/hybrid_synthesis/**",
+        "experiments/luna_quality/**"
+      ],
+      "forbidden_paths": [
+        "scripts/luna_narration_pipeline_v1.py",
+        "assets/voice_ref/**",
+        "engine/chatterbox-v3/**",
+        "**/*_luna.wav",
+        "**/*_pins.json",
+        "*_pins.json",
+        "*_luna.wav"
+      ]
+    },
+    {
+      "id": "S10",
+      "name": "Production integration behind feature flags",
+      "prompt_file": ".codex/prompts/S10_PRODUCTION_INTEGRATION.md",
+      "model": "GPT-5.6 Sol",
+      "reasoning": "High",
+      "next_stage": "S11",
+      "allowed_paths": [
+        "scripts/luna_quality/**",
+        "scripts/luna_narration_pipeline_v1.py",
+        "tests/luna_quality/**",
+        "tests/**luna_narration**",
+        "docs/luna_quality/integration/**",
+        "pyproject.toml",
+        "requirements*.txt"
+      ],
+      "forbidden_paths": [
+        "assets/voice_ref/**",
+        "engine/chatterbox-v3/**",
+        "**/*_pins.json",
+        "**/*_luna.wav",
+        "*_pins.json",
+        "*_luna.wav"
+      ]
+    },
+    {
+      "id": "S11",
+      "name": "Final regression, license, and release audit",
+      "prompt_file": ".codex/prompts/S11_RELEASE_AUDIT.md",
+      "model": "GPT-5.6 Sol",
+      "reasoning": "Extra High",
+      "next_stage": null,
+      "allowed_paths": [
+        "scripts/luna_quality/**",
+        "scripts/luna_narration_pipeline_v1.py",
+        "tests/luna_quality/**",
+        "tests/**luna_narration**",
+        "docs/luna_quality/release/**",
+        "docs/luna_quality/integration/**",
+        "pyproject.toml",
+        "requirements*.txt"
+      ],
+      "forbidden_paths": [
+        ".agents/skills/luna-narration/SKILL.md",
+        "assets/voice_ref/**",
+        "engine/chatterbox-v3/**",
+        "**/*_pins.json",
+        "**/*_luna.wav",
+        "*_pins.json",
+        "*_luna.wav"
+      ]
+    }
+  ]
+}

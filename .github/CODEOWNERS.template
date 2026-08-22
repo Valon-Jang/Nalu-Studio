@@ -1,0 +1,8 @@
+# Replace @REPOSITORY_OWNER with the actual GitHub account or team.
+/AGENTS.md @REPOSITORY_OWNER
+/.agents/skills/luna-narration/SKILL.md @REPOSITORY_OWNER
+/docs/LUNA_VALIDATOR_RANKER_BUILD_SPEC.md @REPOSITORY_OWNER
+/docs/STAGE_MODEL_MATRIX.md @REPOSITORY_OWNER
+/.codex/ @REPOSITORY_OWNER
+/tools/stage_gate.py @REPOSITORY_OWNER
+/.github/workflows/luna-stage-gate.yml @REPOSITORY_OWNER

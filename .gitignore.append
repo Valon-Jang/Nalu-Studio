@@ -1,0 +1,6 @@
+# Luna stage gate local completion requests are intentionally not committed.
+.codex/completion_requests/
+
+# Local experiment outputs and model caches must remain outside source control.
+experiments/luna_quality/**/outputs/
+.luna_quality_cache/
