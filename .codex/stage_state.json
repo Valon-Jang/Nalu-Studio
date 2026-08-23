@@ -1,20 +1,24 @@
 {
-  "active_stage": "S07",
-  "approved_at": "2026-08-23T00:55:13+00:00",
+  "active_stage": "S08",
+  "approved_at": "2026-08-23T01:11:55+00:00",
   "approved_by": "USER",
   "plan_sha256": "1a9215450ae0e3a586248463f0f9dc99b4210f4ae426c3bf3adc11597ef7f927",
-  "previous_stage": "S06",
+  "previous_stage": "S07",
   "previous_stage_changed_paths": [
-    ".codex/reports/S06_REPORT.md",
-    "docs/luna_quality/prosody_bank/S06_SCHEMA.md",
-    "scripts/luna_quality/prosody_bank/__init__.py",
-    "scripts/luna_quality/prosody_bank/ingest.py",
+    ".codex/reports/S07_REPORT.md",
+    "docs/luna_quality/ranking/S07_INSUFFICIENT_DATA.json",
+    "docs/luna_quality/ranking/S07_OFFLINE_EVALUATION.md",
     "scripts/luna_quality/prosody_bank/queries.py",
-    "scripts/luna_quality/prosody_bank/schema.py",
-    "scripts/luna_quality/prosody_bank/sqlite_store.py",
-    "tests/luna_quality/unit/test_prosody_bank.py"
+    "scripts/luna_quality/ranking/__init__.py",
+    "scripts/luna_quality/ranking/artifact.py",
+    "scripts/luna_quality/ranking/data.py",
+    "scripts/luna_quality/ranking/evaluate.py",
+    "scripts/luna_quality/ranking/features.py",
+    "scripts/luna_quality/ranking/pairwise.py",
+    "scripts/luna_quality/ranking/train.py",
+    "tests/luna_quality/unit/test_preference_ranker.py"
   ],
-  "previous_stage_report": ".codex/reports/S06_REPORT.md",
+  "previous_stage_report": ".codex/reports/S07_REPORT.md",
   "project_id": "luna-validator-preference-ranker",
   "protected_hashes": {
     ".agents/skills/luna-narration/SKILL.md": "8ec5472cbdc2336814c27b020429483842e4782de433bf257fa7445afababe39",
@@ -28,8 +32,8 @@
     "tools/stage_gate.py": "4fa113e93b575d16b294332221552e0373fbe64899c477df7b0f035c75bda147"
   },
   "schema_version": 1,
-  "sequence": 3,
-  "signature": "0afe3a36d1773059712c7218fabab34317eab4e1bdddc738fa5d32fc2066c0ef",
-  "stage_start_commit": "d091c0071326e20299bbec1959d3e2b19a5792f1",
+  "sequence": 4,
+  "signature": "a4e522b6157d594108c224f41e66e4b9c20488fcc7c0ae88ac618933d5849d9b",
+  "stage_start_commit": "34c2432c35acd7e2336958b540cc79fecba6de13",
   "status": "ACTIVE"
 }
