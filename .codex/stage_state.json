@@ -1,20 +1,20 @@
 {
-  "active_stage": "S06",
-  "approved_at": "2026-08-23T00:47:01+00:00",
+  "active_stage": "S07",
+  "approved_at": "2026-08-23T00:55:13+00:00",
   "approved_by": "USER",
   "plan_sha256": "1a9215450ae0e3a586248463f0f9dc99b4210f4ae426c3bf3adc11597ef7f927",
-  "previous_stage": "S05",
+  "previous_stage": "S06",
   "previous_stage_changed_paths": [
-    ".codex/reports/S05_REPORT.md",
-    "docs/luna_quality/validators/speaker_identity/S05_SPEAKER_IDENTITY.md",
-    "scripts/luna_quality/adapters/__init__.py",
-    "scripts/luna_quality/adapters/chatterbox_ve_adapter.py",
-    "scripts/luna_quality/adapters/speechbrain_adapter.py",
-    "scripts/luna_quality/validators/__init__.py",
-    "scripts/luna_quality/validators/speaker_identity.py",
-    "tests/luna_quality/unit/test_speaker_identity.py"
+    ".codex/reports/S06_REPORT.md",
+    "docs/luna_quality/prosody_bank/S06_SCHEMA.md",
+    "scripts/luna_quality/prosody_bank/__init__.py",
+    "scripts/luna_quality/prosody_bank/ingest.py",
+    "scripts/luna_quality/prosody_bank/queries.py",
+    "scripts/luna_quality/prosody_bank/schema.py",
+    "scripts/luna_quality/prosody_bank/sqlite_store.py",
+    "tests/luna_quality/unit/test_prosody_bank.py"
   ],
-  "previous_stage_report": ".codex/reports/S05_REPORT.md",
+  "previous_stage_report": ".codex/reports/S06_REPORT.md",
   "project_id": "luna-validator-preference-ranker",
   "protected_hashes": {
     ".agents/skills/luna-narration/SKILL.md": "8ec5472cbdc2336814c27b020429483842e4782de433bf257fa7445afababe39",
@@ -28,8 +28,8 @@
     "tools/stage_gate.py": "4fa113e93b575d16b294332221552e0373fbe64899c477df7b0f035c75bda147"
   },
   "schema_version": 1,
-  "sequence": 2,
-  "signature": "978c7cf9b68d746d950bf12d469287eb9ed1c8891c6a86110421159200550f5c",
-  "stage_start_commit": "3d248d2b5dfaf38dd022c1f65ef92e0bb38c25ad",
+  "sequence": 3,
+  "signature": "0afe3a36d1773059712c7218fabab34317eab4e1bdddc738fa5d32fc2066c0ef",
+  "stage_start_commit": "d091c0071326e20299bbec1959d3e2b19a5792f1",
   "status": "ACTIVE"
 }
