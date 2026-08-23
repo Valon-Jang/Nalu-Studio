@@ -1,0 +1,45 @@
+{
+  "artifact_schema_version": "luna-ranker-artifact/1",
+  "data_sufficiency": {
+    "block_count": 0,
+    "dataset_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "feature_missing_rate": null,
+    "minimum_requirements": {
+      "blocks": 5,
+      "pairs": 150,
+      "pinned_phrases": 50,
+      "recommended_projects": 2
+    },
+    "pair_count": 0,
+    "pinned_phrase_count": 0,
+    "project_concentration": null,
+    "project_count": 0,
+    "reasons": [
+      "pinned_phrases_below_minimum",
+      "pairs_below_minimum",
+      "blocks_below_minimum"
+    ],
+    "sentence_class_distribution": {},
+    "status": "insufficient_data",
+    "warnings": [
+      "project_holdout_unavailable",
+      "feature_missing_rate_not_measurable"
+    ]
+  },
+  "evidence": {
+    "observation": "No preserved historical prosody measurements or project jobs/pins are available in the repository.",
+    "source": ".codex/reports/S00_REPORT.md"
+  },
+  "feature_schema_hash": "1bab4668d8b30e3b5e57c24792cac1ad96babf6c22cc5a94206604ec7b067cd2",
+  "feature_version": "luna-preference-features/1",
+  "model": null,
+  "metadata": {
+    "model_id": "luna-pairwise-logistic/1",
+    "source_hashes": []
+  },
+  "safety": {
+    "production_integration": "off",
+    "ranker_enabled": false
+  },
+  "status": "insufficient_data"
+}
