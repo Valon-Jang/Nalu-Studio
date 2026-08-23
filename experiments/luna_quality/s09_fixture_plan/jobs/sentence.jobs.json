@@ -1,0 +1,142 @@
+{
+  "candidate_budget_per_script": 2,
+  "candidates": [
+    {
+      "audio_relative_path": "candidates/sentence/fixture-script-01/fixture-script-01.sentence.c000.wav",
+      "candidate_id": "fixture-script-01.sentence.c000",
+      "candidate_index": 0,
+      "metadata_relative_path": "candidates/sentence/fixture-script-01/fixture-script-01.sentence.c000.json",
+      "mode": "sentence",
+      "script_id": "fixture-script-01",
+      "seed": 407,
+      "segment_job_ids": [
+        "fixture-script-01.sentence.c000.s000",
+        "fixture-script-01.sentence.c000.s001"
+      ]
+    },
+    {
+      "audio_relative_path": "candidates/sentence/fixture-script-01/fixture-script-01.sentence.c001.wav",
+      "candidate_id": "fixture-script-01.sentence.c001",
+      "candidate_index": 1,
+      "metadata_relative_path": "candidates/sentence/fixture-script-01/fixture-script-01.sentence.c001.json",
+      "mode": "sentence",
+      "script_id": "fixture-script-01",
+      "seed": 105136,
+      "segment_job_ids": [
+        "fixture-script-01.sentence.c001.s000",
+        "fixture-script-01.sentence.c001.s001"
+      ]
+    }
+  ],
+  "experiment_id": "s09-fixture",
+  "generation": {
+    "assembly_policy": {
+      "continuation_pause_seconds": [
+        0.0,
+        0.02
+      ],
+      "fade_seconds": 0.012,
+      "forced_clause_pause_seconds": [
+        0.05,
+        0.1
+      ],
+      "peak_guard": 0.89,
+      "policy_version": "s09-production-pause-mirror/1",
+      "sentence_final_pause_seconds": [
+        0.38,
+        0.6
+      ],
+      "source": "scripts/luna_narration_pipeline_v1.py:53-57,547-582",
+      "target_rms_dbfs": -20.0
+    },
+    "parameters": {
+      "candidate": "B",
+      "cfg_weight": 0.5,
+      "engine": "Chatterbox Multilingual V3",
+      "exaggeration": 0.5,
+      "language_id": "ko",
+      "min_p": 0.05,
+      "repetition_penalty": 1.2,
+      "t3_model": "v3",
+      "temperature": 0.72,
+      "top_p": 1.0
+    },
+    "reference_voice": {
+      "path": "assets/voice_ref/B_voiced_spectral_micro_smooth.wav",
+      "sha256": "30c6d3405f46684af467c7d26ff40a2fb57dd48cc84cd24cf7403d9aa00a2bb9"
+    }
+  },
+  "jobs": [
+    {
+      "audio_relative_path": "segments/sentence/fixture-script-01/fixture-script-01.sentence.c000/fixture-script-01.sentence.c000.s000.wav",
+      "candidate_id": "fixture-script-01.sentence.c000",
+      "candidate_index": 0,
+      "execution_eligible": true,
+      "job_id": "fixture-script-01.sentence.c000.s000",
+      "metadata_relative_path": "segments/sentence/fixture-script-01/fixture-script-01.sentence.c000/fixture-script-01.sentence.c000.s000.json",
+      "mode": "sentence",
+      "script_id": "fixture-script-01",
+      "seed": 407,
+      "segment_id": "fixture-script-01.sentence.s000",
+      "segment_index": 0,
+      "text": "바닷속 케이블을 살펴봅니다."
+    },
+    {
+      "audio_relative_path": "segments/sentence/fixture-script-01/fixture-script-01.sentence.c000/fixture-script-01.sentence.c000.s001.wav",
+      "candidate_id": "fixture-script-01.sentence.c000",
+      "candidate_index": 0,
+      "execution_eligible": true,
+      "job_id": "fixture-script-01.sentence.c000.s001",
+      "metadata_relative_path": "segments/sentence/fixture-script-01/fixture-script-01.sentence.c000/fixture-script-01.sentence.c000.s001.json",
+      "mode": "sentence",
+      "script_id": "fixture-script-01",
+      "seed": 8326,
+      "segment_id": "fixture-script-01.sentence.s001",
+      "segment_index": 1,
+      "text": "데이터의 흐름도 함께 확인합니다."
+    },
+    {
+      "audio_relative_path": "segments/sentence/fixture-script-01/fixture-script-01.sentence.c001/fixture-script-01.sentence.c001.s000.wav",
+      "candidate_id": "fixture-script-01.sentence.c001",
+      "candidate_index": 1,
+      "execution_eligible": true,
+      "job_id": "fixture-script-01.sentence.c001.s000",
+      "metadata_relative_path": "segments/sentence/fixture-script-01/fixture-script-01.sentence.c001/fixture-script-01.sentence.c001.s000.json",
+      "mode": "sentence",
+      "script_id": "fixture-script-01",
+      "seed": 105136,
+      "segment_id": "fixture-script-01.sentence.s000",
+      "segment_index": 0,
+      "text": "바닷속 케이블을 살펴봅니다."
+    },
+    {
+      "audio_relative_path": "segments/sentence/fixture-script-01/fixture-script-01.sentence.c001/fixture-script-01.sentence.c001.s001.wav",
+      "candidate_id": "fixture-script-01.sentence.c001",
+      "candidate_index": 1,
+      "execution_eligible": true,
+      "job_id": "fixture-script-01.sentence.c001.s001",
+      "metadata_relative_path": "segments/sentence/fixture-script-01/fixture-script-01.sentence.c001/fixture-script-01.sentence.c001.s001.json",
+      "mode": "sentence",
+      "script_id": "fixture-script-01",
+      "seed": 113055,
+      "segment_id": "fixture-script-01.sentence.s001",
+      "segment_index": 1,
+      "text": "데이터의 흐름도 함께 확인합니다."
+    }
+  ],
+  "mode": "sentence",
+  "plan_schema_version": "luna-hybrid-plan/1",
+  "safety_limits": {
+    "dry_run_token_method": "utf8_byte_count_plus_framing_conservative_upper_bound",
+    "experiment_max_estimated_audio_seconds": 32.0,
+    "integration_overflow_policy": "fail_without_generation",
+    "integration_token_method": "actual_pinned_chatterbox_tokenizer_plus_framing",
+    "model_config_max_speech_tokens": 4096,
+    "model_max_text_tokens": 2048,
+    "runtime_max_audio_seconds_after_terminal_token_drop": 39.96,
+    "runtime_max_new_speech_tokens": 1000,
+    "speech_token_rate_hz": 25,
+    "text_framing_tokens": 2
+  },
+  "schema_version": "luna-hybrid-jobs/1"
+}

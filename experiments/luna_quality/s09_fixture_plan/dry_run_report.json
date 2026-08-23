@@ -1,0 +1,36 @@
+{
+  "audio_generated": false,
+  "collision_count": 0,
+  "errors": [],
+  "experiment_id": "s09-fixture",
+  "mode_results": {
+    "existing_phrase": {
+      "candidate_count": 2,
+      "execution_eligible_job_count": 4,
+      "generation_job_count": 4,
+      "status": "pass"
+    },
+    "hybrid": {
+      "candidate_count": 2,
+      "execution_eligible_job_count": 4,
+      "generation_job_count": 4,
+      "status": "pass"
+    },
+    "sentence": {
+      "candidate_count": 2,
+      "execution_eligible_job_count": 4,
+      "generation_job_count": 4,
+      "status": "pass"
+    }
+  },
+  "model_loaded": false,
+  "planned_candidate_count": 6,
+  "planned_generation_job_count": 12,
+  "planned_output_count": 40,
+  "production_cache_changed": false,
+  "production_pipeline_changed": false,
+  "production_selection_changed": false,
+  "promotion_performed": false,
+  "schema_version": "luna-hybrid-dry-run/1",
+  "status": "pass"
+}

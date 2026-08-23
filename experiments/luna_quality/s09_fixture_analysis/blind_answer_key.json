@@ -1,0 +1,19 @@
+{
+  "entries": [
+    {
+      "blind_id": "B0001",
+      "candidate_id": "fixture-script-01.existing_phrase.c000",
+      "mode": "existing_phrase",
+      "source_audio_relative_path": "fixture_audio/existing_phrase.wav"
+    },
+    {
+      "blind_id": "B0002",
+      "candidate_id": "fixture-script-01.sentence.c000",
+      "mode": "sentence",
+      "source_audio_relative_path": "fixture_audio/sentence.wav"
+    }
+  ],
+  "experiment_id": "s09-fixture-evidence",
+  "keep_separate_from_listeners": true,
+  "schema_version": "luna-hybrid-blind-answer-key/1"
+}

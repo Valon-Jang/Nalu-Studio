@@ -1,0 +1,86 @@
+{
+  "schema_version": "luna-hybrid-generation-results/1",
+  "experiment_id": "s09-fixture-evidence",
+  "fixture_kind": "synthetic_metrics_no_audio_generation",
+  "production_pipeline_changed": false,
+  "production_cache_changed": false,
+  "production_selection_changed": false,
+  "promotion_performed": false,
+  "results": [
+    {
+      "candidate_id": "fixture-script-01.existing_phrase.c000",
+      "script_id": "fixture-script-01",
+      "mode": "existing_phrase",
+      "status": "pass",
+      "failure_reasons": [],
+      "audio_relative_path": "fixture_audio/existing_phrase.wav",
+      "duration_seconds": 8.2,
+      "generation_seconds": 14.1,
+      "assembly_seconds": 0.3,
+      "signals": {
+        "hallucination": false,
+        "repetition": false,
+        "speaker_drift": false,
+        "abnormal_silence": false
+      },
+      "validations": [
+        {"validator_name": "content_accuracy", "status": "pass", "hard_gate": true, "score": 0.98},
+        {"validator_name": "audio_sanity", "status": "pass", "hard_gate": true},
+        {"validator_name": "speaker_similarity", "status": "pass", "hard_gate": true, "score": 0.83},
+        {"validator_name": "existing_prosody_gates", "status": "pass", "hard_gate": true, "score": 0.78},
+        {"validator_name": "phrase_transition", "status": "pass", "hard_gate": false, "score": 0.76},
+        {"validator_name": "boundary_alignment", "status": "not_run", "hard_gate": false}
+      ]
+    },
+    {
+      "candidate_id": "fixture-script-01.sentence.c000",
+      "script_id": "fixture-script-01",
+      "mode": "sentence",
+      "status": "pass",
+      "failure_reasons": [],
+      "audio_relative_path": "fixture_audio/sentence.wav",
+      "duration_seconds": 7.8,
+      "generation_seconds": 12.4,
+      "assembly_seconds": 0.1,
+      "signals": {
+        "hallucination": false,
+        "repetition": false,
+        "speaker_drift": false,
+        "abnormal_silence": false
+      },
+      "validations": [
+        {"validator_name": "content_accuracy", "status": "pass", "hard_gate": true, "score": 0.97},
+        {"validator_name": "audio_sanity", "status": "pass", "hard_gate": true},
+        {"validator_name": "speaker_similarity", "status": "pass", "hard_gate": true, "score": 0.81},
+        {"validator_name": "existing_prosody_gates", "status": "pass", "hard_gate": true, "score": 0.8},
+        {"validator_name": "phrase_transition", "status": "pass", "hard_gate": false, "score": 0.85},
+        {"validator_name": "boundary_alignment", "status": "pass", "hard_gate": false, "score": 0.96}
+      ]
+    },
+    {
+      "candidate_id": "fixture-script-01.hybrid.c000",
+      "script_id": "fixture-script-01",
+      "mode": "hybrid",
+      "status": "pass",
+      "failure_reasons": [],
+      "audio_relative_path": "fixture_audio/hybrid.wav",
+      "duration_seconds": 8.0,
+      "generation_seconds": 13.2,
+      "assembly_seconds": 0.2,
+      "signals": {
+        "hallucination": false,
+        "repetition": true,
+        "speaker_drift": false,
+        "abnormal_silence": false
+      },
+      "validations": [
+        {"validator_name": "content_accuracy", "status": "fail", "hard_gate": true, "score": 0.7, "reasons": ["fixture_repetition_content_error"]},
+        {"validator_name": "audio_sanity", "status": "pass", "hard_gate": true},
+        {"validator_name": "speaker_similarity", "status": "pass", "hard_gate": true, "score": 0.8},
+        {"validator_name": "existing_prosody_gates", "status": "pass", "hard_gate": true, "score": 0.77},
+        {"validator_name": "phrase_transition", "status": "pass", "hard_gate": false, "score": 0.82},
+        {"validator_name": "boundary_alignment", "status": "not_run", "hard_gate": false}
+      ]
+    }
+  ]
+}

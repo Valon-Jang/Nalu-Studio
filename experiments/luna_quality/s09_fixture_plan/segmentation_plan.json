@@ -1,0 +1,222 @@
+{
+  "experiment_id": "s09-fixture",
+  "fairness": {
+    "candidate_unit": "complete_script_assembly",
+    "generation_job_count_varies_only_with_mode_segmentation": true,
+    "same_candidate_budget_per_script_and_mode": 2,
+    "same_candidate_reference": true,
+    "same_fixed_generation_parameters": true,
+    "same_script_set": true,
+    "same_seed_derivation": "base+104729*candidate_index+7919*segment_index modulo 2147483647"
+  },
+  "generation": {
+    "assembly_policy": {
+      "continuation_pause_seconds": [
+        0.0,
+        0.02
+      ],
+      "fade_seconds": 0.012,
+      "forced_clause_pause_seconds": [
+        0.05,
+        0.1
+      ],
+      "peak_guard": 0.89,
+      "policy_version": "s09-production-pause-mirror/1",
+      "sentence_final_pause_seconds": [
+        0.38,
+        0.6
+      ],
+      "source": "scripts/luna_narration_pipeline_v1.py:53-57,547-582",
+      "target_rms_dbfs": -20.0
+    },
+    "parameters": {
+      "candidate": "B",
+      "cfg_weight": 0.5,
+      "engine": "Chatterbox Multilingual V3",
+      "exaggeration": 0.5,
+      "language_id": "ko",
+      "min_p": 0.05,
+      "repetition_penalty": 1.2,
+      "t3_model": "v3",
+      "temperature": 0.72,
+      "top_p": 1.0
+    },
+    "reference_voice": {
+      "path": "assets/voice_ref/B_voiced_spectral_micro_smooth.wav",
+      "sha256": "30c6d3405f46684af467c7d26ff40a2fb57dd48cc84cd24cf7403d9aa00a2bb9"
+    }
+  },
+  "input_schema_version": "luna-hybrid-input/1",
+  "input_sha256": "f5cd304963a37d2caca452cff7352fb79977799902d2b737d83d76ba167443cb",
+  "job_manifests": {
+    "existing_phrase": "jobs/existing_phrase.jobs.json",
+    "hybrid": "jobs/hybrid.jobs.json",
+    "sentence": "jobs/sentence.jobs.json"
+  },
+  "output_root": "experiments/luna_quality/s09_fixture_plan",
+  "production_isolation": {
+    "frozen_project_excluded": true,
+    "production_cache_changed": false,
+    "production_pipeline_changed": false,
+    "promotion_permitted": false
+  },
+  "runtime_provenance": {
+    "limits_verified_from_pinned_runtime": true,
+    "source_hashes": {
+      "assets/voice_ref/B_voiced_spectral_micro_smooth.wav": "30c6d3405f46684af467c7d26ff40a2fb57dd48cc84cd24cf7403d9aa00a2bb9",
+      "engine/chatterbox-v3/chatterbox/src/chatterbox/models/s3tokenizer/s3tokenizer.py": "8da30a6d978b5071761899d913b31f1fe9ae766a07c316a970b529cfcd0f0aa4",
+      "engine/chatterbox-v3/chatterbox/src/chatterbox/models/t3/modules/t3_config.py": "2a5f8a336d9839cedf1c834c020ddc8980ca63c6e4c654bf4efd894b91dcafef",
+      "engine/chatterbox-v3/chatterbox/src/chatterbox/mtl_tts.py": "96fd2dfbd947d3b617fdada8721264bc6597799e81ebf8e43603f083f72fe433",
+      "scripts/luna_narration_pipeline_v1.py": "1454b6ba97653a98f32253050e85f2a0a19ed0621c78bdcfc8187db6a8c446d5"
+    }
+  },
+  "safety_limits": {
+    "dry_run_token_method": "utf8_byte_count_plus_framing_conservative_upper_bound",
+    "experiment_max_estimated_audio_seconds": 32.0,
+    "integration_overflow_policy": "fail_without_generation",
+    "integration_token_method": "actual_pinned_chatterbox_tokenizer_plus_framing",
+    "model_config_max_speech_tokens": 4096,
+    "model_max_text_tokens": 2048,
+    "runtime_max_audio_seconds_after_terminal_token_drop": 39.96,
+    "runtime_max_new_speech_tokens": 1000,
+    "speech_token_rate_hz": 25,
+    "text_framing_tokens": 2
+  },
+  "schema_version": "luna-hybrid-plan/1",
+  "scripts": [
+    {
+      "base_seed": 407,
+      "modes": {
+        "existing_phrase": {
+          "candidate_budget": 2,
+          "candidate_count": 2,
+          "generation_job_count": 4,
+          "segments": [
+            {
+              "conservative_text_token_upper_bound": 41,
+              "estimated_audio_seconds": 3.0,
+              "forced": false,
+              "mode": "existing_phrase",
+              "safety_reasons": [],
+              "safety_status": "pass",
+              "script_id": "fixture-script-01",
+              "segment_id": "fixture-script-01.existing_phrase.s000",
+              "segment_index": 0,
+              "sentence_final": true,
+              "strategy": "provided_existing_phrase",
+              "text": "바닷속 케이블을 살펴봅니다.",
+              "text_sha256": "61098a4010e2a3411b1a364af941e4be04e87af70620fdcbf70996fd0e329a31"
+            },
+            {
+              "conservative_text_token_upper_bound": 48,
+              "estimated_audio_seconds": 3.5,
+              "forced": false,
+              "mode": "existing_phrase",
+              "safety_reasons": [],
+              "safety_status": "pass",
+              "script_id": "fixture-script-01",
+              "segment_id": "fixture-script-01.existing_phrase.s001",
+              "segment_index": 1,
+              "sentence_final": true,
+              "strategy": "provided_existing_phrase",
+              "text": "데이터의 흐름도 함께 확인합니다.",
+              "text_sha256": "8468d77abe2bedc69b658a51a258e4455575ba33e389f40ac9ef70e1d7d70737"
+            }
+          ],
+          "status": "pass"
+        },
+        "hybrid": {
+          "candidate_budget": 2,
+          "candidate_count": 2,
+          "generation_job_count": 4,
+          "segments": [
+            {
+              "conservative_text_token_upper_bound": 41,
+              "estimated_audio_seconds": 3.0,
+              "forced": false,
+              "mode": "hybrid",
+              "safety_reasons": [],
+              "safety_status": "pass",
+              "script_id": "fixture-script-01",
+              "segment_id": "fixture-script-01.hybrid.s000",
+              "segment_index": 0,
+              "sentence_final": true,
+              "strategy": "sentence_or_semantic_clause",
+              "text": "바닷속 케이블을 살펴봅니다.",
+              "text_sha256": "61098a4010e2a3411b1a364af941e4be04e87af70620fdcbf70996fd0e329a31"
+            },
+            {
+              "conservative_text_token_upper_bound": 48,
+              "estimated_audio_seconds": 3.5,
+              "forced": false,
+              "mode": "hybrid",
+              "safety_reasons": [],
+              "safety_status": "pass",
+              "script_id": "fixture-script-01",
+              "segment_id": "fixture-script-01.hybrid.s001",
+              "segment_index": 1,
+              "sentence_final": true,
+              "strategy": "sentence_or_semantic_clause",
+              "text": "데이터의 흐름도 함께 확인합니다.",
+              "text_sha256": "8468d77abe2bedc69b658a51a258e4455575ba33e389f40ac9ef70e1d7d70737"
+            }
+          ],
+          "status": "pass"
+        },
+        "sentence": {
+          "candidate_budget": 2,
+          "candidate_count": 2,
+          "generation_job_count": 4,
+          "post_generation_boundary_extraction": {
+            "default_status": "not_run",
+            "methods": [
+              "asr",
+              "forced_alignment"
+            ],
+            "required": true,
+            "target_phrase_texts": [
+              "바닷속 케이블을 살펴봅니다.",
+              "데이터의 흐름도 함께 확인합니다."
+            ]
+          },
+          "segments": [
+            {
+              "conservative_text_token_upper_bound": 41,
+              "estimated_audio_seconds": 3.0,
+              "forced": false,
+              "mode": "sentence",
+              "safety_reasons": [],
+              "safety_status": "pass",
+              "script_id": "fixture-script-01",
+              "segment_id": "fixture-script-01.sentence.s000",
+              "segment_index": 0,
+              "sentence_final": true,
+              "strategy": "whole_sentence",
+              "text": "바닷속 케이블을 살펴봅니다.",
+              "text_sha256": "61098a4010e2a3411b1a364af941e4be04e87af70620fdcbf70996fd0e329a31"
+            },
+            {
+              "conservative_text_token_upper_bound": 48,
+              "estimated_audio_seconds": 3.5,
+              "forced": false,
+              "mode": "sentence",
+              "safety_reasons": [],
+              "safety_status": "pass",
+              "script_id": "fixture-script-01",
+              "segment_id": "fixture-script-01.sentence.s001",
+              "segment_index": 1,
+              "sentence_final": true,
+              "strategy": "whole_sentence",
+              "text": "데이터의 흐름도 함께 확인합니다.",
+              "text_sha256": "8468d77abe2bedc69b658a51a258e4455575ba33e389f40ac9ef70e1d7d70737"
+            }
+          ],
+          "status": "pass"
+        }
+      },
+      "script_id": "fixture-script-01",
+      "source_text": "바닷속 케이블을 살펴봅니다. 데이터의 흐름도 함께 확인합니다.",
+      "source_text_sha256": "49602af86269c97108ebb81d4188b2f462f20d3256752758e321f28482d65adf"
+    }
+  ]
+}

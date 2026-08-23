@@ -1,0 +1,36 @@
+{
+  "experiment_id": "s09-fixture-evidence",
+  "modes": {
+    "existing_phrase": {
+      "candidate_count": 1,
+      "mean_assembly_seconds": 0.3,
+      "mean_generation_seconds": 14.1,
+      "real_time_factor": 1.756098,
+      "total_assembly_seconds": 0.3,
+      "total_audio_seconds": 8.2,
+      "total_generation_seconds": 14.1,
+      "total_processing_seconds": 14.4
+    },
+    "hybrid": {
+      "candidate_count": 1,
+      "mean_assembly_seconds": 0.2,
+      "mean_generation_seconds": 13.2,
+      "real_time_factor": 1.675,
+      "total_assembly_seconds": 0.2,
+      "total_audio_seconds": 8.0,
+      "total_generation_seconds": 13.2,
+      "total_processing_seconds": 13.4
+    },
+    "sentence": {
+      "candidate_count": 1,
+      "mean_assembly_seconds": 0.1,
+      "mean_generation_seconds": 12.4,
+      "real_time_factor": 1.602564,
+      "total_assembly_seconds": 0.1,
+      "total_audio_seconds": 7.8,
+      "total_generation_seconds": 12.4,
+      "total_processing_seconds": 12.5
+    }
+  },
+  "schema_version": "luna-hybrid-timing/1"
+}

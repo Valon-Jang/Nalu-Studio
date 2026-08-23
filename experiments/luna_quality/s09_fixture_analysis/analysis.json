@@ -1,0 +1,250 @@
+{
+  "automatic_promotion_performed": false,
+  "evaluated_dimensions": [
+    "content_accuracy",
+    "abnormal_silence_or_repetition",
+    "speaker_similarity_or_drift",
+    "existing_prosody_gates",
+    "phrase_transition",
+    "sentence_boundary_alignment",
+    "duration",
+    "generation_timing",
+    "failure_rate",
+    "human_blind_preference"
+  ],
+  "experiment_id": "s09-fixture-evidence",
+  "fairness_check": {
+    "candidate_unit": "complete_script_assembly",
+    "per_script_mode_candidate_counts": {
+      "fixture-script-01": {
+        "existing_phrase": 1,
+        "hybrid": 1,
+        "sentence": 1
+      }
+    },
+    "status": "pass",
+    "violating_script_ids": []
+  },
+  "human_preference_import": {
+    "allowed_preference": "one blind_id from the referenced comparison",
+    "optional_fields": [
+      "rejected_blind_ids",
+      "notes"
+    ],
+    "required_fields": [
+      "comparison_id",
+      "listener_id",
+      "preferred_blind_id"
+    ],
+    "schema_version": "luna-hybrid-human-preference/1"
+  },
+  "mode_order": [
+    "existing_phrase",
+    "sentence",
+    "hybrid"
+  ],
+  "modes": {
+    "existing_phrase": {
+      "candidate_count": 1,
+      "failed_candidate_count": 0,
+      "failure_rate": 0.0,
+      "mean_assembly_seconds": 0.3,
+      "mean_content_accuracy": 0.98,
+      "mean_duration_seconds": 8.2,
+      "mean_existing_prosody_score": 0.78,
+      "mean_generation_seconds": 14.1,
+      "mean_phrase_transition_score": 0.76,
+      "mean_speaker_similarity": 0.83,
+      "mode_failure_reasons": {},
+      "real_time_factor": 1.756098,
+      "signal_failure_counts": {
+        "abnormal_silence": 0,
+        "hallucination": 0,
+        "repetition": 0,
+        "speaker_drift": 0
+      },
+      "successful_candidate_count": 1,
+      "total_assembly_seconds": 0.3,
+      "total_duration_seconds": 8.2,
+      "total_generation_seconds": 14.1,
+      "total_processing_seconds": 14.4,
+      "validator_failure_reasons": {},
+      "validator_status_counts": {
+        "audio_sanity": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "boundary_alignment": {
+          "fail": 0,
+          "not_run": 1,
+          "pass": 0,
+          "unknown": 0
+        },
+        "content_accuracy": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "existing_prosody_gates": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "phrase_transition": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "speaker_similarity": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        }
+      }
+    },
+    "hybrid": {
+      "candidate_count": 1,
+      "failed_candidate_count": 1,
+      "failure_rate": 1.0,
+      "mean_assembly_seconds": 0.2,
+      "mean_content_accuracy": 0.7,
+      "mean_duration_seconds": 8.0,
+      "mean_existing_prosody_score": 0.77,
+      "mean_generation_seconds": 13.2,
+      "mean_phrase_transition_score": 0.82,
+      "mean_speaker_similarity": 0.8,
+      "mode_failure_reasons": {
+        "hard_gate:content_accuracy": 1,
+        "signal:repetition": 1
+      },
+      "real_time_factor": 1.675,
+      "signal_failure_counts": {
+        "abnormal_silence": 0,
+        "hallucination": 0,
+        "repetition": 1,
+        "speaker_drift": 0
+      },
+      "successful_candidate_count": 0,
+      "total_assembly_seconds": 0.2,
+      "total_duration_seconds": 8.0,
+      "total_generation_seconds": 13.2,
+      "total_processing_seconds": 13.4,
+      "validator_failure_reasons": {
+        "content_accuracy:fixture_repetition_content_error": 1
+      },
+      "validator_status_counts": {
+        "audio_sanity": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "boundary_alignment": {
+          "fail": 0,
+          "not_run": 1,
+          "pass": 0,
+          "unknown": 0
+        },
+        "content_accuracy": {
+          "fail": 1,
+          "not_run": 0,
+          "pass": 0,
+          "unknown": 0
+        },
+        "existing_prosody_gates": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "phrase_transition": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "speaker_similarity": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        }
+      }
+    },
+    "sentence": {
+      "candidate_count": 1,
+      "failed_candidate_count": 0,
+      "failure_rate": 0.0,
+      "mean_assembly_seconds": 0.1,
+      "mean_content_accuracy": 0.97,
+      "mean_duration_seconds": 7.8,
+      "mean_existing_prosody_score": 0.8,
+      "mean_generation_seconds": 12.4,
+      "mean_phrase_transition_score": 0.85,
+      "mean_speaker_similarity": 0.81,
+      "mode_failure_reasons": {},
+      "real_time_factor": 1.602564,
+      "signal_failure_counts": {
+        "abnormal_silence": 0,
+        "hallucination": 0,
+        "repetition": 0,
+        "speaker_drift": 0
+      },
+      "successful_candidate_count": 1,
+      "total_assembly_seconds": 0.1,
+      "total_duration_seconds": 7.8,
+      "total_generation_seconds": 12.4,
+      "total_processing_seconds": 12.5,
+      "validator_failure_reasons": {},
+      "validator_status_counts": {
+        "audio_sanity": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "boundary_alignment": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "content_accuracy": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "existing_prosody_gates": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "phrase_transition": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        },
+        "speaker_similarity": {
+          "fail": 0,
+          "not_run": 0,
+          "pass": 1,
+          "unknown": 0
+        }
+      }
+    }
+  },
+  "production_selection_changed": false,
+  "promotion_recommendation": "not_permitted_in_s09",
+  "schema_version": "luna-hybrid-analysis/1",
+  "source_results_file_sha256": "650b4fecbf2711769592b5a501a518a67dea7fb52a58624acd0b3ed2c96871bb",
+  "source_results_sha256": "b140880f1250d42ebcc1e2b9f4a1df274248f9c2adb75f5ac35a2fcf476ed75f"
+}

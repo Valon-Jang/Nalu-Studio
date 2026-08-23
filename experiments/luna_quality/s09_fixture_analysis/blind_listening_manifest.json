@@ -1,0 +1,28 @@
+{
+  "comparisons": [
+    {
+      "blind_ids": [
+        "B0001",
+        "B0002"
+      ],
+      "comparison_id": "s09-fixture-evidence.fixture-script-01",
+      "script_id": "fixture-script-01"
+    }
+  ],
+  "entries": [
+    {
+      "blind_id": "B0001",
+      "package_relative_path": "blind_audio/B0001.wav",
+      "script_id": "fixture-script-01"
+    },
+    {
+      "blind_id": "B0002",
+      "package_relative_path": "blind_audio/B0002.wav",
+      "script_id": "fixture-script-01"
+    }
+  ],
+  "experiment_id": "s09-fixture-evidence",
+  "mode_labels_exposed": false,
+  "preference_import_schema_version": "luna-hybrid-human-preference/1",
+  "schema_version": "luna-hybrid-blind-package/1"
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "luna-hybrid-input/1",
+  "experiment_id": "s09-fixture",
+  "frozen_project": false,
+  "scripts": [
+    {
+      "script_id": "fixture-script-01",
+      "text": "바닷속 케이블을 살펴봅니다. 데이터의 흐름도 함께 확인합니다.",
+      "seed": 407,
+      "existing_phrases": [
+        {
+          "text": "바닷속 케이블을 살펴봅니다.",
+          "sentence_final": true
+        },
+        {
+          "text": "데이터의 흐름도 함께 확인합니다.",
+          "sentence_final": true
+        }
+      ]
+    }
+  ]
+}
