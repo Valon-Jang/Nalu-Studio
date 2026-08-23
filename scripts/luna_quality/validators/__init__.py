@@ -2,5 +2,6 @@
 
 from .audio_sanity import AudioSanityConfig, AudioSanityValidator
 from .content_asr import ContentAsrValidator
+from .speaker_identity import SpeakerIdentityValidator
 
-__all__ = ["AudioSanityConfig", "AudioSanityValidator", "ContentAsrValidator"]
+__all__ = ["AudioSanityConfig", "AudioSanityValidator", "ContentAsrValidator", "SpeakerIdentityValidator"]
