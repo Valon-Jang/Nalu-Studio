@@ -162,6 +162,18 @@ class ShadowOrchestratorTest(unittest.TestCase):
         self.assertTrue(payload["input"]["read_only_verified"])
         self.assertFalse(payload["production_selection_changed"])
 
+    def test_block_filter_excludes_unrequested_blocks(self):
+        other = self.outdir / "B02"
+        other.mkdir()
+        (other / "phrases.json").write_text(
+            json.dumps([{"text": "다른 문장입니다.", "sentence_final": True}], ensure_ascii=False), encoding="utf-8"
+        )
+        _take(other / "P00_t0.json", 0)
+        _wav(other / "P00_t0.wav")
+        report = ShadowOrchestrator().evaluate(self.outdir, block_ids={"B01"}).report
+        self.assertEqual([block["block_id"] for block in report["blocks"]], ["B01"])
+        self.assertEqual(report["input"]["block_filter"], ["B01"])
+
 
 if __name__ == "__main__":
     unittest.main()

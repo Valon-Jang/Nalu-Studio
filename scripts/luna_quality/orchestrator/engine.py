@@ -70,13 +70,14 @@ class ShadowOrchestrator:
         self.ranker_artifact = Path(ranker_artifact) if ranker_artifact else None
         self.policy = policy or ShadowPolicy()
 
-    def evaluate(self, outdir: str | Path) -> ShadowRunResult:
+    def evaluate(self, outdir: str | Path, *, block_ids: set[str] | None = None) -> ShadowRunResult:
         source = Path(outdir).resolve()
         if not source.is_dir():
             raise ValueError("outdir must be an existing directory")
+        selected_blocks = {str(item) for item in block_ids} if block_ids is not None else None
         before = _tree_manifest(source)
         started = time.perf_counter()
-        discovered, discovery_errors, selection_map = _discover(source)
+        discovered, discovery_errors, selection_map = _discover(source, selected_blocks)
         ranker = self._load_ranker()
         grouped: dict[tuple[str, int], list[DiscoveredTake]] = defaultdict(list)
         for take in discovered:
@@ -108,6 +109,7 @@ class ShadowOrchestrator:
                 "file_count": before["file_count"],
                 "source_manifest_sha256": before["manifest_sha256"],
                 "read_only_verified": read_only_verified,
+                "block_filter": sorted(selected_blocks) if selected_blocks is not None else None,
             },
             "policy": {"version": POLICY_VERSION, "config_hash": self.policy.config_hash},
             "capabilities": self._capabilities(ranker),
@@ -238,16 +240,18 @@ class ShadowOrchestrator:
         }
 
 
-def _discover(source: Path) -> tuple[list[DiscoveredTake], list[dict[str, str]], dict[tuple[str, int], dict[str, Any]]]:
+def _discover(source: Path, block_ids: set[str] | None = None) -> tuple[list[DiscoveredTake], list[dict[str, str]], dict[tuple[str, int], dict[str, Any]]]:
     errors: list[dict[str, str]] = []
     metadata_by_block: dict[str, dict[int, dict[str, Any]]] = {}
-    selections = _actual_selections(source, errors)
+    selections = _actual_selections(source, errors, block_ids)
     discovered: list[DiscoveredTake] = []
     for json_path in sorted(source.rglob("P*_t*.json"), key=lambda path: path.as_posix()):
         match = TAKE_NAME.match(json_path.name)
         if not match:
             continue
         block_id = json_path.parent.name
+        if block_ids is not None and block_id not in block_ids:
+            continue
         phrase_index, take_id = int(match.group("phrase")), int(match.group("take"))
         if block_id not in metadata_by_block:
             metadata_by_block[block_id] = _phrase_metadata(json_path.parent, errors)
@@ -272,18 +276,22 @@ def _discover(source: Path) -> tuple[list[DiscoveredTake], list[dict[str, str]],
     return discovered, sorted(errors, key=lambda item: (item["path"], item["error"])), selections
 
 
-def _actual_selections(source: Path, errors: list[dict[str, str]]) -> dict[tuple[str, int], dict[str, Any]]:
+def _actual_selections(source: Path, errors: list[dict[str, str]], block_ids: set[str] | None = None) -> dict[tuple[str, int], dict[str, Any]]:
     selected: dict[tuple[str, int], dict[str, Any]] = {}
     for path in sorted(source.glob("*_report.json"), key=lambda item: item.name):
         try:
             report = json.loads(path.read_text(encoding="utf-8"))
             block_id = str(report["id"])
+            if block_ids is not None and block_id not in block_ids:
+                continue
             for phrase_index, take_id in enumerate(report.get("picks", [])):
                 selected[(block_id, phrase_index)] = {"take_id": int(take_id), "source": "block_report", "source_path": str(path)}
         except (OSError, ValueError, KeyError, TypeError) as exc:
             errors.append({"path": str(path), "error": f"block_report_error:{type(exc).__name__}"})
     for path in sorted(source.glob("*_pins.json"), key=lambda item: item.name):
         block_id = path.stem[:-5]
+        if block_ids is not None and block_id not in block_ids:
+            continue
         try:
             pins = json.loads(path.read_text(encoding="utf-8"))
             for phrase, take_id in pins.items():

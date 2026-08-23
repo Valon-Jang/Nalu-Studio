@@ -2,6 +2,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import math
 from typing import Iterable
 from ..adapters.chatterbox_ve_adapter import ChatterboxVEAdapter
 from ..adapters.speechbrain_adapter import SpeechBrainAdapter
@@ -27,8 +28,19 @@ class SpeakerIdentityValidator:
         if candidate is None or reference is None:
             return ValidationResult(self.validator_name, self.validator_version, ValidationStatus.NOT_RUN, False, reasons=["chatterbox_ve_not_bound"], metrics={"primary_cache_hit": candidate_cached or reference_cached}, source_hashes={"candidate": candidate_hash, "reference": reference_hash}, started_at=started, finished_at=_now())
         primary_score = self.primary.cosine(candidate, reference); secondary_score = self.secondary.score(candidate_wav, reference_wav) if self.secondary else None
-        calibrated = bool(self.calibration and self.calibration.get("status") == "calibrated_candidate")
+        raw_threshold = self.calibration.get("recommended_threshold_candidate") if self.calibration else None
+        calibrated = bool(
+            self.calibration
+            and self.calibration.get("status") == "calibrated_candidate"
+            and isinstance(raw_threshold, (int, float))
+            and not isinstance(raw_threshold, bool)
+            and math.isfinite(float(raw_threshold))
+            and -1.0 <= float(raw_threshold) <= 1.0
+        )
+        threshold = float(raw_threshold) if calibrated else None
         metrics = {"primary_chatterbox_similarity": primary_score, "primary_cache_hit": candidate_cached and reference_cached, "secondary_speechbrain_status": "not_run" if secondary_score is None else "pass", "model_revision": self.primary.model_revision, "calibrated": calibrated}
         if secondary_score is not None: metrics["secondary_speechbrain_similarity"] = secondary_score
-        return ValidationResult(self.validator_name, self.validator_version, ValidationStatus.UNKNOWN if not calibrated else ValidationStatus.PASS, calibrated, score=primary_score, reasons=[] if calibrated else ["insufficient_calibration"], metrics=metrics, source_hashes={"candidate": candidate_hash, "reference": reference_hash}, started_at=started, finished_at=_now())
+        status = ValidationStatus.UNKNOWN if not calibrated else (ValidationStatus.PASS if primary_score >= threshold else ValidationStatus.FAIL)
+        reasons = ["insufficient_calibration"] if not calibrated else ([] if status is ValidationStatus.PASS else ["primary_similarity_below_calibrated_threshold"])
+        return ValidationResult(self.validator_name, self.validator_version, status, calibrated, score=primary_score, threshold=threshold, reasons=reasons, metrics=metrics, source_hashes={"candidate": candidate_hash, "reference": reference_hash}, started_at=started, finished_at=_now())
 def _now(): return datetime.now(timezone.utc).isoformat()

@@ -25,6 +25,73 @@ ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / "engine" / "chatterbox-v3"
 REF = ROOT / "assets" / "voice_ref" / "B_voiced_spectral_micro_smooth.wav"
 
+QUALITY_FEATURE_DEFAULTS = {
+    "LUNA_QUALITY_MODE": "off",
+    "LUNA_CONDITIONALS_CACHE": "off",
+    "LUNA_ASR_VALIDATOR": "off",
+    "LUNA_SPEAKER_VALIDATOR": "off",
+    "LUNA_MOS_VALIDATOR": "off",
+    "LUNA_PREFERENCE_RANKER": "off",
+    "LUNA_HYBRID_SYNTHESIS": "off",
+}
+QUALITY_SETTING_NAMES = (
+    "LUNA_QUALITY_REPORT_DIR",
+    "LUNA_CONDITIONALS_CACHE_DIR",
+    "LUNA_RANKER_ARTIFACT",
+    "LUNA_SPEAKER_CALIBRATION_ARTIFACT",
+    "LUNA_SELECT_APPROVAL_MANIFEST",
+)
+
+
+def quality_integration_requested(environ=None):
+    source = os.environ if environ is None else environ
+    return any(
+        str(source.get(name, default)).strip().lower() != default
+        for name, default in QUALITY_FEATURE_DEFAULTS.items()
+    ) or any(str(source.get(name, "")).strip() for name in QUALITY_SETTING_NAMES)
+
+
+def write_quality_import_fallback(outdir, error, environ=None):
+    """Best-effort diagnostic when the optional integration cannot import."""
+    temporary = None
+    try:
+        source = os.environ if environ is None else environ
+        output = Path(outdir).resolve()
+        configured = str(source.get("LUNA_QUALITY_REPORT_DIR", "")).strip()
+        report_root = Path(configured) if configured else output.parent / f"{output.name}.luna_quality_reports"
+        if not report_root.is_absolute():
+            report_root = ROOT / report_root
+        report_root = report_root.resolve()
+        try:
+            report_root.relative_to(output)
+            report_root = output.parent / f"{output.name}.luna_quality_reports"
+        except ValueError:
+            pass
+        report_root.mkdir(parents=True, exist_ok=True)
+        destination = report_root / "startup_fallback.json"
+        temporary = report_root / f".startup_fallback.json.tmp-{os.getpid()}"
+        temporary.write_text(
+            json.dumps(
+                {
+                    "schema_version": "luna-production-integration/1",
+                    "status": "fallback",
+                    "reason": f"integration_import_exception:{type(error).__name__}",
+                    "production_selection_changed": False,
+                },
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            ) + "\n",
+            encoding="utf-8",
+        )
+        os.replace(temporary, destination)
+        return destination
+    except Exception:
+        return None
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
 # ---- CEO-validated parameters (see LUNA_PROSODY_TARGET.json) ----
 N_TAKES = 6
 EARLY_STOP_MIN_TAKES = 3
@@ -385,7 +452,62 @@ def quality(m, n_syl, question=False, forced=False, final=False):
     return q
 
 
-def synthesize_block(model, sr, block, outdir, np, torch, ta):
+def _take_by_id(rows, take_id):
+    return next((row for row in rows if row.get("take") == take_id), None)
+
+
+def apply_quality_selection(baseline_picks, proposals, takes, pins):
+    """Apply an already-approved proposal behind the immutable Luna gates.
+
+    The integration module owns artifact/calibration/approval checks.  This
+    final production-side guard preserves pins and rejects the entire proposal
+    if any selected take or block continuity constraint is invalid.
+    """
+    baseline = list(baseline_picks)
+    if not proposals:
+        return baseline, {"status": "not_requested", "reasons": []}
+
+    candidate = list(baseline)
+    reasons = []
+    for phrase_index, take_id in sorted(proposals.items()):
+        if not isinstance(phrase_index, int) or not 0 <= phrase_index < len(takes):
+            reasons.append(f"invalid_phrase_index:{phrase_index}")
+            continue
+        if f"P{phrase_index:02d}" in pins:
+            continue
+        row = _take_by_id(takes[phrase_index], take_id)
+        if row is None or not row.get("ok") or not row.get("metrics"):
+            reasons.append(f"invalid_or_failed_take:P{phrase_index:02d}_t{take_id}")
+            continue
+        candidate[phrase_index] = take_id
+
+    selected_rows = [_take_by_id(takes[i], take_id) for i, take_id in enumerate(candidate)]
+    if any(row is None or not row.get("metrics") for row in selected_rows):
+        reasons.append("selected_take_metrics_missing")
+    if reasons:
+        return baseline, {"status": "fallback", "reasons": reasons}
+
+    slopes = sorted(row["metrics"]["end_slope"] for row in selected_rows)
+    n_slopes = len(slopes)
+    median = slopes[n_slopes // 2] if n_slopes % 2 else (
+        slopes[n_slopes // 2 - 1] + slopes[n_slopes // 2]) / 2
+    if not (BLOCK_MEDIAN_BAND[0] <= median <= BLOCK_MEDIAN_BAND[1]):
+        reasons.append(f"block_median_outside_gate:{median:.2f}")
+
+    for index in range(1, len(selected_rows)):
+        before = selected_rows[index - 1]["metrics"]
+        after = selected_rows[index]["metrics"]
+        reset = 12 * math.log2(after["first_hz"] / before["last_hz"])
+        if not (RESET_GATE[0] <= reset <= RESET_GATE[1]):
+            reasons.append(f"reset_outside_gate:P{index:02d}:{reset:.2f}")
+    if reasons:
+        return baseline, {"status": "fallback", "reasons": reasons}
+    if candidate == baseline:
+        return baseline, {"status": "unchanged", "reasons": []}
+    return candidate, {"status": "applied", "reasons": []}
+
+
+def synthesize_block(model, sr, block, outdir, np, torch, ta, quality_session=None):
     bid = block["id"]
     text = respell(block["text"])
     seed0 = int(block["seed"])
@@ -452,8 +574,12 @@ def synthesize_block(model, sr, block, outdir, np, torch, ta):
             np.random.seed(sd % (2**32 - 1))
             torch.manual_seed(sd)
             tg = time.time()
+            audio_prompt_path = (
+                quality_session.audio_prompt_path(REF) if quality_session is not None
+                else str(REF)
+            )
             wav = model.generate(p["text"], language_id="ko",
-                                 audio_prompt_path=str(REF),
+                                 audio_prompt_path=audio_prompt_path,
                                  exaggeration=EXAG, cfg_weight=CFG,
                                  temperature=temp_k, repetition_penalty=1.2,
                                  min_p=0.05, top_p=1.0)
@@ -488,6 +614,10 @@ def synthesize_block(model, sr, block, outdir, np, torch, ta):
                       f"temp={ESCALATION_TEMPS[esc_round-1]} "
                       f"(0 passing in {k} takes)", flush=True)
         takes.append(rows)
+
+    quality_proposals = (
+        quality_session.evaluate_block(bid) if quality_session is not None else {}
+    )
 
     # ---- beam assembly ----
     q_flags = [(is_question(p["text"]), p.get("forced", False),
@@ -543,6 +673,18 @@ def synthesize_block(model, sr, block, outdir, np, torch, ta):
                     break
             if BLOCK_MEDIAN_BAND[0] <= bm <= BLOCK_MEDIAN_BAND[1]:
                 break
+
+    baseline_picks = list(picks)
+    picks, quality_guard = apply_quality_selection(
+        baseline_picks, quality_proposals, takes, pins)
+    if quality_session is not None:
+        quality_session.finalize_block(
+            bid,
+            baseline_picks=baseline_picks,
+            final_picks=picks,
+            guard=quality_guard,
+        )
+    bm = block_med(picks)
 
     # ---- concatenate ----
     rng = random.Random(seed0)
@@ -612,6 +754,26 @@ def main():
     sr = model.sr
     print(f"[load] {time.time()-t0:.1f}s", flush=True)
 
+    quality_session = None
+    if quality_integration_requested():
+        try:
+            from luna_quality.production_integration import (
+                ProductionQualitySession,
+                write_startup_fallback_report,
+            )
+            try:
+                quality_session = ProductionQualitySession.from_environment(
+                    ROOT, outdir, model)
+            except Exception as exc:
+                write_startup_fallback_report(ROOT, outdir, exc)
+                print("[quality] integration unavailable; existing selector retained",
+                      flush=True)
+        except Exception as exc:
+            # Optional integration imports can never stop the production pipeline.
+            write_quality_import_fallback(outdir, exc)
+            print(f"[quality] integration import unavailable ({type(exc).__name__}); "
+                  "existing selector retained", flush=True)
+
     reports = []
     for block in jobs["blocks"]:
         rp = outdir / f"{block['id']}_report.json"
@@ -619,7 +781,8 @@ def main():
             print(f"[{block['id']}] already done, skip", flush=True)
             reports.append(json.loads(rp.read_text(encoding="utf-8")))
             continue
-        reports.append(synthesize_block(model, sr, block, outdir, np, torch, ta))
+        reports.append(synthesize_block(
+            model, sr, block, outdir, np, torch, ta, quality_session))
     (outdir / "pipeline_report.json").write_text(
         json.dumps(reports, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[pipeline done] {len(reports)} blocks", flush=True)

@@ -33,6 +33,9 @@ class WhisperXAdapter:
     def __init__(self, language_code: str = "ko", model_name: str = "large-v3", device: str = "cpu", package_name: str = "whisperx") -> None:
         if language_code != "ko": raise ValueError("S04 supports Korean language code 'ko' only")
         self.language_code, self.model_name, self.device, self.package_name = language_code, model_name, device, package_name
+        self._model = None
+        self._align_model = None
+        self._align_metadata = None
 
     def capability(self) -> CapabilityStatus:
         return optional_dependency(self.package_name)
@@ -46,8 +49,9 @@ class WhisperXAdapter:
             return AsrOutput(ValidationStatus.NOT_RUN, reason="whisperx_not_installed", language_code=self.language_code)
         try:
             import whisperx  # lazy: unit tests never import or download the model
-            model = whisperx.load_model(self.model_name, self.device, language=self.language_code)
-            result = model.transcribe(str(audio_path), language=self.language_code)
+            if self._model is None:
+                self._model = whisperx.load_model(self.model_name, self.device, language=self.language_code)
+            result = self._model.transcribe(str(audio_path), language=self.language_code)
             segments = _alignment_segments(result)
             return AsrOutput(ValidationStatus.PASS, text=" ".join(segment["text"] for segment in segments), segments=segments, language_code=self.language_code)
         except Exception as exc:
@@ -62,8 +66,9 @@ class WhisperXAdapter:
             return AsrOutput(ValidationStatus.UNKNOWN, text=transcription.text, reason="asr_segments_unavailable", language_code=self.language_code)
         try:
             import whisperx  # lazy import; this explicit call may load weights only in integration use
-            align_model, metadata = whisperx.load_align_model(language_code=self.language_code, device=self.device)
-            aligned = whisperx.align(transcription.segments, align_model, metadata, str(audio_path), self.device, return_char_alignments=False)
+            if self._align_model is None:
+                self._align_model, self._align_metadata = whisperx.load_align_model(language_code=self.language_code, device=self.device)
+            aligned = whisperx.align(transcription.segments, self._align_model, self._align_metadata, str(audio_path), self.device, return_char_alignments=False)
             words = _word_timestamps(aligned)
             if not words:
                 return AsrOutput(ValidationStatus.UNKNOWN, text=transcription.text, reason="alignment_words_unavailable", language_code=self.language_code)
