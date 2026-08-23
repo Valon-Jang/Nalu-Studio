@@ -7,14 +7,19 @@ No S04 threshold changes production selection.
 
 `normalize_expected_pronunciation` has deliberately limited support for
 Arabic integers, years (1800–2099 followed by `년`), decimals, percent, kg,
-km, Hz, ms, and upper-case Latin abbreviations.  Other mixed terms are kept
-literal instead of assigning an unverified pronunciation.
+km, Hz, ms, upper-case Latin abbreviations, and a capital acronym directly
+attached to Hangul (for example, `GPU기반`). Other mixed terms are kept literal
+instead of assigning an unverified pronunciation.
 
 `WhisperXAdapter` is optional and lazy: importing the package or checking
 capability never loads or downloads a model.  Explicit transcription and
 alignment calls can load WhisperX.  Alignment word timestamps are returned
 separately from content comparison, and unavailable or failed ASR/alignment is
 `not_run` or `unknown`, never `pass`.
+
+The adapter preserves the original WhisperX ASR segment bounds for alignment.
+It never fabricates a `0.0–0.0` segment; missing usable ASR segments result in
+an explicit `asr_segments_unavailable` `unknown` result.
 
 The opt-in integration smoke test is
 `tests/luna_quality/integration/test_whisperx_integration.py`.  It runs only

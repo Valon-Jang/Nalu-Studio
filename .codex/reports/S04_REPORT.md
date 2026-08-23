@@ -18,6 +18,11 @@ not connect to production selection.
 - `WhisperXAdapter` lazy-loads WhisperX only for explicit transcription or
   alignment calls, fixes the S04 language interface to `ko`, and returns word
   timestamps with confidence separately from content comparison.
+- The adapter now preserves validated WhisperX ASR `text/start/end` segments
+  for forced alignment.  It returns `asr_segments_unavailable` when those
+  bounds are absent rather than fabricating a zero-length segment.
+- Upper-case abbreviations attached directly to Hangul, such as `GPU기반`, are
+  conservatively split and normalised; unsupported mixed terms remain literal.
 - Missing optional dependencies return `not_run`; ASR/alignment exceptions
   return `unknown`; neither is treated as successful validation.
 - An opt-in integration test requires a permitted non-private WAV supplied by
@@ -27,7 +32,7 @@ not connect to production selection.
 
 | Command | Result |
 | --- | --- |
-| `engine\\chatterbox-v3\\venv\\Scripts\\python.exe -X utf8 -m unittest discover -s tests\\luna_quality\\unit -v` | PASS (32 tests) |
+| `engine\\chatterbox-v3\\venv\\Scripts\\python.exe -X utf8 -m unittest discover -s tests\\luna_quality\\unit -v` | PASS (36 tests) |
 | `engine\\chatterbox-v3\\venv\\Scripts\\python.exe -X utf8 tests\\luna_quality\\integration\\test_whisperx_integration.py -v` | DOCUMENTED_NOT_RUN (1 skipped; opt-in model/audio required) |
 | `engine\\chatterbox-v3\\venv\\Scripts\\python.exe -X utf8 -m compileall -q scripts\\luna_quality` | PASS |
 | `git diff --check` | PASS |

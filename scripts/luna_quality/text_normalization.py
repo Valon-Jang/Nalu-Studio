@@ -50,6 +50,9 @@ def _replace_latin_abbreviations(text: str) -> str:
         token = match.group(0)
         # Lower-case words and mixed identifiers are intentionally left literal.
         return " ".join(_LETTER_NAMES[letter] for letter in token) if token.isupper() else token
+    # A capital acronym immediately followed by Hangul is a verified spelling
+    # pattern (for example, GPU기반); split it before normalising the acronym.
+    text = re.sub(r"([A-Z]{2,})(?=[가-힣])", lambda match: " ".join(_LETTER_NAMES[letter] for letter in match.group(1)) + " ", text)
     return re.sub(r"\b[A-Za-z]{2,}\b", replace, text)
 
 

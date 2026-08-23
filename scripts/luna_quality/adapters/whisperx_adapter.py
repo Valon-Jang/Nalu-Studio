@@ -22,6 +22,7 @@ class AsrOutput:
     status: ValidationStatus
     text: str = ""
     words: list[WordTimestamp] = field(default_factory=list)
+    segments: list[dict[str, Any]] = field(default_factory=list)
     reason: str | None = None
     language_code: str = "ko"
 
@@ -47,7 +48,8 @@ class WhisperXAdapter:
             import whisperx  # lazy: unit tests never import or download the model
             model = whisperx.load_model(self.model_name, self.device, language=self.language_code)
             result = model.transcribe(str(audio_path), language=self.language_code)
-            return AsrOutput(ValidationStatus.PASS, text=" ".join(segment.get("text", "") for segment in result.get("segments", [])), language_code=self.language_code)
+            segments = _alignment_segments(result)
+            return AsrOutput(ValidationStatus.PASS, text=" ".join(segment["text"] for segment in segments), segments=segments, language_code=self.language_code)
         except Exception as exc:
             return AsrOutput(ValidationStatus.UNKNOWN, reason=f"asr_exception:{type(exc).__name__}", language_code=self.language_code)
 
@@ -56,17 +58,29 @@ class WhisperXAdapter:
             return AsrOutput(transcription.status, text=transcription.text, reason=transcription.reason, language_code=self.language_code)
         if self.alignment_capability().status is not ValidationStatus.PASS:
             return AsrOutput(ValidationStatus.NOT_RUN, text=transcription.text, reason="alignment_not_available", language_code=self.language_code)
+        if not transcription.segments:
+            return AsrOutput(ValidationStatus.UNKNOWN, text=transcription.text, reason="asr_segments_unavailable", language_code=self.language_code)
         try:
             import whisperx  # lazy import; this explicit call may load weights only in integration use
             align_model, metadata = whisperx.load_align_model(language_code=self.language_code, device=self.device)
-            segments = [{"text": transcription.text, "start": 0.0, "end": 0.0}]
-            aligned = whisperx.align(segments, align_model, metadata, str(audio_path), self.device, return_char_alignments=False)
+            aligned = whisperx.align(transcription.segments, align_model, metadata, str(audio_path), self.device, return_char_alignments=False)
             words = _word_timestamps(aligned)
             if not words:
                 return AsrOutput(ValidationStatus.UNKNOWN, text=transcription.text, reason="alignment_words_unavailable", language_code=self.language_code)
             return AsrOutput(ValidationStatus.PASS, text=transcription.text, words=words, language_code=self.language_code)
         except Exception as exc:
             return AsrOutput(ValidationStatus.UNKNOWN, text=transcription.text, reason=f"alignment_exception:{type(exc).__name__}", language_code=self.language_code)
+
+
+def _alignment_segments(result: dict[str, Any]) -> list[dict[str, Any]]:
+    """Keep WhisperX segment bounds; alignment must never receive invented ones."""
+    segments: list[dict[str, Any]] = []
+    for item in result.get("segments", []):
+        text = str(item.get("text", "")).strip()
+        start, end = _number(item.get("start")), _number(item.get("end"))
+        if text and start is not None and end is not None and end >= start:
+            segments.append({"text": text, "start": start, "end": end})
+    return segments
 
 
 def _word_timestamps(result: dict[str, Any]) -> list[WordTimestamp]:
