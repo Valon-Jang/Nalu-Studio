@@ -63,6 +63,11 @@ class FastSpeakerApp:
         root.geometry("900x520")
         self.input = tk.Text(root, height=13, wrap="word")
         self.input.pack(fill="both", expand=True, padx=12, pady=(12, 6))
+        # Keep a left-gravity boundary at the end of the last manual submit.
+        # Text inserted at that boundary belongs to the next submission rather
+        # than causing the already-spoken draft to be submitted again.
+        self.input.mark_set("manual_submission_end", "1.0")
+        self.input.mark_gravity("manual_submission_end", tk.LEFT)
         controls = ttk.Frame(root)
         controls.pack(fill="x", padx=12)
         ttk.Radiobutton(controls, text="수동", variable=self.mode, value="manual").pack(side="left")
@@ -95,7 +100,7 @@ class FastSpeakerApp:
         ttk.Button(maintenance, text="문제 문맥부터 재개", command=self.resume_issue_context).pack(side="left", padx=4)
         ttk.Label(root, textvariable=self.status).pack(anchor="w", padx=12, pady=(8, 0))
         ttk.Label(root, textvariable=self.metrics).pack(anchor="w", padx=12, pady=(2, 12))
-        root.bind_all("<Control-Return>", lambda _: self.speak())
+        root.bind_all("<Control-Return>", self._on_speak_shortcut)
         root.protocol("WM_DELETE_WINDOW", self.close)
         self._restore_latest_session()
         self.app_state = "LOADING_MODEL"
@@ -121,17 +126,32 @@ class FastSpeakerApp:
         self.status.set("준비 완료 — Ctrl+Enter 또는 발화")
         self.speak_button.configure(state="normal")
 
+    def _on_speak_shortcut(self, _: tk.Event[Any]) -> str:
+        self.speak()
+        return "break"
+
+    def _manual_unsent_text(self) -> tuple[str, str]:
+        """Return only the text appended after the prior manual submission."""
+        start = self.input.index("manual_submission_end")
+        end = self.input.index("end-1c")
+        return self.input.get(start, end).strip(), end
+
     def speak(self) -> None:
         if self.controller is None:
             return
-        text = self.input.get("1.0", "end-1c")
         try:
             if self.mode.get() == "batch":
+                text = self.input.get("1.0", "end-1c")
                 self.batch = BatchSession.from_text(self.session_name.get(), text, source_path=self._imported_path, code_revision=self._code_revision)
                 self.store.save(self.batch)
                 self._start_batch_next()
             else:
+                text, end = self._manual_unsent_text()
+                if not text:
+                    self.status.set("새로 입력한 대사가 없습니다")
+                    return
                 self.controller.submit(text)
+                self.input.mark_set("manual_submission_end", end)
             self.status.set("발화 대기열에 추가됨")
             self.app_state = "GENERATING"
         except ValueError as error:
@@ -153,6 +173,7 @@ class FastSpeakerApp:
             self._imported_path = str(Path(path).resolve())
             self.input.delete("1.0", "end")
             self.input.insert("1.0", Path(path).read_text(encoding="utf-8"))
+            self.input.mark_set("manual_submission_end", "1.0")
 
     def mark_issue(self) -> None:
         if self.controller is None:
@@ -337,6 +358,9 @@ class FastSpeakerApp:
         self._imported_path = recovered.source_path
         self.input.delete("1.0", "end")
         self.input.insert("1.0", recovered.source_text)
+        # A recovered batch was already submitted and must not be duplicated
+        # if the user later changes the mode to manual.
+        self.input.mark_set("manual_submission_end", "end-1c")
         if recovered.issue_links:
             try:
                 self.last_issue = self.issue_store.load(Path(recovered.issue_links[-1]))
