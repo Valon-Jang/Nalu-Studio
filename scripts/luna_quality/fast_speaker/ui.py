@@ -49,6 +49,9 @@ class FastSpeakerApp:
         ttk.Button(controls, text="Replay Last Phrase", command=lambda: self._call("replay_last_phrase")).pack(side="left", padx=4)
         ttk.Button(controls, text="Replay Current Sentence", command=lambda: self._call("replay_current_sentence")).pack(side="left", padx=4)
         ttk.Button(controls, text="Mark Issue", command=self.mark_issue).pack(side="left", padx=4)
+        ttk.Button(controls, text="Retest Improved", command=lambda: self.retest(RetestOutcome.IMPROVED)).pack(side="left", padx=4)
+        ttk.Button(controls, text="Listen Previous", command=lambda: self.listen_issue(1)).pack(side="left", padx=4)
+        ttk.Button(controls, text="Listen Retest", command=lambda: self.listen_issue(2)).pack(side="left", padx=4)
         ttk.Label(root, textvariable=self.status).pack(anchor="w", padx=12, pady=(8, 0))
         ttk.Label(root, textvariable=self.metrics).pack(anchor="w", padx=12, pady=(2, 12))
         root.bind_all("<Control-Return>", lambda _: self.speak())
@@ -125,6 +128,22 @@ class FastSpeakerApp:
                 self.status.set(f"Issue paused and request copied: {folder}"); dialog.destroy()
             except ValueError as error: self.status.set(str(error))
         ttk.Button(dialog, text="Save + Copy Codex Request", command=save).pack(pady=6)
+
+    def retest(self, outcome: RetestOutcome) -> None:
+        if self.last_issue is None or self.controller is None or not self.controller.recent_phrases():
+            self.status.set("Select and save an issue first"); return
+        _, frame, _ = self.controller.recent_phrases()[-1]
+        folder = self.issue_store.retest(self.last_issue, outcome=outcome, note="Explicit user retest evaluation", frame=frame)
+        self.status.set(f"Retest revision saved: {folder}")
+
+    def listen_issue(self, revision: int) -> None:
+        if self.last_issue is None:
+            self.status.set("No issue selected"); return
+        path = self.issue_store.root / self.last_issue.issue_id / f"r{revision:03d}" / "original_phrase.wav"
+        if path.exists():
+            import winsound
+            winsound.PlaySound(str(path), winsound.SND_FILENAME | winsound.SND_ASYNC)
+        else: self.status.set(f"Issue revision not available: r{revision:03d}")
 
     def _start_batch_next(self) -> None:
         if self.controller is None or self.batch is None or self.batch.paused or self._batch_submitted:
