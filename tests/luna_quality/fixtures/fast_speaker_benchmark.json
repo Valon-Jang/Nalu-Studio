@@ -1,0 +1,62 @@
+{
+  "schema_version": "luna-fast-speaker-benchmark/1",
+  "fast_config": {
+    "language_id": "ko",
+    "exaggeration": 0.5,
+    "cfg_weight": 0.5,
+    "temperature": 0.72,
+    "repetition_penalty": 1.2,
+    "min_p": 0.05,
+    "top_p": 1.0,
+    "sample_rate": 24000,
+    "peak_guard": 0.89,
+    "audio_prompt_path": null
+  },
+  "cases": [
+    {
+      "id": "short_statement",
+      "input": "공대루나입니다.",
+      "spoken_text": "공대루나입니다.",
+      "phrases": [{"id": "P00", "text": "공대루나입니다.", "sentence_final": true, "forced": false}]
+    },
+    {
+      "id": "long_statement",
+      "input": "아이언맨 슈트에는 냉각 기술이 반드시 필요합니다.",
+      "spoken_text": "아이언맨 슈트에는 냉각 기술이 반드시 필요합니다.",
+      "phrases": [{"id": "P00", "text": "아이언맨 슈트에는 냉각 기술이 반드시 필요합니다.", "sentence_final": true, "forced": false}]
+    },
+    {
+      "id": "question",
+      "input": "이제 바닷속 케이블을 건널까요?",
+      "spoken_text": "이제 바닷속 케이블을 건널까요.",
+      "phrases": [{"id": "P00", "text": "이제 바닷속 케이블을 건널까요.", "sentence_final": true, "forced": false}]
+    },
+    {
+      "id": "number",
+      "input": "천팔백오십팔년에는 새로운 기술이 등장했습니다.",
+      "spoken_text": "천팔백오십팔년에는 새로운 기술이 등장했습니다.",
+      "phrases": [{"id": "P00", "text": "천팔백오십팔년에는 새로운 기술이 등장했습니다.", "sentence_final": true, "forced": false}]
+    },
+    {
+      "id": "forced_split",
+      "input": "거미줄은 유연한 부분과 단단한 부분이 함께 구조를 지탱합니다.",
+      "spoken_text": "거미줄은 유연한 부분과 단단한 부분이 함께 구조를 지탱합니다.",
+      "phrases": [
+        {"id": "P00", "text": "거미줄은 유연한 부분과", "sentence_final": false, "forced": true},
+        {"id": "P01", "text": "단단한 부분이 함께 구조를 지탱합니다.", "sentence_final": true, "forced": false}
+      ]
+    },
+    {
+      "id": "modifier_edge",
+      "input": "아주 유연한 부분이 충격을 흡수합니다.",
+      "spoken_text": "아주 유연한 부분이 충격을 흡수합니다.",
+      "phrases": [{"id": "P00", "text": "아주 유연한 부분이 충격을 흡수합니다.", "sentence_final": true, "forced": false}]
+    },
+    {
+      "id": "locative_edge",
+      "input": "손목에서 거미줄을 발사합니다.",
+      "spoken_text": "손목에서 거미줄을 발사합니다.",
+      "phrases": [{"id": "P00", "text": "손목에서 거미줄을 발사합니다.", "sentence_final": true, "forced": false}]
+    }
+  ]
+}
