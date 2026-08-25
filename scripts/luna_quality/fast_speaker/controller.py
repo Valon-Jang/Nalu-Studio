@@ -132,6 +132,8 @@ class FastSpeakerController:
         if self._active is None and self._pending:
             self._active = self._pending.popleft()
             self._pump_locked()
+        elif self._active is None:
+            self._state = "ready"
 
     def _pump_locked(self) -> None:
         run = self._active

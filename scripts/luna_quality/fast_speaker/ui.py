@@ -5,11 +5,14 @@ from __future__ import annotations
 from pathlib import Path
 import threading
 import tkinter as tk
-from tkinter import ttk
+from tkinter import filedialog, ttk
 from typing import Any
+from datetime import datetime
 
 from .audio_sink import WinmmAudioSink
+from .batch import BatchSession
 from .controller import FastSpeakerController
+from .session_store import SessionStore
 from .worker import WorkerProcess
 
 
@@ -18,6 +21,11 @@ class FastSpeakerApp:
         self.root, self.repo_root = root, repo_root
         self.worker = WorkerProcess(repo_root)
         self.controller: FastSpeakerController | None = None
+        self.mode = tk.StringVar(value="manual")
+        self.session_name = tk.StringVar(value=datetime.now().strftime("luna_fast_%Y%m%d_%H%M%S"))
+        self.batch: BatchSession | None = None
+        self.store = SessionStore(repo_root / "fast_speaker" / "sessions")
+        self._batch_submitted = False
         self.status = tk.StringVar(value="Loading Luna worker…")
         self.metrics = tk.StringVar(value="READY: loading")
         root.title("Luna FAST Speaker v1")
@@ -26,6 +34,10 @@ class FastSpeakerApp:
         self.input.pack(fill="both", expand=True, padx=12, pady=(12, 6))
         controls = ttk.Frame(root)
         controls.pack(fill="x", padx=12)
+        ttk.Radiobutton(controls, text="Manual", variable=self.mode, value="manual").pack(side="left")
+        ttk.Radiobutton(controls, text="Batch", variable=self.mode, value="batch").pack(side="left")
+        ttk.Button(controls, text="Import .txt/.md", command=self.import_batch).pack(side="left", padx=6)
+        ttk.Entry(controls, textvariable=self.session_name, width=24).pack(side="right")
         self.speak_button = ttk.Button(controls, text="Speak", command=self.speak, state="disabled")
         self.speak_button.pack(side="left")
         ttk.Button(controls, text="Stop", command=lambda: self._call("stop")).pack(side="left", padx=4)
@@ -58,7 +70,12 @@ class FastSpeakerApp:
             return
         text = self.input.get("1.0", "end-1c")
         try:
-            self.controller.submit(text)
+            if self.mode.get() == "batch":
+                self.batch = BatchSession.from_text(self.session_name.get(), text)
+                self.store.save(self.batch)
+                self._start_batch_next()
+            else:
+                self.controller.submit(text)
             self.status.set("Queued")
         except ValueError as error:
             self.status.set(str(error))
@@ -66,10 +83,34 @@ class FastSpeakerApp:
     def _call(self, method: str) -> None:
         if self.controller is not None:
             getattr(self.controller, method)()
+        if self.batch is not None and method == "pause":
+            self.batch.pause(); self.store.save(self.batch)
+        if self.batch is not None and method == "continue_playback":
+            self.batch.continue_session(); self._start_batch_next()
+
+    def import_batch(self) -> None:
+        path = filedialog.askopenfilename(filetypes=[("Text", "*.txt *.md")])
+        if path:
+            self.input.delete("1.0", "end")
+            self.input.insert("1.0", Path(path).read_text(encoding="utf-8"))
+
+    def _start_batch_next(self) -> None:
+        if self.controller is None or self.batch is None or self.batch.paused or self._batch_submitted:
+            return
+        item = self.batch.start_next()
+        if item is not None:
+            self.store.save(self.batch)
+            self._batch_submitted = True
+            self.controller.submit(item.text)
 
     def _refresh(self) -> None:
         if self.controller is not None:
             view: Any = self.controller.snapshot()
+            if self.batch is not None and self._batch_submitted and not view["audio_busy"] and not view["synthesis_busy"] and view["state"] == "ready":
+                self.batch.complete_active_cleanly()
+                self.store.save(self.batch)
+                self._batch_submitted = False
+                self._start_batch_next()
             self.status.set(f"{view['state']} | queue {view['queue_runs']}")
             self.metrics.set(f"warm TTFA: {view['warm_ttfa_seconds']} | avg RTF: {view['average_rtf']} | last: {view['last_metrics']}")
         self.root.after(150, self._refresh)
