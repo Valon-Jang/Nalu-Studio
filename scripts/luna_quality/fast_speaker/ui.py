@@ -14,6 +14,7 @@ from .batch import BatchSession
 from .controller import FastSpeakerController
 from .session_store import SessionStore
 from .worker import WorkerProcess
+from .issues import IssueCategory, IssueStore, new_issue
 
 
 class FastSpeakerApp:
@@ -25,6 +26,7 @@ class FastSpeakerApp:
         self.session_name = tk.StringVar(value=datetime.now().strftime("luna_fast_%Y%m%d_%H%M%S"))
         self.batch: BatchSession | None = None
         self.store = SessionStore(repo_root / "fast_speaker" / "sessions")
+        self.issue_store = IssueStore(repo_root / "fast_speaker" / "issues")
         self._batch_submitted = False
         self.status = tk.StringVar(value="Loading Luna worker…")
         self.metrics = tk.StringVar(value="READY: loading")
@@ -45,6 +47,7 @@ class FastSpeakerApp:
         ttk.Button(controls, text="Continue", command=lambda: self._call("continue_playback")).pack(side="left", padx=4)
         ttk.Button(controls, text="Replay Last Phrase", command=lambda: self._call("replay_last_phrase")).pack(side="left", padx=4)
         ttk.Button(controls, text="Replay Current Sentence", command=lambda: self._call("replay_current_sentence")).pack(side="left", padx=4)
+        ttk.Button(controls, text="Mark Issue", command=self.mark_issue).pack(side="left", padx=4)
         ttk.Label(root, textvariable=self.status).pack(anchor="w", padx=12, pady=(8, 0))
         ttk.Label(root, textvariable=self.metrics).pack(anchor="w", padx=12, pady=(2, 12))
         root.bind_all("<Control-Return>", lambda _: self.speak())
@@ -93,6 +96,18 @@ class FastSpeakerApp:
         if path:
             self.input.delete("1.0", "end")
             self.input.insert("1.0", Path(path).read_text(encoding="utf-8"))
+
+    def mark_issue(self) -> None:
+        if self.controller is None:
+            return
+        self.controller.pause()  # current phrase completes; next phrase is held
+        frame = getattr(self.controller, "_last_phrase", None)
+        if frame is None:
+            self.status.set("No completed phrase available for issue evidence")
+            return
+        issue = new_issue(category=IssueCategory.OTHER, phrase_text=self.input.get("1.0", "end-1c").strip(), note="Listening issue; classify before retest.", seed=20260826)
+        folder = self.issue_store.save(issue, frame)
+        self.status.set(f"Issue paused: {folder}")
 
     def _start_batch_next(self) -> None:
         if self.controller is None or self.batch is None or self.batch.paused or self._batch_submitted:
