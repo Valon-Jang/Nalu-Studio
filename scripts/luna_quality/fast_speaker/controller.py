@@ -27,10 +27,24 @@ class ManualRun:
     phrases: tuple[FastPhrase, ...]
     submitted_monotonic: float
     seed: int
+    source_text: str
     next_index: int = 0
     cached: list[PcmFrame] = field(default_factory=list)
     current_sentence: list[PcmFrame] = field(default_factory=list)
     ready_results: deque[Mapping[str, Any]] = field(default_factory=deque)
+    first_audio_started: bool = False
+    last_audio_finished_monotonic: float | None = None
+
+
+@dataclass(frozen=True)
+class RecentPhrase:
+    session_id: str
+    phrase_id: str
+    text: str
+    frame: PcmFrame
+    seed: int
+    sentence_context: str
+    metrics: Mapping[str, Any]
 
 
 def split_current_luna_phrases(text: str) -> tuple[FastPhrase, ...]:
@@ -55,18 +69,25 @@ class FastSpeakerController:
         self._active: ManualRun | None = None
         self._synthesis_busy = False
         self._audio_busy = False
+        self._playback_token: str | None = None
         self._paused = False
         self._state = "ready"
         self._last_phrase: PcmFrame | None = None
         self._last_sentence: tuple[PcmFrame, ...] = ()
-        self._recent_phrases: list[tuple[str, PcmFrame, int]] = []
-        self._metrics: dict[str, Any] = {"warm_ttfa_seconds": None, "rolling_rtf": [], "last": None}
+        self._recent_phrases: list[RecentPhrase] = []
+        self._metrics: dict[str, Any] = {
+            "warm_ttfa_seconds": None,
+            "rolling_rtf": [],
+            "last": None,
+            "inter_phrase_gaps_seconds": [],
+            "underrun_count": 0,
+        }
 
     def submit(self, text: str, seed: int = 20260826) -> str:
         phrases = self.split_text(self.text_overlay(text))
         if not phrases:
             raise ValueError("text produced no phrases")
-        run = ManualRun(uuid4().hex, uuid4().hex, phrases, time.perf_counter(), seed)
+        run = ManualRun(uuid4().hex, uuid4().hex, phrases, time.perf_counter(), seed, text)
         with self._lock:
             self._pending.append(run)
             self._state = "queued" if self._active else "synthesizing"
@@ -77,13 +98,17 @@ class FastSpeakerController:
         with self._lock:
             active = self._active
             self._pending.clear()
+            self._active = None
+            self._synthesis_busy = False
             self._paused = False
             self._state = "stopped"
+            self._playback_token = uuid4().hex
             if active is not None:
                 active.generation_id = uuid4().hex
-                self._executor.submit(self._invalidate, active.session_id, active.generation_id)
+                self._executor.submit(self._invalidate, self.worker, active.session_id, active.generation_id)
             self.audio.stop()
             self._audio_busy = False
+            self._playback_token = uuid4().hex
 
     def pause(self) -> None:
         with self._lock:
@@ -111,7 +136,7 @@ class FastSpeakerController:
             self._play_replay_sequence_locked(frames)
             return True
 
-    def recent_phrases(self) -> tuple[tuple[str, PcmFrame, int], ...]:
+    def recent_phrases(self) -> tuple[RecentPhrase, ...]:
         with self._lock:
             return tuple(self._recent_phrases)
 
@@ -127,6 +152,8 @@ class FastSpeakerController:
                 "warm_ttfa_seconds": self._metrics["warm_ttfa_seconds"],
                 "average_rtf": (sum(rolling) / len(rolling)) if rolling else None,
                 "last_metrics": self._metrics["last"],
+                "inter_phrase_gaps_seconds": tuple(self._metrics["inter_phrase_gaps_seconds"]),
+                "underrun_count": self._metrics["underrun_count"],
             }
 
     def close(self) -> None:
@@ -181,46 +208,60 @@ class FastSpeakerController:
         except Exception as error:
             response = {"stale": True, "error": f"{type(error).__name__}: {error}"}
         with self._lock:
-            self._synthesis_busy = False
             if self._active is run:
+                self._synthesis_busy = False
                 if run.generation_id != requested_generation:
                     response = {**response, "stale": True}
                 run.ready_results.append(response)
                 self._pump_locked()
 
-    def _invalidate(self, session_id: str, generation_id: str) -> None:
+    def _invalidate(self, requester: WorkerRequester, session_id: str, generation_id: str) -> None:
         try:
-            self.worker.request(WorkerCommand("invalidate", uuid4().hex, session_id, generation_id), timeout_seconds=10)
+            requester.request(WorkerCommand("invalidate", uuid4().hex, session_id, generation_id), timeout_seconds=10)
         except Exception:
             pass
 
     def _play_locked(self, frame: PcmFrame, result: Mapping[str, Any] | None) -> None:
         self._audio_busy = True
+        playback_token = uuid4().hex
+        self._playback_token = playback_token
         self._state = "playing"
         run = self._active
 
         def started() -> None:
             with self._lock:
-                if run is not None and self._metrics["warm_ttfa_seconds"] is None and _has_non_silent_pcm(frame):
-                    self._metrics["warm_ttfa_seconds"] = time.perf_counter() - run.submitted_monotonic
+                if run is not None and self._active is run and _has_non_silent_pcm(frame):
+                    now = time.perf_counter()
+                    if not run.first_audio_started:
+                        run.first_audio_started = True
+                        self._metrics["warm_ttfa_seconds"] = now - run.submitted_monotonic
+                    elif run.last_audio_finished_monotonic is not None:
+                        gap = max(0.0, now - run.last_audio_finished_monotonic)
+                        self._metrics["inter_phrase_gaps_seconds"] = (self._metrics["inter_phrase_gaps_seconds"] + [gap])[-20:]
+                        if gap > 0.02:
+                            self._metrics["underrun_count"] += 1
 
         def finished() -> None:
             with self._lock:
+                if self._playback_token != playback_token:
+                    return
                 self._audio_busy = False
-                self._last_phrase = frame
-                if run is not None:
+                if run is not None and self._active is run:
+                    self._last_phrase = frame
                     run.cached.append(frame)
                     run.current_sentence.append(frame)
                     if result is not None:
-                        phrase_text = str(result.get("phrase", {}).get("text", ""))
-                        self._recent_phrases = (self._recent_phrases + [(phrase_text, frame, run.seed)])[-3:]
+                        phrase = result.get("phrase", {})
+                        phrase_text = str(phrase.get("text", ""))
                         metrics = result.get("metrics", {})
+                        self._recent_phrases = (self._recent_phrases + [RecentPhrase(run.session_id, str(phrase.get("phrase_id", "")), phrase_text, frame, run.seed, run.source_text, dict(metrics))])[-3:]
                         self._metrics["last"] = metrics
                         if isinstance(metrics.get("rtf"), (int, float)):
                             self._metrics["rolling_rtf"] = (self._metrics["rolling_rtf"] + [metrics["rtf"]])[-10:]
                     if result is not None and result.get("phrase", {}).get("sentence_final"):
                         self._last_sentence = tuple(run.current_sentence)
                         run.current_sentence.clear()
+                    run.last_audio_finished_monotonic = time.perf_counter()
                     if run.next_index >= len(run.phrases) and not self._synthesis_busy and not run.ready_results:
                         self._active = None
                         self._activate_next_locked()

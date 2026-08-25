@@ -8,7 +8,8 @@ import re
 from typing import Any, Mapping
 
 
-SESSION_SCHEMA_VERSION = "luna-fast-speaker-session/1"
+SESSION_SCHEMA_VERSION = "luna-fast-speaker-session/2"
+LEGACY_SESSION_SCHEMA_VERSION = "luna-fast-speaker-session/1"
 _SENTENCE_END = re.compile(r"(?<=[.!?。！？])\s+")
 
 
@@ -43,16 +44,38 @@ def parse_batch_text(text: str) -> list[str]:
 
 
 class BatchSession:
-    def __init__(self, name: str, items: list[BatchItem], *, recovered: bool = False) -> None:
+    def __init__(
+        self,
+        name: str,
+        items: list[BatchItem],
+        *,
+        recovered: bool = False,
+        source_text: str = "",
+        source_path: str | None = None,
+        issue_links: list[str] | None = None,
+        code_revision: str | None = None,
+    ) -> None:
         if not name.strip() or not items:
             raise ValueError("session name and at least one batch item are required")
         self.name, self.items, self.recovered = name.strip(), items, recovered
+        self.source_text = source_text or "\n".join(item.text for item in items)
+        self.source_path = source_path
+        self.issue_links = list(issue_links or [])
+        self.code_revision = code_revision
+        self.app_version = "luna-fast-speaker-v1"
+        self.mode = "batch"
         self.paused = False
         self.active_index: int | None = None
 
     @classmethod
-    def from_text(cls, name: str, text: str) -> "BatchSession":
-        return cls(name, [BatchItem(f"S{index:04d}", value) for index, value in enumerate(parse_batch_text(text), 1)])
+    def from_text(cls, name: str, text: str, *, source_path: str | None = None, code_revision: str | None = None) -> "BatchSession":
+        return cls(
+            name,
+            [BatchItem(f"S{index:04d}", value) for index, value in enumerate(parse_batch_text(text), 1)],
+            source_text=text,
+            source_path=source_path,
+            code_revision=code_revision,
+        )
 
     def start_next(self) -> BatchItem | None:
         if self.paused:
@@ -79,10 +102,13 @@ class BatchSession:
     def continue_session(self) -> None:
         self.paused = False
 
-    def mark_active_issue(self) -> None:
+    def mark_active_issue(self) -> BatchItem | None:
         if self.active_index is not None:
-            self.items[self.active_index].state = BatchState.ISSUE
+            item = self.items[self.active_index]
+            item.state = BatchState.ISSUE
             self.active_index = None
+            return item
+        return None
 
     def recover_interrupted_active(self) -> None:
         """Make an interrupted sentence safe to replay from its beginning."""
@@ -104,14 +130,36 @@ class BatchSession:
         return {state.value: sum(item.state is state for item in self.items) for state in BatchState}
 
     def to_mapping(self) -> dict[str, Any]:
-        return {"schema_version": SESSION_SCHEMA_VERSION, "name": self.name, "paused": self.paused, "active_index": self.active_index, "items": [item.to_mapping() for item in self.items]}
+        return {
+            "schema_version": SESSION_SCHEMA_VERSION,
+            "app_version": self.app_version,
+            "name": self.name,
+            "mode": self.mode,
+            "source_text": self.source_text,
+            "source_path": self.source_path,
+            "paused": self.paused,
+            "active_index": self.active_index,
+            "current_sentence_index": self.active_index,
+            "issue_links": list(self.issue_links),
+            "counts": dict(self.counts()),
+            "code_revision": self.code_revision,
+            "items": [item.to_mapping() for item in self.items],
+        }
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "BatchSession":
-        if value.get("schema_version") != SESSION_SCHEMA_VERSION:
+        if value.get("schema_version") not in {SESSION_SCHEMA_VERSION, LEGACY_SESSION_SCHEMA_VERSION}:
             raise ValueError("unsupported session schema")
         items = [BatchItem(str(item["item_id"]), str(item["text"]), BatchState(str(item["state"]))) for item in value["items"]]
-        session = cls(str(value["name"]), items, recovered=True)
+        session = cls(
+            str(value["name"]),
+            items,
+            recovered=True,
+            source_text=str(value.get("source_text") or ""),
+            source_path=str(value["source_path"]) if value.get("source_path") else None,
+            issue_links=[str(item) for item in value.get("issue_links", [])],
+            code_revision=str(value["code_revision"]) if value.get("code_revision") else None,
+        )
         active = value.get("active_index")
         session.active_index = active if isinstance(active, int) and 0 <= active < len(items) else None
         session.recover_interrupted_active()

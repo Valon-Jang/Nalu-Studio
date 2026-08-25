@@ -26,3 +26,14 @@ class SessionStore:
 
     def load(self, path: Path) -> BatchSession:
         return BatchSession.from_mapping(json.loads(path.read_text(encoding="utf-8")))
+
+    def load_latest(self) -> BatchSession | None:
+        if not self.root.exists():
+            return None
+        candidates = sorted(self.root.glob("*.json"), key=lambda path: path.stat().st_mtime_ns, reverse=True)
+        for path in candidates:
+            try:
+                return self.load(path)
+            except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError):
+                continue
+        return None

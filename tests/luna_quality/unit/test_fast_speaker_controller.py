@@ -29,7 +29,7 @@ class FakeWorker:
             self.release.wait(2)
         return {
             "status": "ok", "stale": False,
-            "phrase": {"sentence_final": command.phrase.sentence_final},
+            "phrase": {"phrase_id": command.phrase.phrase_id, "text": command.phrase.text, "sentence_final": command.phrase.sentence_final},
             "pcm": {"schema_version": "luna-fast-speaker-pcm/1", "encoding": "pcm_s16le", "channels": 1, "sample_rate": 24000, "sample_count": 4, "pcm_s16le": FakeFastBackend.KNOWN_PCM_S16LE},
             "metrics": {"rtf": 2.0, "generation_seconds": 0.001},
         }
@@ -64,6 +64,7 @@ class FastSpeakerControllerTest(unittest.TestCase):
         self.controller.pause()
         self.audio.finish()
         self.assertEqual(self.controller.snapshot()["state"], "paused")
+        self.assertEqual(self.controller.recent_phrases()[-1].text, "첫 구절")
         self.assertEqual(len(self.audio.frames), 1)
         self.controller.continue_playback()
         wait_for(lambda: len(self.audio.frames) == 2)
@@ -97,6 +98,42 @@ class FastSpeakerControllerTest(unittest.TestCase):
         wait_for(lambda: len(self.audio.frames) == 1)
         self.assertTrue(any(item.command == "synthesize" for item in new_worker.commands))
         self.assertEqual(self.controller.snapshot()["state"], "playing")
+
+    def test_stop_then_new_submission_is_not_blocked_by_old_run(self) -> None:
+        self.worker.block_synthesis = True
+        self.controller.submit("중단할 작업")
+        self.assertTrue(self.worker.entered.wait(1))
+        self.controller.stop()
+        self.worker.release.set()
+        self.controller.submit("새 작업")
+        wait_for(lambda: len(self.audio.frames) == 1)
+        self.assertEqual(self.controller.recent_phrases(), ())
+        self.audio.finish()
+        self.assertEqual(self.controller.recent_phrases()[0].text, "첫 구절")
+
+    def test_metrics_include_ttfa_and_inter_phrase_gap(self) -> None:
+        self.controller.submit("측정")
+        wait_for(lambda: len(self.audio.frames) == 1)
+        self.audio.finish()
+        wait_for(lambda: len(self.audio.frames) == 2)
+        self.audio.finish()
+        view = self.controller.snapshot()
+        self.assertIsNotNone(view["warm_ttfa_seconds"])
+        self.assertEqual(len(view["inter_phrase_gaps_seconds"]), 1)
+        self.assertEqual(len(self.controller.recent_phrases()), 2)
+
+    def test_new_manual_input_queues_and_recent_history_is_bounded_to_three(self) -> None:
+        one_phrase = lambda text: (FastPhrase("P00", text, True, False),)
+        controller = FastSpeakerController(self.worker, self.audio, split_text=one_phrase)
+        self.controller.close()
+        self.controller = controller
+        for text in ("하나", "둘", "셋", "넷"):
+            controller.submit(text)
+        for expected_count in range(1, 5):
+            wait_for(lambda: len(self.audio.frames) == expected_count)
+            self.audio.finish()
+        wait_for(lambda: controller.snapshot()["state"] == "ready")
+        self.assertEqual([item.text for item in controller.recent_phrases()], ["둘", "셋", "넷"])
 
 
 if __name__ == "__main__":

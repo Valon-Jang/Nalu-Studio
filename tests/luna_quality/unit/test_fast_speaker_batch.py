@@ -55,6 +55,19 @@ class FastSpeakerBatchTest(unittest.TestCase):
         self.assertTrue(restored.paused)
         self.assertEqual(restored.items[0].state, BatchState.PENDING)
 
+    def test_latest_recovery_restores_full_session_metadata(self) -> None:
+        session = BatchSession.from_text("session", "원본 첫 문장.\n원본 둘째 문장.", source_path="input.md", code_revision="abc123")
+        session.issue_links.append("issues/one")
+        with tempfile.TemporaryDirectory() as directory:
+            store = SessionStore(Path(directory))
+            store.save(session)
+            restored = store.load_latest()
+        self.assertIsNotNone(restored)
+        self.assertEqual(restored.source_text, session.source_text)
+        self.assertEqual(restored.source_path, "input.md")
+        self.assertEqual(restored.issue_links, ["issues/one"])
+        self.assertEqual(restored.code_revision, "abc123")
+
 
 if __name__ == "__main__":
     unittest.main()
