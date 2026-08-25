@@ -7,6 +7,8 @@ from .contracts import (
     FastSynthesisResult,
 )
 from .fast_adapter import FakeFastBackend, LunaFastBackend
+from .ipc import WorkerCommand
+from .pcm import PcmFrame
 
 __all__ = [
     "FAST_SPEAKER_BACKEND_SCHEMA_VERSION",
@@ -15,4 +17,6 @@ __all__ = [
     "FastPhrase",
     "FastSynthesisResult",
     "LunaFastBackend",
+    "PcmFrame",
+    "WorkerCommand",
 ]
