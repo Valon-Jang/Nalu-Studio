@@ -58,6 +58,7 @@ class FastSpeakerController:
         self._state = "ready"
         self._last_phrase: PcmFrame | None = None
         self._last_sentence: tuple[PcmFrame, ...] = ()
+        self._recent_phrases: list[tuple[str, PcmFrame, int]] = []
         self._metrics: dict[str, Any] = {"warm_ttfa_seconds": None, "rolling_rtf": [], "last": None}
 
     def submit(self, text: str, seed: int = 20260826) -> str:
@@ -108,6 +109,10 @@ class FastSpeakerController:
             frames = iter(self._last_sentence)
             self._play_replay_sequence_locked(frames)
             return True
+
+    def recent_phrases(self) -> tuple[tuple[str, PcmFrame, int], ...]:
+        with self._lock:
+            return tuple(self._recent_phrases)
 
     def snapshot(self) -> Mapping[str, Any]:
         with self._lock:
@@ -194,6 +199,8 @@ class FastSpeakerController:
                     run.cached.append(frame)
                     run.current_sentence.append(frame)
                     if result is not None:
+                        phrase_text = str(result.get("phrase", {}).get("text", ""))
+                        self._recent_phrases = (self._recent_phrases + [(phrase_text, frame, run.seed)])[-3:]
                         metrics = result.get("metrics", {})
                         self._metrics["last"] = metrics
                         if isinstance(metrics.get("rtf"), (int, float)):

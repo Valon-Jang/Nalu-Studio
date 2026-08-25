@@ -14,7 +14,7 @@ from .batch import BatchSession
 from .controller import FastSpeakerController
 from .session_store import SessionStore
 from .worker import WorkerProcess
-from .issues import IssueCategory, IssueStore, new_issue
+from .issues import IssueCategory, IssueStore, RetestOutcome, new_issue
 
 
 class FastSpeakerApp:
@@ -27,6 +27,7 @@ class FastSpeakerApp:
         self.batch: BatchSession | None = None
         self.store = SessionStore(repo_root / "fast_speaker" / "sessions")
         self.issue_store = IssueStore(repo_root / "fast_speaker" / "issues")
+        self.last_issue = None
         self._batch_submitted = False
         self.status = tk.StringVar(value="Loading Luna worker…")
         self.metrics = tk.StringVar(value="READY: loading")
@@ -101,13 +102,29 @@ class FastSpeakerApp:
         if self.controller is None:
             return
         self.controller.pause()  # current phrase completes; next phrase is held
-        frame = getattr(self.controller, "_last_phrase", None)
-        if frame is None:
+        recent = self.controller.recent_phrases()
+        if not recent:
             self.status.set("No completed phrase available for issue evidence")
             return
-        issue = new_issue(category=IssueCategory.OTHER, phrase_text=self.input.get("1.0", "end-1c").strip(), note="Listening issue; classify before retest.", seed=20260826)
-        folder = self.issue_store.save(issue, frame)
-        self.status.set(f"Issue paused: {folder}")
+        dialog = tk.Toplevel(self.root); dialog.title("Mark Luna Issue")
+        choice = tk.StringVar(value=recent[-1][0]); category = tk.StringVar(value=IssueCategory.OTHER.value)
+        note = tk.StringVar(); word = tk.StringVar(); heard = tk.StringVar(); desired = tk.StringVar()
+        ttk.Label(dialog, text="Primary phrase (recent 3)").pack(anchor="w")
+        ttk.Combobox(dialog, textvariable=choice, values=[x[0] for x in recent], state="readonly", width=58).pack()
+        ttk.Combobox(dialog, textvariable=category, values=[x.value for x in IssueCategory], state="readonly").pack()
+        for label, value in (("Listening note", note), ("Problem word", word), ("Heard as", heard), ("Desired pronunciation", desired)):
+            ttk.Label(dialog, text=label).pack(anchor="w"); ttk.Entry(dialog, textvariable=value, width=60).pack()
+        def save() -> None:
+            text, frame, seed = next(x for x in recent if x[0] == choice.get())
+            fields = {"problem_word": word.get(), "heard_as": heard.get(), "desired_pronunciation": desired.get()}
+            try:
+                self.last_issue = new_issue(category=IssueCategory(category.get()), phrase_text=text, note=note.get(), seed=seed, **fields)
+                folder = self.issue_store.save(self.last_issue, frame)
+                request = (folder / "codex_request.md").read_text(encoding="utf-8")
+                self.root.clipboard_clear(); self.root.clipboard_append(request)
+                self.status.set(f"Issue paused and request copied: {folder}"); dialog.destroy()
+            except ValueError as error: self.status.set(str(error))
+        ttk.Button(dialog, text="Save + Copy Codex Request", command=save).pack(pady=6)
 
     def _start_batch_next(self) -> None:
         if self.controller is None or self.batch is None or self.batch.paused or self._batch_submitted:
