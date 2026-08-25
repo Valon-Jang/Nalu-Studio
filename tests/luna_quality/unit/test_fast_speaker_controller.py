@@ -86,6 +86,18 @@ class FastSpeakerControllerTest(unittest.TestCase):
         self.assertTrue(self.audio.stopped)
         self.assertTrue(any(item.command == "invalidate" for item in self.worker.commands))
 
+    def test_successful_worker_replacement_discards_old_request_and_accepts_new_one(self) -> None:
+        self.worker.block_synthesis = True
+        self.controller.submit("첫 작업")
+        self.assertTrue(self.worker.entered.wait(1))
+        new_worker = FakeWorker()
+        self.controller.replace_worker_after_restart(new_worker)
+        self.worker.release.set()
+        self.controller.submit("새 작업")
+        wait_for(lambda: len(self.audio.frames) == 1)
+        self.assertTrue(any(item.command == "synthesize" for item in new_worker.commands))
+        self.assertEqual(self.controller.snapshot()["state"], "playing")
+
 
 if __name__ == "__main__":
     unittest.main()

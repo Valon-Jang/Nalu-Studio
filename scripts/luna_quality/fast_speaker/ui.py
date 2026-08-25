@@ -15,6 +15,7 @@ from .controller import FastSpeakerController
 from .session_store import SessionStore
 from .worker import WorkerProcess
 from .issues import IssueCategory, IssueStore, RetestOutcome, new_issue
+from .rules import FastTestRuleOverlay
 
 
 class FastSpeakerApp:
@@ -27,12 +28,13 @@ class FastSpeakerApp:
         self.batch: BatchSession | None = None
         self.store = SessionStore(repo_root / "fast_speaker" / "sessions")
         self.issue_store = IssueStore(repo_root / "fast_speaker" / "issues")
+        self.rules = FastTestRuleOverlay(repo_root / "scripts" / "luna_quality" / "fast_speaker" / "rules" / "fast_test_rules.json")
         self.last_issue = None
         self._batch_submitted = False
         self.status = tk.StringVar(value="Loading Luna worker…")
         self.metrics = tk.StringVar(value="READY: loading")
         root.title("Luna FAST Speaker v1")
-        root.geometry("760x460")
+        root.geometry("900x520")
         self.input = tk.Text(root, height=13, wrap="word")
         self.input.pack(fill="both", expand=True, padx=12, pady=(12, 6))
         controls = ttk.Frame(root)
@@ -55,6 +57,12 @@ class FastSpeakerApp:
         ttk.Button(controls, text="Resolved", command=lambda: self.retest(RetestOutcome.RESOLVED)).pack(side="left", padx=2)
         ttk.Button(controls, text="Listen Previous", command=lambda: self.listen_issue(1)).pack(side="left", padx=4)
         ttk.Button(controls, text="Listen Retest", command=lambda: self.listen_issue(2)).pack(side="left", padx=4)
+        maintenance = ttk.Frame(root)
+        maintenance.pack(fill="x", padx=12, pady=(6, 0))
+        ttk.Button(maintenance, text="Reload Rules", command=self.reload_rules).pack(side="left", padx=(0, 4))
+        ttk.Button(maintenance, text="Restart Luna Worker", command=self.restart_worker).pack(side="left", padx=4)
+        ttk.Button(maintenance, text="Retest Issue Sentence", command=self.retest_issue_sentence).pack(side="left", padx=4)
+        ttk.Button(maintenance, text="Resume Issue Context", command=self.resume_issue_context).pack(side="left", padx=4)
         ttk.Label(root, textvariable=self.status).pack(anchor="w", padx=12, pady=(8, 0))
         ttk.Label(root, textvariable=self.metrics).pack(anchor="w", padx=12, pady=(2, 12))
         root.bind_all("<Control-Return>", lambda _: self.speak())
@@ -65,7 +73,7 @@ class FastSpeakerApp:
     def _start_worker(self) -> None:
         try:
             client = self.worker.start(120)
-            controller = FastSpeakerController(client, WinmmAudioSink())
+            controller = FastSpeakerController(client, WinmmAudioSink(), text_overlay=self.rules.apply)
             self.root.after(0, lambda: self._ready(controller))
         except Exception as error:
             self.root.after(0, lambda: self.status.set(f"Worker error: {type(error).__name__}: {error}"))
@@ -124,7 +132,8 @@ class FastSpeakerApp:
             text, frame, seed = next(x for x in recent if x[0] == choice.get())
             fields = {"problem_word": word.get(), "heard_as": heard.get(), "desired_pronunciation": desired.get()}
             try:
-                self.last_issue = new_issue(category=IssueCategory(category.get()), phrase_text=text, note=note.get(), seed=seed, **fields)
+                batch_sentence = self.batch.items[self.batch.active_index].text if self.batch is not None and self.batch.active_index is not None else text
+                self.last_issue = new_issue(category=IssueCategory(category.get()), phrase_text=text, note=note.get(), seed=seed, metadata={"batch_sentence": batch_sentence}, **fields)
                 folder = self.issue_store.save(self.last_issue, frame)
                 request = (folder / "codex_request.md").read_text(encoding="utf-8")
                 self.root.clipboard_clear(); self.root.clipboard_append(request)
@@ -136,8 +145,63 @@ class FastSpeakerApp:
         if self.last_issue is None or self.controller is None or not self.controller.recent_phrases():
             self.status.set("Select and save an issue first"); return
         _, frame, _ = self.controller.recent_phrases()[-1]
-        folder = self.issue_store.retest(self.last_issue, outcome=outcome, note="Explicit user retest evaluation", frame=frame)
+        from dataclasses import replace
+        revision = replace(self.last_issue, revision=self.last_issue.revision + 1, outcome=outcome, note="Explicit user retest evaluation")
+        folder = self.issue_store.save(revision, frame)
+        self.last_issue = revision
         self.status.set(f"Retest revision saved: {folder}")
+        if outcome is RetestOutcome.RESOLVED and self.batch is not None:
+            self.resume_issue_context()
+
+    def reload_rules(self) -> None:
+        result = self.rules.reload()
+        suffix = " Code changes require Restart Luna Worker." if result.requires_worker_restart else " Rule reload never reloads the model, reference, or generation parameters."
+        self.status.set(result.message + suffix)
+
+    def restart_worker(self) -> None:
+        if self.controller is None:
+            return
+        # Stop only volatile playback before the process is replaced. Persisted
+        # batch and issue data stay owned by the UI and are saved below.
+        self.controller.stop()
+        if self.batch is not None:
+            self.batch.pause()
+            self.batch.recover_interrupted_active()
+            self.store.save(self.batch)
+            self._batch_submitted = False
+        self.status.set("Restarting Luna Worker; UI, issue evidence, and saved batch state remain available…")
+        def restart() -> None:
+            try:
+                client = self.worker.restart(120)
+            except Exception as error:
+                self.root.after(0, lambda: self.status.set(f"Worker restart failed; saved session is unchanged: {type(error).__name__}: {error}"))
+                return
+            self.root.after(0, lambda: self._restart_ready(client))
+        threading.Thread(target=restart, daemon=True).start()
+
+    def _restart_ready(self, client: Any) -> None:
+        if self.controller is not None:
+            self.controller.replace_worker_after_restart(client)
+        self.status.set("READY — worker restarted. Continue batch to replay the interrupted sentence from its beginning.")
+
+    def retest_issue_sentence(self) -> None:
+        if self.last_issue is None or self.controller is None:
+            self.status.set("Select and save an issue first"); return
+        self.controller.submit(self.last_issue.phrase_text, self.last_issue.seed)
+        self.status.set("Retesting the saved issue sentence with the original seed")
+
+    def resume_issue_context(self) -> None:
+        if self.last_issue is None or self.batch is None:
+            self.status.set("No saved issue and active batch context"); return
+        sentence = str(self.last_issue.metadata.get("batch_sentence", self.last_issue.phrase_text))
+        try:
+            self.batch.resume_from_sentence(sentence)
+            self.store.save(self.batch)
+            self._batch_submitted = False
+            self._start_batch_next()
+            self.status.set("Resuming batch from the beginning of the issue sentence")
+        except ValueError as error:
+            self.status.set(str(error))
 
     def listen_issue(self, revision: int) -> None:
         if self.last_issue is None:

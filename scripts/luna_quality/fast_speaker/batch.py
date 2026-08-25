@@ -84,6 +84,22 @@ class BatchSession:
             self.items[self.active_index].state = BatchState.ISSUE
             self.active_index = None
 
+    def recover_interrupted_active(self) -> None:
+        """Make an interrupted sentence safe to replay from its beginning."""
+        if self.active_index is not None and self.items[self.active_index].state is BatchState.PLAYING:
+            self.items[self.active_index].state = BatchState.PENDING
+        self.active_index = None
+
+    def resume_from_sentence(self, text: str) -> BatchItem:
+        """Resume context validation from the exact sentence that had an issue."""
+        for index, item in enumerate(self.items):
+            if item.text == text:
+                self.active_index = None
+                self.paused = False
+                item.state = BatchState.PENDING
+                return item
+        raise ValueError("issue sentence is not present in this batch session")
+
     def counts(self) -> Mapping[str, int]:
         return {state.value: sum(item.state is state for item in self.items) for state in BatchState}
 
@@ -97,8 +113,7 @@ class BatchSession:
         items = [BatchItem(str(item["item_id"]), str(item["text"]), BatchState(str(item["state"]))) for item in value["items"]]
         session = cls(str(value["name"]), items, recovered=True)
         active = value.get("active_index")
-        if isinstance(active, int) and 0 <= active < len(items) and items[active].state is BatchState.PLAYING:
-            items[active].state = BatchState.PENDING  # resume the entire interrupted sentence
-        session.active_index = None
+        session.active_index = active if isinstance(active, int) and 0 <= active < len(items) else None
+        session.recover_interrupted_active()
         session.paused = bool(value.get("paused", False))
         return session

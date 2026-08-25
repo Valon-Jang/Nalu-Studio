@@ -1,0 +1,7 @@
+{
+  "package": "Luna FAST Speaker v1",
+  "stage": "S06",
+  "status": "COMPLETE_AWAITING_USER_APPROVAL",
+  "report": ".codex/reports/FAST_SPEAKER_V1_S06_REPORT.md",
+  "summary": "Safe FAST-test rule reload, worker restart recovery, issue retest, and batch context resume verified."
+}

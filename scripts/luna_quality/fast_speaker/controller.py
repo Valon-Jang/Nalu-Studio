@@ -46,8 +46,9 @@ def split_current_luna_phrases(text: str) -> tuple[FastPhrase, ...]:
 class FastSpeakerController:
     """Keeps Tk responsive; model IPC and audio completion run outside Tk callbacks."""
 
-    def __init__(self, worker: WorkerRequester, audio: AudioSink, *, split_text: Callable[[str], tuple[FastPhrase, ...]] = split_current_luna_phrases) -> None:
+    def __init__(self, worker: WorkerRequester, audio: AudioSink, *, split_text: Callable[[str], tuple[FastPhrase, ...]] = split_current_luna_phrases, text_overlay: Callable[[str], str] | None = None) -> None:
         self.worker, self.audio, self.split_text = worker, audio, split_text
+        self.text_overlay = text_overlay or (lambda value: value)
         self._lock = threading.RLock()
         self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="luna-fast-speaker")
         self._pending: deque[ManualRun] = deque()
@@ -62,7 +63,7 @@ class FastSpeakerController:
         self._metrics: dict[str, Any] = {"warm_ttfa_seconds": None, "rolling_rtf": [], "last": None}
 
     def submit(self, text: str, seed: int = 20260826) -> str:
-        phrases = self.split_text(text)
+        phrases = self.split_text(self.text_overlay(text))
         if not phrases:
             raise ValueError("text produced no phrases")
         run = ManualRun(uuid4().hex, uuid4().hex, phrases, time.perf_counter(), seed)
@@ -133,6 +134,18 @@ class FastSpeakerController:
         self._executor.shutdown(wait=False, cancel_futures=True)
         self.audio.close()
 
+    def replace_worker_after_restart(self, worker: WorkerRequester) -> None:
+        """Discard only in-flight work after a successful external restart."""
+        with self._lock:
+            self._pending.clear()
+            self._active = None
+            self._synthesis_busy = False
+            self._audio_busy = False
+            self._paused = False
+            self._state = "ready"
+            self.audio.stop()
+            self.worker = worker
+
     def _activate_next_locked(self) -> None:
         if self._active is None and self._pending:
             self._active = self._pending.popleft()
@@ -149,7 +162,7 @@ class FastSpeakerController:
             run.next_index += 1
             self._synthesis_busy = True
             self._state = "synthesizing" if not self._audio_busy else "playing"
-            self._executor.submit(self._synthesize, run, phrase, int(run.seed))
+            self._executor.submit(self._synthesize, self.worker, run, phrase, int(run.seed))
         if not self._audio_busy and run.ready_results:
             result = run.ready_results.popleft()
             if not result.get("stale", False):
@@ -161,10 +174,10 @@ class FastSpeakerController:
                     self._activate_next_locked()
                 self._pump_locked()
 
-    def _synthesize(self, run: ManualRun, phrase: FastPhrase, seed: int) -> None:
+    def _synthesize(self, requester: WorkerRequester, run: ManualRun, phrase: FastPhrase, seed: int) -> None:
         requested_generation = run.generation_id
         try:
-            response = self.worker.request(WorkerCommand("synthesize", uuid4().hex, run.session_id, requested_generation, phrase, seed), timeout_seconds=180)
+            response = requester.request(WorkerCommand("synthesize", uuid4().hex, run.session_id, requested_generation, phrase, seed), timeout_seconds=180)
         except Exception as error:
             response = {"stale": True, "error": f"{type(error).__name__}: {error}"}
         with self._lock:
