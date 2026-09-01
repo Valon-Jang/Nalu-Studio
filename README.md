@@ -12,6 +12,8 @@ So I spent a lot of tokens and time listening to generations, revising them, and
 
 Making the videos themselves was harder. This is an ordinary laptop, not a high-end production machine. Blender was not reliably usable, and tools such as Flow felt premature without a stronger visual foundation. Video production stalled more than once, but I did not want to give up on the voice.
 
+When I have a computer that can properly carry the work, I will come back to the videos.
+
 I also could not keep spending nearly all of a video's credits, then spending a week just chatting and iterating. I needed something more repeatable: a system that could take new dialogue and recreate the same voice without rebuilding the process from scratch.
 
 Nalu Studio is that system.
