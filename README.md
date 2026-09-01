@@ -50,6 +50,10 @@ This repository does not distribute private voice-reference audio, generated per
 
 Audio remains local. The quality runtime uses WAV/JSON file contracts and does not upload voice audio to an external service.
 
+## Use the voice
+
+If you like the voice this project is trying to build, you are welcome to take the system and use it in your own work. Please prepare your own legally authorized voice reference and models locally; the private Luna reference audio itself is not included here.
+
 ## Status
 
 The FAST/PRODUCTION integration is implemented. The production default remains subject to the creator's listening and approval.
