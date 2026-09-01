@@ -22,7 +22,7 @@ from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCTION_PYTHON = ROOT / "engine" / "chatterbox-v3" / "venv" / "Scripts" / "python.exe"
-STATE_DIR = Path(os.environ.get("LOCALAPPDATA", ROOT / ".local")) / "Gongdaeluna" / "luna-voice"
+STATE_DIR = Path(os.environ.get("LOCALAPPDATA", ROOT / ".local")) / "Nalu" / "luna-voice"
 DEFAULT_OUTPUT_DIR = ROOT / "outputs" / "luna_voice"
 
 if str(ROOT) not in sys.path:

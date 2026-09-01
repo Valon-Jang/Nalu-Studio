@@ -2,7 +2,7 @@
 
 ## 확인된 사항
 
-- 현재 공대루나 스튜디오의 runtime, Candidate B, prosody target은 각각 `engine/chatterbox-v3`, `assets/voice_ref/B_voiced_spectral_micro_smooth.wav`, `assets/voice_ref/LUNA_PROSODY_TARGET.json`에 있다. 실행팩은 이 저장소 상대경로를 기준으로 한다.
+- 현재 Nalu 스튜디오의 runtime, Candidate B, prosody target은 각각 `engine/chatterbox-v3`, `assets/voice_ref/B_voiced_spectral_micro_smooth.wav`, `assets/voice_ref/LUNA_PROSODY_TARGET.json`에 있다. 실행팩은 이 저장소 상대경로를 기준으로 한다.
 - 내장 venv의 Python 3.12.10에서 Chatterbox import를 확인했다. import 중 `perth`가 deprecated `pkg_resources` API를 쓴다는 경고가 나오지만 import 결과는 정상이다. 향후 setuptools 호환성 정리 대상으로 추적한다.
 - 공식 Chatterbox Multilingual V3는 한국어를 지원하고 Candidate B 같은 reference audio에서 conditionals를 준비한다.
 - 공식 구현의 `Conditionals`는 T3·S3Gen 조건값을 저장하고 불러올 수 있다.

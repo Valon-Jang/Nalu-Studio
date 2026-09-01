@@ -13,7 +13,7 @@ Listening note:
 Engine/config snapshot: Chatterbox Multilingual V3; Candidate B SHA-256 30C6D3405F46684AF467C7D26FF40A2FB57DD48CC84CD24CF7403D9AA00A2BB9; language_id=ko; exaggeration=0.5; cfg=0.5; temperature=0.72; repetition_penalty=1.2; min_p=0.05; top_p=1.0.
 Code/rule revision: 8d3e1fe6782468d47b25670664601fe8db5d944d / built-in-noop
 Timing metrics: {'schema_version': 'luna-fast-speaker-metrics/1', 'worker_ready_seconds': 20.98182490002364, 'synthesis_started_monotonic': 1131458.2079832, 'synthesis_finished_monotonic': 1131476.2763267, 'pcm_ready_monotonic': 1131476.2763314, 'audio_duration_seconds': 1.92, 'generation_seconds': 18.049832500051707, 'rtf': 9.400954427110264, 'playback_ttfa': 'not_run', 'warm_ttfa_seconds': 18.071587200043723}
-Issue WAV: C:\Users\tequi\Gongdaeluna-Studio\fast_speaker\issues\b7913a7e759e4881b739214bcf3fa988\r001\original_phrase.wav
+Issue WAV: C:\Users\tequi\Nalu-Studio\fast_speaker\issues\b7913a7e759e4881b739214bcf3fa988\r001\original_phrase.wav
 
 Reproduction: Launch scripts/luna_fast_speaker.py, use seed 20260826, submit the exact source sentence, and retest the selected phrase.
 

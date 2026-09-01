@@ -2,7 +2,7 @@
 
 - Stage: `FAST_SPEAKER_V1/S00`
 - Audit date: `2026-08-25` (Asia/Seoul)
-- Repository root: `C:\Users\tequi\Gongdaeluna-Studio`
+- Repository root: `C:\Users\tequi\Nalu-Studio`
 - Git branch / HEAD: `main` / `4cec4a8175687d278d0f1c3f35cbf284c1e16114`
 - Source package: `references/LUNA_FAST_SPEAKER_V1_CODEX_PACKAGE.zip`
 - Source package SHA-256: `69912385216b868183e8e90ab5c507030335d00fef0ea4056d76002cfc78a678`
@@ -180,7 +180,7 @@ The following current splitter observations were recorded without audio generati
 
 | Case | Input result |
 |---|---|
-| Short statement | `공대루나입니다.` -> one final phrase |
+| Short statement | `Nalu입니다.` -> one final phrase |
 | Longer statement | `아이언맨 슈트에는 냉각 기술이 반드시 필요합니다.` -> one final phrase |
 | Question | `이제 바닷속 케이블을 건널까요?` -> respelled punctuation `.`; one final phrase; question ending remains detectable after trimming punctuation |
 | Number | `천팔백오십팔년에는 새로운 기술이 등장했습니다.` -> one final phrase |

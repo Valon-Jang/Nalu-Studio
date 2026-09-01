@@ -2,7 +2,7 @@
 
 검증일: 2026-08-22
 
-공대루나 경로 재검증일: 2026-08-23
+Nalu 경로 재검증일: 2026-08-23
 
 ## 정적 검증
 
@@ -10,7 +10,7 @@
 - `.codex/stage_plan.json` JSON parse: PASS
 - ZIP integrity: PASS
 
-## 공대루나 스튜디오 경로 검증
+## Nalu 스튜디오 경로 검증
 
 - 저장소 기준 상대경로 사용: PASS
 - `scripts/luna_narration_pipeline_v1.py` 존재: PASS
@@ -23,7 +23,7 @@
 - `assets/voice_ref/LUNA_PROSODY_TARGET.json` 존재: PASS
 - 저장소 스킬 발견 경로 `.agents/skills/luna-narration/SKILL.md`: PASS
 
-현재 공대루나 폴더에는 아직 `.git`이 없으므로 실제 단계 게이트 설치 전 `git init`이 필요하다. 실행팩 검증 실패가 아니라 적용 선행 조건이다.
+현재 Nalu 폴더에는 아직 `.git`이 없으므로 실제 단계 게이트 설치 전 `git init`이 필요하다. 실행팩 검증 실패가 아니라 적용 선행 조건이다.
 
 ## 임시 Git 저장소 End-to-End 검증
 

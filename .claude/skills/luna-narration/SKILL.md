@@ -1,9 +1,9 @@
 ---
 name: luna-narration
-description: 공대루나 YouTube 내레이션(나레이션) 생성 규칙. 새 영상 대본의 음성 합성, Luna 목소리 작업, 내레이션 재생성, 억양 수정 요청 시 반드시 이 스킬을 로드한다. Use when creating or fixing any 공대루나 narration audio, Luna voice synthesis, or when a script needs TTS narration.
+description: Nalu YouTube 내레이션(나레이션) 생성 규칙. 새 영상 대본의 음성 합성, Luna 목소리 작업, 내레이션 재생성, 억양 수정 요청 시 반드시 이 스킬을 로드한다. Use when creating or fixing any Nalu narration audio, Luna voice synthesis, or when a script needs TTS narration.
 ---
 
-# Luna 내레이션 생성 규칙 (공대루나)
+# Luna 내레이션 생성 규칙 (Nalu)
 
 ## 목소리 — 절대 불변
 
@@ -194,5 +194,5 @@ sentence class를 Prosody Bank record와 preference pair에 함께 기록하고,
 ## 후반 작업 연결
 
 - 자막: `<id>_report.json`의 timeline(구절 텍스트+시각)에서 생성. ASS는 Name 필드 필수, WrapStyle 0, MarginV 540, 폰트는 로컬 `_fonts/`.
-- 최종 블록은 태그 없이 합성하고 브랜드 아웃트로 `assets/youtube/gongdaeluna/brand_audio/GONGDAELUNA_BRAND_OUTRO_BRIGHT_48k.wav`를 뒤에 붙인다.
+- 최종 블록은 태그 없이 합성하고 브랜드 아웃트로 `assets/youtube/nalu/brand_audio/NALU_BRAND_OUTRO_BRIGHT_48k.wav`를 뒤에 붙인다.
 - 영상 규격: 1080x1920, 24fps, 최종 믹스 −14 LUFS.

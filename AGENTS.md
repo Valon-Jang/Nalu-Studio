@@ -20,7 +20,7 @@
 ## 1. 절대 불변 규칙
 
 - Luna의 production 음성 엔진은 **Chatterbox Multilingual V3 + Candidate B**다.
-- 공대루나 런타임은 `engine/chatterbox-v3`, Python은 `engine/chatterbox-v3/venv/Scripts/python.exe`를 사용한다.
+- Nalu 런타임은 `engine/chatterbox-v3`, Python은 `engine/chatterbox-v3/venv/Scripts/python.exe`를 사용한다.
 - Candidate B는 `assets/voice_ref/B_voiced_spectral_micro_smooth.wav`, prosody 기준은 `assets/voice_ref/LUNA_PROSODY_TARGET.json`을 사용한다.
 - Candidate B 경로·해시·고정 파라미터를 임의로 바꾸지 않는다.
 - 다른 TTS, RVC, VC, 음성 엔진을 production 경로에 혼합하지 않는다.

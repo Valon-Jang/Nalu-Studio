@@ -89,7 +89,7 @@ python scripts/luna_voice.py start|status|stop
 
 Canonical production venv에서 실제 V3 모델로 다음 두 요청을 한 runtime에서 연속 생성했다.
 
-- `안녕하세요. 공대루나입니다.`
+- `안녕하세요. Nalu입니다.`
 - `기술 이야기를 시작합니다.`
 
 검증 결과:

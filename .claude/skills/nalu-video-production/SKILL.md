@@ -1,11 +1,11 @@
 ---
-name: gongdaeluna-video-production
-description: 공대루나 영상 제작(구현) 규칙 — Blender EEVEE 씬 구축, 렌더, 셰이더 레시피, 오버레이 합성, 조립. 3D 씬을 실제로 만들거나 렌더·수정하는 모든 작업 시 로드. Use when building, rendering, or fixing any 공대루나 3D scene or video assembly.
+name: nalu-video-production
+description: Nalu 영상 제작(구현) 규칙 — Blender EEVEE 씬 구축, 렌더, 셰이더 레시피, 오버레이 합성, 조립. 3D 씬을 실제로 만들거나 렌더·수정하는 모든 작업 시 로드. Use when building, rendering, or fixing any Nalu 3D scene or video assembly.
 ---
 
-# 공대루나 영상 제작 규칙 (Blender 구현)
+# Nalu 영상 제작 규칙 (Blender 구현)
 
-기획은 `gongdaeluna-video` 스킬(월드 3종·숏리스트·페이싱). 여기는 **만드는 법**.
+기획은 `nalu-video` 스킬(월드 3종·숏리스트·페이싱). 여기는 **만드는 법**.
 2026-08-06 구현 가능성 검증(T1 4라운드·T2·T3)에서 확정된 노하우.
 
 ## 환경

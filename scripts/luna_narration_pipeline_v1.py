@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Luna narration pipeline v1 — THE single entry point for 공대루나 narration.
+"""Luna narration pipeline v1 — THE single entry point for Nalu narration.
 
 CEO-validated 2026-08-05 on SUBSEA B04 A/B (B > A), pause ladder -> B4:
   - phrase split ~10 syllables (신비한건축사전 rhythm, LUNA_PROSODY_TARGET.json)

@@ -15,9 +15,9 @@
   "cases": [
     {
       "id": "short_statement",
-      "input": "공대루나입니다.",
-      "spoken_text": "공대루나입니다.",
-      "phrases": [{"id": "P00", "text": "공대루나입니다.", "sentence_final": true, "forced": false}]
+      "input": "Nalu입니다.",
+      "spoken_text": "Nalu입니다.",
+      "phrases": [{"id": "P00", "text": "Nalu입니다.", "sentence_final": true, "forced": false}]
     },
     {
       "id": "long_statement",

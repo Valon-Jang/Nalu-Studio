@@ -1,14 +1,14 @@
 ---
 name: luna-narration
-description: 공대루나 YouTube 내레이션(나레이션) 생성 규칙. 새 영상 대본의 음성 합성, Luna 목소리 작업, 내레이션 재생성, 억양 수정 요청 시 반드시 이 스킬을 로드한다. Use when creating or fixing any 공대루나 narration audio, Luna voice synthesis, or when a script needs TTS narration.
+description: Nalu YouTube 내레이션(나레이션) 생성 규칙. 새 영상 대본의 음성 합성, Luna 목소리 작업, 내레이션 재생성, 억양 수정 요청 시 반드시 이 스킬을 로드한다. Use when creating or fixing any Nalu narration audio, Luna voice synthesis, or when a script needs TTS narration.
 ---
 
-# Luna 내레이션 생성 규칙 (공대루나)
+# Luna 내레이션 생성 규칙 (Nalu)
 
 ## 목소리 — 절대 불변
 
 - **Luna = Chatterbox Multilingual V3 + Candidate B 레퍼런스만 사용.**
-  - 저장소 루트: 이 `SKILL.md`에서 `../../../`인 공대루나 작업 폴더. 현재 위치는 `C:\Users\tequi\Gongdaeluna-Studio`이며 실행 시에는 절대경로를 하드코딩하지 않고 저장소 상대경로를 사용한다.
+  - 저장소 루트: 이 `SKILL.md`에서 `../../../`인 Nalu 작업 폴더. 현재 위치는 `C:\Users\tequi\Nalu-Studio`이며 실행 시에는 절대경로를 하드코딩하지 않고 저장소 상대경로를 사용한다.
   - venv: `engine/chatterbox-v3/venv/Scripts/python.exe` (CPU, 모델 로드 ~60초)
   - 런타임 소스/캐시: `engine/chatterbox-v3/chatterbox/src`, `engine/chatterbox-v3/hf-cache`
   - 레퍼런스 wav: `assets/voice_ref/B_voiced_spectral_micro_smooth.wav` (sha256 `30C6D3405F46684AF467C7D26FF40A2FB57DD48CC84CD24CF7403D9AA00A2BB9`)
@@ -62,5 +62,5 @@ description: 공대루나 YouTube 내레이션(나레이션) 생성 규칙. 새 
 ## 후반 작업 연결
 
 - 자막: `<id>_report.json`의 timeline(구절 텍스트+시각)에서 생성. ASS는 Name 필드 필수, WrapStyle 0, MarginV 540, 폰트는 로컬 `_fonts/`.
-- 최종 블록은 태그 없이 합성하고 브랜드 아웃트로 `assets/youtube/gongdaeluna/brand_audio/GONGDAELUNA_BRAND_OUTRO_BRIGHT_48k.wav`를 뒤에 붙인다.
+- 최종 블록은 태그 없이 합성하고 브랜드 아웃트로 `assets/youtube/nalu/brand_audio/NALU_BRAND_OUTRO_BRIGHT_48k.wav`를 뒤에 붙인다.
 - 영상 규격: 1080x1920, 24fps, 최종 믹스 −14 LUFS.

@@ -1,6 +1,6 @@
 # Luna Validator + Preference Ranker — Codex 단계 실행팩
 
-이 실행팩은 `C:\Users\tequi\Gongdaeluna-Studio`의 현재 구조에 맞춰 조정되어 있다. 이 폴더의 **내용물**을 공대루나 저장소 루트에 복사하되, 기존 파일과 충돌하면 덮어쓰지 말고 먼저 비교한다. 실행 경로는 이동에 강하도록 모두 저장소 기준 상대경로를 사용한다.
+이 실행팩은 `C:\Users\tequi\Nalu-Studio`의 현재 구조에 맞춰 조정되어 있다. 이 폴더의 **내용물**을 Nalu 저장소 루트에 복사하되, 기존 파일과 충돌하면 덮어쓰지 말고 먼저 비교한다. 실행 경로는 이동에 강하도록 모두 저장소 기준 상대경로를 사용한다.
 
 단계 표기는 `S00~S11`로 총 12개다. `S00`은 저장소 감사와 baseline 동결을 위한 준비 단계이고, 실제 구축은 `S01~S11`의 11단계다.
 
@@ -15,7 +15,7 @@
 
 ## 2. 선행 조건
 
-- 작업 루트: `C:\Users\tequi\Gongdaeluna-Studio`
+- 작업 루트: `C:\Users\tequi\Nalu-Studio`
 - Git 저장소. 현재 폴더에 `.git`이 없으면 실행팩을 복사하기 전에 루트에서 `git init`을 먼저 실행한다.
 - Python 3.11 이상 권장
 - GPT-5.6을 사용할 경우 Codex CLI 0.144.0 이상 또는 해당 버전을 지원하는 최신 Codex 앱
@@ -26,7 +26,7 @@
 
 ### PowerShell 사전 점검
 
-공대루나 루트에서 실행한다.
+Nalu 루트에서 실행한다.
 
 ```powershell
 $required = @(

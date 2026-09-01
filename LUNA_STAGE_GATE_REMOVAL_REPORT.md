@@ -1,6 +1,6 @@
 # Luna Stage Gate removal report
 
-Backup: `C:\Users\tequi\Gongdaeluna-Studio\.luna-stage-gate-backups\\20260823-211157`
+Backup: `C:\Users\tequi\Nalu-Studio\.luna-stage-gate-backups\\20260823-211157`
 
 - Updated `.codex/stage_state.json`; original backed up when present.
 - Updated `.codex/stage_plan.json`; original backed up when present.

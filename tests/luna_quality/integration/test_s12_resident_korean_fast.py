@@ -26,7 +26,7 @@ class S12ResidentKoreanFastIntegrationTest(unittest.TestCase):
             root = Path(directory)
             first = runtime.handle({
                 "request_id": "ko-fast-one",
-                "text": "안녕하세요. 공대루나입니다.",
+                "text": "안녕하세요. Nalu입니다.",
                 "output_wav": str(root / "one.wav"),
                 "output_json": str(root / "one.json"),
                 "seed": 20260823,

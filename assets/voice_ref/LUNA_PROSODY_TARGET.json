@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "created": "2026-08-05",
-  "purpose": "Target intonation-shape statistics for 공대루나 Luna narration. Derived from CEO-selected reference narration (신비한건축사전 6 shorts). INTONATION STATISTICS ONLY — no voice cloning, no audio reuse. Luna timbre stays CANDIDATE_B (B_voiced_spectral_micro_smooth.wav, sha 30C6D34...).",
+  "purpose": "Target intonation-shape statistics for Nalu Luna narration. Derived from CEO-selected reference narration (신비한건축사전 6 shorts). INTONATION STATISTICS ONLY — no voice cloning, no audio reuse. Luna timbre stays CANDIDATE_B (B_voiced_spectral_micro_smooth.wav, sha 30C6D34...).",
   "provenance": {
     "reference_videos": [
       "https://www.youtube.com/shorts/OEHliQmpm24",
