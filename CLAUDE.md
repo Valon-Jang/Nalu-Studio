@@ -1,5 +1,7 @@
 # 공대루나 (Gongdaeluna) — Luna 목소리 + 제작 지식 전용 프로젝트
 
+> **Root 호환 주석 (2026-09-01):** 아래의 “음성 엔진 + 스킬 지식 전용” 범위는 2026-08-08 분리 당시 상태를 설명하는 역사 기록이다. 사용자의 현재 방향은 Luna 음성을 유지하면서 영상 제작까지 포함한다. 현재 방향과 문서 권위는 `.root/CURRENT.md`와 `.root/nodes/DOCUMENT_MAP.md`에서 확인하며, 이 주석은 `.agents/skills/luna-narration/SKILL.md`의 음성 불변 규칙을 변경하지 않는다.
+
 2026-08-08, 무거워진 `Personal-AI-Venture-Orchestrator`에서 분리해 새로 시작.
 **범위는 Luna 목소리 엔진 + 스킬 MD(지식)만.** 영상 제작 자산(Blender 스크립트, 렌더,
 기획서, 조립 파이프라인, 브랜드 영상/텍스처 소스)은 의도적으로 가져오지 않았다 —

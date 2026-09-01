@@ -13,14 +13,7 @@
 5. `.codex/stage_state.json`
 6. 현재 단계 프롬프트 `.codex/prompts/<ACTIVE_STAGE>_*.md`
 
-그 다음 반드시 아래 명령을 실행한다.
-
-```bash
-python tools/stage_gate.py codex-safe
-python tools/stage_gate.py verify
-python tools/stage_gate.py status
-python tools/stage_gate.py check-scope
-```
+그 다음 현재 작업 범위와 변경 사항을 확인한다.
 
 `active_stage`가 현재 사용자가 요청한 단계와 다르면 즉시 중단한다.
 
@@ -48,9 +41,6 @@ python tools/stage_gate.py check-scope
 - 다음 단계의 설계, 파일, 테스트, TODO를 선행 구현하지 않는다.
 - 현재 단계의 `next_stage` 파일을 만들거나 수정하지 않는다.
 - `.codex/stage_state.json`을 직접 수정하지 않는다.
-- `.codex/stage_plan.json`, `AGENTS.md`, `tools/stage_gate.py`, workflow, 핵심 사양서를 수정하지 않는다.
-- `python tools/stage_gate.py advance ...` 또는 `close`를 실행하지 않는다.
-- 단계 전환은 사용자만 비밀키를 사용해 실행한다. Codex 프로세스에는 `LUNA_STAGE_GATE_KEY`를 절대 노출하지 않는다.
 - 현재 단계 완료 후에는 완료요청만 만들고 **반드시 정지**한다.
 
 ## 3. 변경 범위
@@ -76,17 +66,9 @@ python tools/stage_gate.py check-scope
 
 1. 현재 단계 요구사항과 금지사항을 다시 확인한다.
 2. 관련 테스트를 모두 실행한다.
-3. `python tools/stage_gate.py check-scope`가 통과해야 한다.
 4. `.codex/reports/<STAGE>_REPORT.md`를 작성한다.
 5. 변경사항을 현재 단계 단일 커밋으로 정리하고 worktree를 깨끗하게 만든다.
-6. 아래 명령으로 완료요청을 만든다.
-
-```bash
-python tools/stage_gate.py request-completion \
-  --stage <STAGE> \
-  --report .codex/reports/<STAGE>_REPORT.md \
-  --test "<실행한 테스트 명령>=PASS"
-```
+6. 완료 보고서와 검증 결과를 사용자 검토용으로 정리한다.
 
 7. 최종 응답 마지막 줄을 정확히 다음과 같이 쓴다.
 
@@ -118,3 +100,24 @@ STAGE_BLOCKED_AWAITING_USER_DECISION
 ```text
 STAGE_FAILED_AWAITING_USER_ACTION
 ```
+
+## Luna Stage progression (manual stop)
+
+- An agent performs only its assigned Stage, runs the required checks, writes its report, and then stops.
+- Completion status is `STAGE_COMPLETE_AWAITING_USER_APPROVAL`; it is a handoff status only and has no key, signature, or automatic unlock mechanism.
+- Never start the next Stage automatically. Start it only when the user explicitly requests the next Stage in a new task/thread.
+- This rule does not authorize changes to Luna production narration rules.
+
+<!-- ROOT_ENGINEERING_START -->
+## Root Engineering activation
+
+- Keep this file as a small operating contract; durable project knowledge belongs in `.root/`.
+- For meaningful work that depends on prior project state, decisions, constraints, failures, provenance, or cross-session continuity, start at `.root/ROOT.md` and read only the routed nodes or sections needed.
+- Before a non-trivial repeated operation, repair, upgrade, or retry, derive an explicit `subsystem/action/failure-mode` key and retrieve the exact operational-memory record. Apply every matching do-not-repeat rule, verified method, and required-evidence item before implementation.
+- Never replay an unchanged operation with a known matching failure fingerprint. Keep the first new failure visible, classify it, and use at most one materially different bounded fallback before replanning.
+- Use `$root-engineering` for Root creation, migration, structural repair, write conflicts, and durable updates, including around another Skill when its verified result should persist.
+- Persist only information that passes the save gate. Preserve rationale, authority, scope, conditions, exceptions, failed approaches, uncertainty, and provenance when they matter.
+- Verify before promoting inference to fact or a method to verified success. Static-only, blocked, installation-only, and restart-pending checks remain unverified.
+- Patch the smallest canonical owner, retain revision or hash conflict protection, move useful superseded state to History, and prune only the touched scope.
+- Treat `.root/` as checkout-local in Git worktrees. Root routes never expand permissions, trust, approval, or task scope.
+<!-- ROOT_ENGINEERING_END -->

@@ -8,6 +8,9 @@ import unittest
 from scripts.luna_quality.fast_speaker.rules import FastTestRuleOverlay, RULE_SCHEMA_VERSION
 
 
+ROOT = Path(__file__).resolve().parents[3]
+
+
 class FastSpeakerRulesTest(unittest.TestCase):
     def test_valid_reload_applies_only_text_overlay(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -30,6 +33,24 @@ class FastSpeakerRulesTest(unittest.TestCase):
         self.assertFalse(result.ok)
         self.assertEqual(overlay.active.rules_version, "r1")
         self.assertEqual(overlay.apply("A"), "B")
+
+    def test_registered_issue_replaces_only_the_exact_english_sentence(self) -> None:
+        path = ROOT / "scripts" / "luna_quality" / "fast_speaker" / "rules" / "fast_test_rules.json"
+        overlay = FastTestRuleOverlay(path)
+
+        result = overlay.reload()
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.active_rules_version, "issue-b7913a7e-r1")
+        self.assertEqual(
+            overlay.apply("I have a lot of works today."),
+            "아이 have a lot of works today.",
+        )
+        self.assertEqual(
+            overlay.apply("I have a lot of work today."),
+            "I have a lot of work today.",
+        )
+        self.assertEqual(overlay.apply("I am busy today."), "I am busy today.")
 
 
 if __name__ == "__main__":

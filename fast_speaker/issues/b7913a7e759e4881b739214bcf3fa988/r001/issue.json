@@ -1,0 +1,63 @@
+{
+  "issue_id": "b7913a7e759e4881b739214bcf3fa988",
+  "revision": 1,
+  "category": "OTHER",
+  "phrase_text": "I have a lot of works today.",
+  "note": "",
+  "seed": 20260826,
+  "problem_word": "I",
+  "heard_as": "I",
+  "desired_pronunciation": "아이",
+  "outcome": null,
+  "metadata": {
+    "batch_sentence": "I have a lot of works today.",
+    "batch_item_index": null,
+    "code_revision": "8d3e1fe6782468d47b25670664601fe8db5d944d",
+    "current_sentence": "I have a lot of works today.",
+    "full_phrase_split": [
+      "I have a lot of works today."
+    ],
+    "engine_config": {
+      "engine": "Chatterbox Multilingual V3",
+      "reference": "Candidate B",
+      "reference_sha256": "30C6D3405F46684AF467C7D26FF40A2FB57DD48CC84CD24CF7403D9AA00A2BB9",
+      "language_id": "ko",
+      "exaggeration": 0.5,
+      "cfg": 0.5,
+      "temperature": 0.72,
+      "repetition_penalty": 1.2,
+      "min_p": 0.05,
+      "top_p": 1.0
+    },
+    "metrics": {
+      "schema_version": "luna-fast-speaker-metrics/1",
+      "worker_ready_seconds": 20.98182490002364,
+      "synthesis_started_monotonic": 1131458.2079832,
+      "synthesis_finished_monotonic": 1131476.2763267,
+      "pcm_ready_monotonic": 1131476.2763314,
+      "audio_duration_seconds": 1.92,
+      "generation_seconds": 18.049832500051707,
+      "rtf": 9.400954427110264,
+      "playback_ttfa": "not_run",
+      "warm_ttfa_seconds": 18.071587200043723
+    },
+    "original_input": "안녕하세요, 좋은 아침입니다.\n나~~니~~~~???\n오늘의 날씨는 매우 덥고 흐린 날씨가 계속 되겠습니다.\n우산 잘 챙겨가시고 바깥 활동은 자제해주시기 바랍니다.\n네?\n아니 그게 아니잖아요\n데?\n헤에?\n헤?\n하...\n참..내..\n참내..\n나원참.\n오늘은 이이무라가 마무리를 맡습니다.\nI have a lot of works today.\n",
+    "phrase_class": "sentence_final",
+    "phrase_id": "P00",
+    "recent_phrase_context": [
+      "나원참.",
+      "오늘은 이이무라가 마무리를 맡습니다.",
+      "I have a lot of works today."
+    ],
+    "rule_revision": "built-in-noop",
+    "session_name": "luna_fast_20260826_064626",
+    "source_mode": "manual"
+  },
+  "created_at": "2026-08-26T09:42:29.284282+00:00",
+  "status": "OPEN",
+  "evidence_paths": {
+    "issue_wav": "C:\\Users\\tequi\\Gongdaeluna-Studio\\fast_speaker\\issues\\b7913a7e759e4881b739214bcf3fa988\\r001\\original_phrase.wav",
+    "issue_markdown": "C:\\Users\\tequi\\Gongdaeluna-Studio\\fast_speaker\\issues\\b7913a7e759e4881b739214bcf3fa988\\r001\\issue.md",
+    "codex_request": "C:\\Users\\tequi\\Gongdaeluna-Studio\\fast_speaker\\issues\\b7913a7e759e4881b739214bcf3fa988\\r001\\codex_request.md"
+  }
+}

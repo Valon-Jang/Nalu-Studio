@@ -23,3 +23,10 @@ references/LUNA_CODEX_STAGE_PACK.zip
 # Local experiment outputs and model caches must remain outside source control.
 experiments/luna_quality/**/outputs/
 .luna_quality_cache/
+
+# Local agent/browser state and private listening-review source audio.
+.playwright-cli/
+.claude/skills/playwright-cli/
+.luna-stage-gate-backups/
+.root/
+fast_speaker/issues/**/*.wav

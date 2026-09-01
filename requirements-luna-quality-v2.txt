@@ -1,0 +1,19 @@
+# Isolated quality runtime only.  Do not install this file into production.
+# Python 3.12 / Windows CPU runtime; validators exchange WAV and JSON artifacts.
+pip==26.2.1
+setuptools==80.9.0
+wheel==0.45.1
+
+# Base runtime
+torch==2.8.0
+torchaudio==2.8.0
+torchvision==0.23.0
+
+# Content validation
+whisperx==3.8.6
+
+# Speaker validation
+speechbrain==1.1.0
+
+# MOS validation
+utmos-pytorch==0.1.0

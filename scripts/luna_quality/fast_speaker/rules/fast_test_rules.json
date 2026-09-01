@@ -1,5 +1,7 @@
 {
   "schema_version": "luna-fast-speaker-rules/1",
-  "rules_version": "initial-noop",
-  "text_replacements": {}
+  "rules_version": "issue-b7913a7e-r1",
+  "text_replacements": {
+    "I have a lot of works today.": "아이 have a lot of works today."
+  }
 }

@@ -25,6 +25,140 @@ venv_python -X utf8 scripts/luna_narration_pipeline_v1.py JOBS.json OUTDIR
 - 블록별 수동 튜닝 금지. 대본이 바뀌어도 이 파이프라인 하나로 처리한다.
 - 목표 수치의 원본: `assets/voice_ref/LUNA_PROSODY_TARGET.json` (신비한건축사전 6편 측정치 + CEO 검증 이력)
 
+## Luna Quality System — 모든 내레이션 생성에 필수
+
+기존 TTS만 단독 실행하지 않는다. 모든 Luna 생성 작업은 기존 production
+파이프라인에 Luna Quality System을 함께 연결한다. Luna의 생성 엔진과
+정체성은 계속 Chatterbox Multilingual V3 + Candidate B이며, 다른 TTS나
+VC/RVC를 섞지 않는다.
+
+현재 검증된 릴리스 경계는 `SHADOW_ONLY_APPROVED`다. 따라서 Quality System은
+반드시 실행하되 production 선택을 자동으로 바꾸는 `select`는 승인된 실제
+ranker·speaker calibration·USER approval manifest가 모두 준비되기 전까지
+사용하지 않는다.
+
+### 기본 실행 설정
+
+```powershell
+$env:LUNA_QUALITY_MODE = 'shadow'
+$env:LUNA_CONDITIONALS_CACHE = 'on'
+$env:LUNA_ASR_VALIDATOR = 'on'
+$env:LUNA_SPEAKER_VALIDATOR = 'on'
+$env:LUNA_MOS_VALIDATOR = 'on'
+$env:LUNA_PREFERENCE_RANKER = 'shadow'
+$env:LUNA_HYBRID_SYNTHESIS = 'off'
+```
+
+- `LUNA_QUALITY_MODE=off`로 생성하지 않는다.
+- 구현되어 정상 작동 가능한 validator와 ranker는 임의로 끄지 않는다.
+- flag가 `on`이어도 dependency·model·calibration·artifact가 없으면 결과는
+  `unknown` 또는 `not_run`이다. 이를 `pass`로 표현하지 않는다.
+- WhisperX, SpeechBrain, MOS 또는 model revision을 검증 없이 다운로드하거나
+  설치해 빈 칸을 억지로 채우지 않는다.
+- unavailable 항목이 있으면 기존 gate만으로 최종 취향을 확정하지 않는다.
+  후보와 별도 quality report를 보존하고 사용자 비교 청취로 전환한다.
+- conditionals cache는 Candidate B와 V3 source/checkpoint/reference hash가
+  정확히 맞을 때만 사용한다. 불일치하면 기존 Candidate B 분석 경로로
+  폴백하되 Quality System 자체를 끄지는 않는다.
+
+### 필수 평가 순서
+
+1. 생성 전에 기존 `pins.json`, Prosody Bank, ranker artifact, speaker
+   calibration, 승인 manifest와 optional validator 가용성을 확인한다.
+2. Chatterbox V3 + Candidate B와 고정 synthesis parameter로 여러 take를
+   생성한다.
+3. Audio Sanity와 ASR/원문 일치 검사로 손상, clipping, 비정상 무음, 오독,
+   누락, 삽입, 반복, hallucination을 먼저 분리한다.
+4. 승인된 calibration이 있으면 Luna speaker identity를 검사한다. calibration이
+   없으면 `unknown`이며 화자 통과로 간주하지 않는다.
+5. 기존 pitch/speed/tail/curl/rebound와 문장 연결 수치를 측정하되, 아래의
+   취향 지표를 단독 hard reject로 사용하지 않는다.
+6. 동일 문장 유형의 Prosody Bank 기록, 과거 사용자 승인 take, 기존 pin과
+   Preference Ranker 결과를 함께 비교한다.
+7. legacy gate와 사용자 이력/ranker 판단이 충돌하면 양쪽 결과와 이유를
+   quality report에 남긴다.
+8. 기술적 오류가 없는 상위 후보는 gate 결과와 무관하게 보존하여 사용자가
+   직접 비교 청취할 수 있게 한다.
+
+### Hard Reject와 Preference를 분리
+
+다음은 다른 점수가 보상할 수 없는 기술적 hard reject다.
+
+- 손상되거나 비어 있는 WAV, NaN/Inf
+- 심한 clipping, noise 또는 비정상 무음
+- 원문 핵심어 오독·누락·삽입·반복·hallucination
+- 심각한 자음 왜곡
+- 승인된 calibration 기준에서 Luna와 명백히 다른 화자
+
+다음은 취향과 문장 기능에 따라 달라지는 preference/ranking feature다.
+단독으로 최종 탈락을 결정하지 않는다.
+
+- 절대 pitch level
+- tail 절대·상대 낙폭
+- final glide와 rebound
+- 종결 기울기
+- 허용 범위 안 속도의 미세한 차이
+- 기존 quality score와 block median 선호값
+
+현재 production JSON의 `ok=false`가 위 preference feature만으로 발생했다면
+파일을 삭제하거나 명백한 불량으로 부르지 않는다. `legacy_gate_fail`과
+`user_reviewable`을 함께 기록하고 비교 청취 후보로 유지한다.
+
+### 문장 유형별 평가
+
+최소한 다음 유형을 분리한다. 특정 `-요`/`-죠` 문제에서 얻은 종결 규칙을
+모든 평서문에 그대로 적용하지 않는다.
+
+- 일반 설명 평서문
+- 단정적 기술 설명(`-입니다`, `-됩니다`)
+- `-요` 종결
+- `-죠` 종결
+- 의문문
+- 이어지는 구절과 강제분할 조각
+- 숫자 포함 구절
+- 강조 문장
+
+sentence class를 Prosody Bank record와 preference pair에 함께 기록하고,
+동일 유형의 승인 사례를 우선 비교한다. 유형 근거가 부족하면 threshold를
+임의 조정하지 말고 사용자에게 후보를 들려준다.
+
+### 사용자 선호는 최상위 학습 신호
+
+사용자가 “좋다”, “더 자연스럽다”, “Luna 같다”, “어둡다”, “별로다”,
+“1번이 더 좋다”처럼 평가하면 코멘트로만 소비하지 않는다.
+
+- preferred take와 comparison take의 정확한 project/block/phrase/take ID,
+  WAV·JSON SHA-256, 문장 유형, metrics, validator 상태와 사용자 표현을
+  selection event로 기록한다.
+- 예: `P00_t0 > P00_t10`.
+- 사용자가 승인한 take는 legacy gate에서 탈락했어도 positive preference
+  example로 보존하고 `legacy_gate_false_negative` 충돌을 기록한다.
+- 단순히 선택되지 않은 후보를 명시적 반려로 바꾸지 않는다.
+- 기존 `pins.json` 선택 이력을 Prosody Bank에 수집하고, 충분한 실제 pair가
+  모였을 때만 grouped evaluation을 거쳐 ranker를 다시 학습한다.
+- ranker가 `insufficient_data`, schema mismatch, low coverage 또는 low
+  confidence이면 점수를 꾸미지 않는다. 상위 후보를 사용자에게 들려주어
+  preference data를 추가 확보한다.
+
+사용자가 좋은 후보를 이미 찾았으면 새 take 생성을 즉시 멈추고 기존 후보
+비교와 preference 기록을 먼저 끝낸다. 사용자가 중단을 요청하면 현재 생성을
+즉시 중단하며, 이미 완성된 후보와 측정 JSON은 삭제하지 않는다.
+
+### 최종 선택 전 체크리스트
+
+- Quality System이 실제로 `shadow` 또는 승인된 `select`로 실행됐는가
+- 요청한 validator가 `pass/fail/unknown/not_run` 중 무엇을 반환했는가
+- Preference Ranker가 실제 artifact를 로드했는가, 아니면
+  `insufficient_data/not_run`인가
+- Prosody Bank와 기존 pins/사용자 승인 이력을 조회했는가
+- legacy gate와 ranker/사용자 선호 충돌을 기록했는가
+- 기술적 hard reject가 아닌 상위 후보를 사용자 청취용으로 보존했는가
+
+하나라도 확인할 수 없으면 기존 gate만으로 최종 취향을 확정하지 않는다.
+목표는 기존 threshold에 가장 가까운 음성이 아니라, 같은 Luna 정체성을
+유지하면서 실제 사용자가 가장 자연스럽다고 느끼는 take를 안정적으로
+선택하는 것이다.
+
 ## 파이프라인이 하는 일 (전부 CEO 검증 완료 2026-08-05)
 
 1. **구절 분할**: 문장→쉼표/연결어미 경계→~10음절(4~22) 구절. 한도 초과 시 연결형(-어/-아/-고/-서/-과/-와/-처럼…) 어미 단어 우선으로 강제 분할(조사에서 자르면 문장 끝처럼 읽혀서 CEO 반려됨). **수식어(-한/-된/-진/-인) 뒤 절단 금지** ("…유연한 | 부분이…" 반려). **-에서(처격) 뒤 절단 금지 + 연결어미 '서'로 오인 금지** — 동사구에 붙음 ("손목에서 | 거미줄을" 반려: "쉬지말고 이어버리자"). 리스펠 사전에 끊어진→끄너진 포함. 강제분할 조각 뒤 쉼은 0.05~0.10초(0이면 "순간 음소거"처럼 들림 — "부분과" 반려). 분할 규칙 변경 시 **동결된 프로젝트는 작업 목록에서 제외**할 것(분할이 바뀌면 캐시·확정 오디오 무효화).
