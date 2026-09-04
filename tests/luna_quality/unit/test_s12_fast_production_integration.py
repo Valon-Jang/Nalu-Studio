@@ -185,6 +185,29 @@ class S12FastProductionIntegrationTest(unittest.TestCase):
         self.assertEqual(captured["text"], "대사만 입력합니다.")
         self.assertEqual(captured["mode"], "fast")
 
+    def test_dispatch_auto_uses_lowmem_for_fast_when_small_cgroup(self) -> None:
+        from scripts import luna_voice
+
+        with patch.object(luna_voice, "should_use_low_memory_backend", return_value=True), \
+             patch.object(luna_voice, "run_low_memory_fast", return_value={"status": "ok", "runtime_backend": "lowmem"}) as lowmem, \
+             patch.object(luna_voice, "ensure_worker") as ensure_worker:
+            result = luna_voice._dispatch({"text": "저메모리입니다.", "output_wav": "out.wav", "mode": "fast"}, 19081, auto_start=True)
+        self.assertEqual(result["runtime_backend"], "lowmem")
+        lowmem.assert_called_once()
+        ensure_worker.assert_not_called()
+
+    def test_dispatch_production_keeps_resident_backend(self) -> None:
+        from scripts import luna_voice
+
+        with patch.object(luna_voice, "should_use_low_memory_backend", return_value=False), \
+             patch.object(luna_voice, "ensure_worker") as ensure_worker, \
+             patch.object(luna_voice, "send_request", return_value={"status": "ok", "mode": "production"}) as send_request:
+            with patch.dict("os.environ", {"LUNA_VOICE_BACKEND": "auto"}, clear=False):
+                result = luna_voice._dispatch({"text": "정밀 생성", "output_wav": "out.wav", "mode": "production"}, 19081, auto_start=True)
+        self.assertEqual(result["mode"], "production")
+        ensure_worker.assert_called_once_with(19081)
+        send_request.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()
