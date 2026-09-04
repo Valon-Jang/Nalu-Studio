@@ -1,0 +1,156 @@
+name: Chat Luna Runtime V2
+
+on:
+  push:
+    branches: [chat-model-cache-stage]
+    paths:
+      - '.github/workflows/chat-runtime-v2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Prepare exact sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p stage
+          git clone -q https://github.com/Valon-Jang/Nalu-Studio.git stage/Nalu-Studio
+          git -C stage/Nalu-Studio checkout -q 11c2551c70c3fb7106168ee3cde0e1ef457832af
+          rm -rf stage/Nalu-Studio/.git
+          mkdir -p stage/Nalu-Studio/engine/chatterbox-v3
+          git clone -q https://github.com/resemble-ai/chatterbox.git stage/Nalu-Studio/engine/chatterbox-v3/chatterbox
+          git -C stage/Nalu-Studio/engine/chatterbox-v3/chatterbox checkout -q 5de7a54aa4e5e2baadb0182dde554908b48b85c2
+          rm -rf stage/Nalu-Studio/engine/chatterbox-v3/chatterbox/.git
+
+      - name: Prepare portable Python 3.12.13
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install -q --user uv
+          UV="$HOME/.local/bin/uv"
+          "$UV" python install 3.12.13
+          PY="$($UV python find 3.12.13 --managed-python)"
+          PYROOT="$(dirname "$(dirname "$PY")")"
+          cp -a "$PYROOT" stage/Nalu-Studio/engine/chatterbox-v3/venv
+          stage/Nalu-Studio/engine/chatterbox-v3/venv/bin/python3.12 --version
+
+      - name: Install exact dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          UV="$HOME/.local/bin/uv"
+          VPY=stage/Nalu-Studio/engine/chatterbox-v3/venv/bin/python3.12
+          "$UV" pip install --python "$VPY" --system --break-system-packages --no-cache \
+            --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.6.0+cpu torchaudio==2.6.0+cpu
+          "$UV" pip install --python "$VPY" --system --break-system-packages --no-cache \
+            numpy==1.26.4 transformers==5.2.0 huggingface-hub==1.30.0 diffusers==0.29.0 \
+            librosa==0.11.0 s3tokenizer==0.3.0 conformer==0.3.2 safetensors==0.5.3 \
+            spacy-pkuseg==1.0.1 pykakasi==2.3.0 gradio==6.8.0 pyloudnorm==0.2.0 \
+            omegaconf==2.3.1 resemble-perth==1.0.1 socksio==1.0.0
+          "$VPY" - <<'PY'
+          import torch, torchaudio, numpy, transformers, huggingface_hub, diffusers
+          import librosa, s3tokenizer, conformer, safetensors, spacy_pkuseg, pykakasi, gradio, pyloudnorm, omegaconf, perth
+          print('IMPORTS_OK', torch.__version__, torchaudio.__version__, numpy.__version__)
+          PY
+
+      - name: Add offline assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=stage/Nalu-Studio/engine/chatterbox-v3
+          mkdir -p "$ROOT/pkuseg"
+          curl -L --fail --retry 5 --retry-all-errors \
+            https://github.com/explosion/spacy-pkuseg/releases/download/v0.0.26/spacy_ontonotes.zip \
+            -o "$ROOT/pkuseg/spacy_ontonotes.zip"
+          echo 'b216e7f92de7ae285aeab8feba2faa8ea8216e5995ff6fb3d391cc8356db1bfe  stage/Nalu-Studio/engine/chatterbox-v3/pkuseg/spacy_ontonotes.zip' | sha256sum -c -
+          unzip -q "$ROOT/pkuseg/spacy_ontonotes.zip" -d "$ROOT/pkuseg"
+          mkdir -p "$ROOT/venv/Scripts"
+          ln -s ../bin/python3.12 "$ROOT/venv/Scripts/python.exe"
+          SITE="$ROOT/venv/lib/python3.12/site-packages/sitecustomize.py"
+          cat > "$SITE" <<'PY'
+          import os
+          from pathlib import Path
+          os.environ.setdefault('HF_ENDPOINT', 'http://127.0.0.1:9')
+          os.environ.setdefault('HF_HUB_OFFLINE', '1')
+          os.environ.setdefault('TRANSFORMERS_OFFLINE', '1')
+          os.environ.setdefault('HF_DATASETS_OFFLINE', '1')
+          os.environ.setdefault('TOKENIZERS_PARALLELISM', 'false')
+          os.environ.setdefault('PKUSEG_HOME', str(Path(__file__).resolve().parents[4] / 'pkuseg'))
+          PY
+          "$ROOT/venv/Scripts/python.exe" --version
+
+      - name: Pack and split
+        shell: bash
+        run: |
+          set -euo pipefail
+          find stage/Nalu-Studio -type d -name __pycache__ -prune -exec rm -rf {} + || true
+          mkdir -p out
+          tar -I 'zstd -3 -T0' -cf out/luna-runtime.tar.zst -C stage Nalu-Studio
+          sha256sum out/luna-runtime.tar.zst > out/luna-runtime.tar.zst.sha256
+          stat -c '%s' out/luna-runtime.tar.zst > out/luna-runtime.tar.zst.size
+          split -b 200000000 -d -a 2 out/luna-runtime.tar.zst out/runtime.part
+          ls -lh out/runtime.part*
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part00') != '' }}
+        with: {name: luna-runtime-v2-part00, path: out/runtime.part00, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part01') != '' }}
+        with: {name: luna-runtime-v2-part01, path: out/runtime.part01, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part02') != '' }}
+        with: {name: luna-runtime-v2-part02, path: out/runtime.part02, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part03') != '' }}
+        with: {name: luna-runtime-v2-part03, path: out/runtime.part03, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part04') != '' }}
+        with: {name: luna-runtime-v2-part04, path: out/runtime.part04, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part05') != '' }}
+        with: {name: luna-runtime-v2-part05, path: out/runtime.part05, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part06') != '' }}
+        with: {name: luna-runtime-v2-part06, path: out/runtime.part06, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part07') != '' }}
+        with: {name: luna-runtime-v2-part07, path: out/runtime.part07, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part08') != '' }}
+        with: {name: luna-runtime-v2-part08, path: out/runtime.part08, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part09') != '' }}
+        with: {name: luna-runtime-v2-part09, path: out/runtime.part09, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part10') != '' }}
+        with: {name: luna-runtime-v2-part10, path: out/runtime.part10, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part11') != '' }}
+        with: {name: luna-runtime-v2-part11, path: out/runtime.part11, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part12') != '' }}
+        with: {name: luna-runtime-v2-part12, path: out/runtime.part12, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part13') != '' }}
+        with: {name: luna-runtime-v2-part13, path: out/runtime.part13, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part14') != '' }}
+        with: {name: luna-runtime-v2-part14, path: out/runtime.part14, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part15') != '' }}
+        with: {name: luna-runtime-v2-part15, path: out/runtime.part15, compression-level: 0, retention-days: 1}
+
+      - name: Upload manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-runtime-v2-manifest
+          path: |
+            out/luna-runtime.tar.zst.sha256
+            out/luna-runtime.tar.zst.size
+          retention-days: 1
