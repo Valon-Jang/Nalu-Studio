@@ -16,6 +16,14 @@ Observed on the S12 Windows CPU smoke test:
 
 Timing varies with text length and machine load. After the worker is ready, requests avoid the startup cost but still pay synthesis time.
 
+## ChatGPT Chat execution path
+
+The same user-facing entry point is also verified in a constrained ChatGPT Chat execution environment. This is not a ChatGPT built-in voice feature: Chat invokes Nalu Studio in its attached local execution environment and returns the generated WAV to the conversation.
+
+The original resident design did not fit reliably because the effective Linux cgroup limit was 4 GiB even though host-level memory reporting looked larger. T3/S3Gen allocations and charged model-file page cache could overlap and trigger OOM. The 2026-09-04 follow-up therefore added an automatic FAST-only low-memory backend that preserves the exact Chatterbox V3 + Candidate B voice while executing T3 and S3Gen in separate processes.
+
+Chat usage can be as simple as `dialogue → scripts/luna_voice.py → WAV → attach WAV to the conversation`. `LUNA_VOICE_BACKEND=auto` selects the low-memory path automatically at `memory.max <= 4 GiB`; larger-memory and PRODUCTION workflows retain the original resident behavior. The full development story, rejected approaches, memory safeguards, and Chat invocation example are in [`LOW_MEMORY_FAST.md`](LOW_MEMORY_FAST.md).
+
 ## Simple use
 
 FAST is the default and generates exactly one take:
