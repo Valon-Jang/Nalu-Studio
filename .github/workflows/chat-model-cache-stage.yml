@@ -1,4 +1,4 @@
-name: Chat Luna Model Cache Stage
+name: Chat Luna Runtime Stage
 
 on:
   push:
@@ -9,107 +9,175 @@ on:
 permissions:
   contents: read
 
-env:
-  REVISION: '5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18'
-  BASE: 'https://huggingface.co/ResembleAI/chatterbox/resolve/5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18'
-
 jobs:
-  stage:
+  build-runtime:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - name: Download and verify T3 V3
+      - name: Prepare exact Nalu and Chatterbox sources
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p out
-          curl -L --fail --retry 5 --retry-all-errors --connect-timeout 30 \
-            "$BASE/t3_mtl23ls_v3.safetensors?download=true" \
-            -o out/t3_mtl23ls_v3.safetensors
-          test "$(stat -c%s out/t3_mtl23ls_v3.safetensors)" = "2143989928"
-          echo '5abca8321ede76f8e61f1cc0d19aea6c946b28871017ce8726f8a69203f05953  out/t3_mtl23ls_v3.safetensors' | sha256sum -c -
-          split -b 200000000 -d -a 2 out/t3_mtl23ls_v3.safetensors out/t3.part
+          mkdir -p stage
+          git clone -q https://github.com/Valon-Jang/Nalu-Studio.git stage/Nalu-Studio
+          git -C stage/Nalu-Studio checkout -q 11c2551c70c3fb7106168ee3cde0e1ef457832af
+          rm -rf stage/Nalu-Studio/.git
+          mkdir -p stage/Nalu-Studio/engine/chatterbox-v3
+          git clone -q https://github.com/resemble-ai/chatterbox.git stage/Nalu-Studio/engine/chatterbox-v3/chatterbox
+          git -C stage/Nalu-Studio/engine/chatterbox-v3/chatterbox checkout -q 5de7a54aa4e5e2baadb0182dde554908b48b85c2
+          rm -rf stage/Nalu-Studio/engine/chatterbox-v3/chatterbox/.git
 
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part00, path: out/t3.part00, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part01, path: out/t3.part01, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part02, path: out/t3.part02, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part03, path: out/t3.part03, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part04, path: out/t3.part04, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part05, path: out/t3.part05, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part06, path: out/t3.part06, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part07, path: out/t3.part07, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part08, path: out/t3.part08, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part09, path: out/t3.part09, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-t3-part10, path: out/t3.part10, compression-level: 0, retention-days: 1}
-
-      - name: Clear T3 staging
-        run: rm -f out/t3_mtl23ls_v3.safetensors out/t3.part*
-
-      - name: Download and verify S3Gen
+      - name: Install uv and exact portable Python 3.12.13
         shell: bash
         run: |
           set -euo pipefail
-          curl -L --fail --retry 5 --retry-all-errors --connect-timeout 30 \
-            "$BASE/s3gen.pt?download=true" \
-            -o out/s3gen.pt
-          test "$(stat -c%s out/s3gen.pt)" = "1057165844"
-          echo '9b9ff07e60b20c136e2b1b3d7563a24604e8d2c4c267888d1ee929dd0151d2a3  out/s3gen.pt' | sha256sum -c -
-          split -b 200000000 -d -a 2 out/s3gen.pt out/s3.part
+          python3 -m pip install -q --user uv
+          UV="$HOME/.local/bin/uv"
+          "$UV" python install 3.12.13
+          PY="$($UV python find 3.12.13 --managed-python)"
+          PYROOT="$(dirname "$(dirname "$PY")")"
+          cp -a "$PYROOT" stage/Nalu-Studio/engine/chatterbox-v3/venv
+          VPY=stage/Nalu-Studio/engine/chatterbox-v3/venv/bin/python3.12
+          "$VPY" --version
+          "$VPY" -m ensurepip --upgrade
+          "$VPY" -m pip install -q --upgrade pip
 
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-s3-part00, path: out/s3.part00, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-s3-part01, path: out/s3.part01, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-s3-part02, path: out/s3.part02, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-s3-part03, path: out/s3.part03, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-s3-part04, path: out/s3.part04, compression-level: 0, retention-days: 1}
-      - uses: actions/upload-artifact@v4
-        with: {name: luna-s3-part05, path: out/s3.part05, compression-level: 0, retention-days: 1}
-
-      - name: Clear S3Gen staging
-        run: rm -f out/s3gen.pt out/s3.part*
-
-      - name: Download and verify small model assets
+      - name: Install exact Luna Python dependencies
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import urllib.request
-          base='https://huggingface.co/ResembleAI/chatterbox/resolve/5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18'
-          for name in ['ve.pt','conds.pt','grapheme_mtl_merged_expanded_v1.json','Cangjie5_TC.json']:
-              urllib.request.urlretrieve(f'{base}/{name}?download=true', f'out/{name}')
+          VPY=stage/Nalu-Studio/engine/chatterbox-v3/venv/bin/python3.12
+          "$VPY" -m pip install --no-cache-dir \
+            --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.6.0+cpu torchaudio==2.6.0+cpu
+          "$VPY" -m pip install --no-cache-dir \
+            numpy==1.26.4 \
+            transformers==5.2.0 \
+            huggingface-hub==1.30.0 \
+            diffusers==0.29.0 \
+            librosa==0.11.0 \
+            s3tokenizer==0.3.0 \
+            conformer==0.3.2 \
+            safetensors==0.5.3 \
+            spacy-pkuseg==1.0.1 \
+            pykakasi==2.3.0 \
+            gradio==6.8.0 \
+            pyloudnorm==0.2.0 \
+            omegaconf==2.3.1 \
+            resemble-perth==1.0.1 \
+            socksio==1.0.0
+          "$VPY" - <<'PY'
+          import torch, torchaudio, numpy, transformers, huggingface_hub, diffusers
+          import librosa, s3tokenizer, conformer, safetensors, spacy_pkuseg, pykakasi, gradio, pyloudnorm, omegaconf, perth
+          print('runtime imports ok')
+          print(torch.__version__, torchaudio.__version__, numpy.__version__)
           PY
-          test "$(stat -c%s out/ve.pt)" = "5698626"
-          test "$(stat -c%s out/conds.pt)" = "107374"
-          test "$(stat -c%s out/grapheme_mtl_merged_expanded_v1.json)" = "69989"
-          test "$(stat -c%s out/Cangjie5_TC.json)" = "1920163"
-          echo '4b16d836bc598509860f6fa068165a8bb5e9ac84f05582dfcf278a5a372879f1  out/ve.pt' | sha256sum -c -
-          echo '6552d70568833628ba019c6b03459e77fe71ca197d5c560cef9411bee9d87f4e  out/conds.pt' | sha256sum -c -
-          echo '69632f47220a788a52ce2661d096453c5655e9bf25289d89a8d832c46ee07dbf  out/grapheme_mtl_merged_expanded_v1.json' | sha256sum -c -
-          echo '7073fd9de919443ae88e0bd2449917a65fe54898a4413ed1edcc4b67f28bce8c  out/Cangjie5_TC.json' | sha256sum -c -
 
-      - name: Upload small model assets
+      - name: Add offline pkuseg asset and POSIX compatibility entrypoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=stage/Nalu-Studio/engine/chatterbox-v3
+          mkdir -p "$ROOT/pkuseg"
+          curl -L --fail --retry 5 --retry-all-errors \
+            https://github.com/explosion/spacy-pkuseg/releases/download/v0.0.26/spacy_ontonotes.zip \
+            -o "$ROOT/pkuseg/spacy_ontonotes.zip"
+          echo 'b216e7f92de7ae285aeab8feba2faa8ea8216e5995ff6fb3d391cc8356db1bfe  stage/Nalu-Studio/engine/chatterbox-v3/pkuseg/spacy_ontonotes.zip' | sha256sum -c -
+          unzip -q "$ROOT/pkuseg/spacy_ontonotes.zip" -d "$ROOT/pkuseg"
+          mkdir -p "$ROOT/venv/Scripts"
+          ln -s ../bin/python3.12 "$ROOT/venv/Scripts/python.exe"
+          SITE="$ROOT/venv/lib/python3.12/site-packages/sitecustomize.py"
+          cat > "$SITE" <<'PY'
+          import os
+          from pathlib import Path
+          os.environ.setdefault('HF_ENDPOINT', 'http://127.0.0.1:9')
+          os.environ.setdefault('HF_HUB_OFFLINE', '1')
+          os.environ.setdefault('TRANSFORMERS_OFFLINE', '1')
+          os.environ.setdefault('HF_DATASETS_OFFLINE', '1')
+          os.environ.setdefault('TOKENIZERS_PARALLELISM', 'false')
+          os.environ.setdefault('PKUSEG_HOME', str(Path(__file__).resolve().parents[4] / 'pkuseg'))
+          PY
+          "$ROOT/venv/Scripts/python.exe" --version
+
+      - name: Pack portable runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          find stage/Nalu-Studio -type d -name __pycache__ -prune -exec rm -rf {} + || true
+          rm -rf stage/Nalu-Studio/engine/chatterbox-v3/venv/lib/python3.12/site-packages/pip/_vendor/cachecontrol/__pycache__ || true
+          mkdir -p out
+          tar -I 'zstd -3 -T0' -cf out/luna-runtime.tar.zst -C stage Nalu-Studio
+          sha256sum out/luna-runtime.tar.zst > out/luna-runtime.tar.zst.sha256
+          stat -c '%s' out/luna-runtime.tar.zst > out/luna-runtime.tar.zst.size
+          split -b 200000000 -d -a 2 out/luna-runtime.tar.zst out/runtime.part
+          ls -lh out/luna-runtime.tar.zst out/runtime.part*
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part00') != '' }}
+        with: {name: luna-runtime-part00, path: out/runtime.part00, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part01') != '' }}
+        with: {name: luna-runtime-part01, path: out/runtime.part01, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part02') != '' }}
+        with: {name: luna-runtime-part02, path: out/runtime.part02, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part03') != '' }}
+        with: {name: luna-runtime-part03, path: out/runtime.part03, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part04') != '' }}
+        with: {name: luna-runtime-part04, path: out/runtime.part04, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part05') != '' }}
+        with: {name: luna-runtime-part05, path: out/runtime.part05, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part06') != '' }}
+        with: {name: luna-runtime-part06, path: out/runtime.part06, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part07') != '' }}
+        with: {name: luna-runtime-part07, path: out/runtime.part07, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part08') != '' }}
+        with: {name: luna-runtime-part08, path: out/runtime.part08, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part09') != '' }}
+        with: {name: luna-runtime-part09, path: out/runtime.part09, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part10') != '' }}
+        with: {name: luna-runtime-part10, path: out/runtime.part10, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part11') != '' }}
+        with: {name: luna-runtime-part11, path: out/runtime.part11, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part12') != '' }}
+        with: {name: luna-runtime-part12, path: out/runtime.part12, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part13') != '' }}
+        with: {name: luna-runtime-part13, path: out/runtime.part13, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part14') != '' }}
+        with: {name: luna-runtime-part14, path: out/runtime.part14, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part15') != '' }}
+        with: {name: luna-runtime-part15, path: out/runtime.part15, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part16') != '' }}
+        with: {name: luna-runtime-part16, path: out/runtime.part16, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part17') != '' }}
+        with: {name: luna-runtime-part17, path: out/runtime.part17, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part18') != '' }}
+        with: {name: luna-runtime-part18, path: out/runtime.part18, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('out/runtime.part19') != '' }}
+        with: {name: luna-runtime-part19, path: out/runtime.part19, compression-level: 0, retention-days: 1}
+
+      - name: Upload runtime manifest
         uses: actions/upload-artifact@v4
         with:
-          name: luna-model-small
+          name: luna-runtime-manifest
           path: |
-            out/ve.pt
-            out/conds.pt
-            out/grapheme_mtl_merged_expanded_v1.json
-            out/Cangjie5_TC.json
-          compression-level: 0
+            out/luna-runtime.tar.zst.sha256
+            out/luna-runtime.tar.zst.size
           retention-days: 1
