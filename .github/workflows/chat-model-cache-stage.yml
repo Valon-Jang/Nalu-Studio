@@ -39,18 +39,17 @@ jobs:
           cp -a "$PYROOT" stage/Nalu-Studio/engine/chatterbox-v3/venv
           VPY=stage/Nalu-Studio/engine/chatterbox-v3/venv/bin/python3.12
           "$VPY" --version
-          "$VPY" -m ensurepip --upgrade
-          "$VPY" -m pip install -q --upgrade pip
 
       - name: Install exact Luna Python dependencies
         shell: bash
         run: |
           set -euo pipefail
+          UV="$HOME/.local/bin/uv"
           VPY=stage/Nalu-Studio/engine/chatterbox-v3/venv/bin/python3.12
-          "$VPY" -m pip install --no-cache-dir \
+          "$UV" pip install --python "$VPY" --system --no-cache \
             --index-url https://download.pytorch.org/whl/cpu \
             torch==2.6.0+cpu torchaudio==2.6.0+cpu
-          "$VPY" -m pip install --no-cache-dir \
+          "$UV" pip install --python "$VPY" --system --no-cache \
             numpy==1.26.4 \
             transformers==5.2.0 \
             huggingface-hub==1.30.0 \
@@ -104,7 +103,6 @@ jobs:
         run: |
           set -euo pipefail
           find stage/Nalu-Studio -type d -name __pycache__ -prune -exec rm -rf {} + || true
-          rm -rf stage/Nalu-Studio/engine/chatterbox-v3/venv/lib/python3.12/site-packages/pip/_vendor/cachecontrol/__pycache__ || true
           mkdir -p out
           tar -I 'zstd -3 -T0' -cf out/luna-runtime.tar.zst -C stage Nalu-Studio
           sha256sum out/luna-runtime.tar.zst > out/luna-runtime.tar.zst.sha256
