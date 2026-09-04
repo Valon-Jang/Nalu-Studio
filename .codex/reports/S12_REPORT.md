@@ -199,3 +199,96 @@ PASS
 ## Stage 상태
 
 S11은 `CLOSED` 이력으로 보존했다. S12만 `COMPLETE_AWAITING_USER_APPROVAL`로 전환하고 다음 Stage는 시작하지 않는다.
+
+## 2026-09-04 Follow-up — 4 GiB Low-memory FAST
+
+사용자 승인으로 S12 범위 안에서 Chat/소형 Linux cgroup용 FAST 메모리 경로를 추가했다. 기존 resident worker와 PRODUCTION 경로는 유지하며, Linux `memory.max <= 4 GiB`인 FAST 요청만 자동으로 low-memory backend를 선택한다.
+
+### ChatGPT Chat 활용 스토리
+
+이번 후속 경로의 직접적인 계기는 **ChatGPT Chat 안에서 사용자가 대사만 보내고 Luna WAV를 바로 돌려받는 사용 방식**이었다. 이는 ChatGPT 내장 TTS가 아니라, Chat에 연결된 로컬 실행환경에서 Nalu Studio를 실행하고 결과 WAV를 대화에 반환하는 방식이다.
+
+초기에는 기존 S12 resident worker를 그대로 사용하려 했으나 Chat 환경에서 불안정했다. 호스트 수준 메모리 표시는 약 5.8 GiB처럼 보였지만 실제 cgroup `memory.max`는 정확히 4 GiB였다. T3/S3Gen allocation과 모델 파일 page cache가 같은 4 GiB 예산에 겹치면서 OOM kill이 발생했다. 이후 clean page cache 반환, `torch.inference_mode()`, CPU 2-thread를 검증했고, file-backed/meta 로딩 방식은 page-fault/thrashing stall 때문에 채택하지 않았다. 최종적으로 T3와 S3Gen을 별도 OS 프로세스로 분리해 한 phase의 메모리를 다음 phase 전에 회수하는 경로가 안정적으로 통과했다.
+
+따라서 Chat 사용자는 별도 resident worker 조작 없이 일반 FAST entry point에 대사를 넘길 수 있다. `LUNA_VOICE_BACKEND=auto`가 4 GiB cgroup을 감지하면 lowmem backend를 선택하고, `Candidate B cache → T3 → process exit → S3Gen → WAV`를 수행한다. 생성된 WAV는 Chat 응답에 파일로 반환할 수 있다. 상세 사용법과 개발 이력은 `docs/luna_quality/integration/LOW_MEMORY_FAST.md`에 기록했다.
+
+### 변경 목적과 불변성
+
+- 원인: 4 GiB cgroup에서 T3와 S3Gen의 resident allocation/page cache가 겹치면 OOM 가능.
+- 해결: `Candidate B conditionals cache → T3 전용 자식 프로세스 → 프로세스 종료 → S3Gen 전용 자식 프로세스 → PCM WAV`.
+- T3/S3 inference는 `torch.inference_mode()`로 실행한다.
+- 검증 경로는 CPU thread 2개를 사용한다.
+- `POSIX_FADV_DONTNEED`는 고정 T3/S3 weight 파일에만 적용하며 재귀 cache scan은 하지 않는다.
+- OOM 종료 `-9/137`만 cache release 후 1회 재시도한다. 240초 phase timeout은 재시도하지 않는다.
+- Chatterbox Multilingual V3, Candidate B, seed, language/temperature/cfg/exaggeration/repetition/min-p/top-p, 24 kHz mono PCM16 계약은 변경하지 않았다.
+- `engine/chatterbox-v3/**`, Candidate B, prosody target, production pipeline, `.codex/stage_state.json`은 수정하지 않았다.
+
+### 사용자 entry point 동작
+
+`LUNA_VOICE_BACKEND=auto`가 기본이다.
+
+- FAST + Linux cgroup `<= 4 GiB` → `lowmem`
+- FAST + 충분한 메모리 → 기존 resident worker
+- PRODUCTION → 기존 resident worker
+- 진단 override: `resident` 또는 `lowmem` (`lowmem`은 FAST만 허용)
+
+### 실제 4 GiB 전체 CLI 검증
+
+입력:
+
+```text
+오늘의 이야기는 냉장고가 말한다 입니다
+```
+
+수정된 `scripts/luna_voice.py`를 canonical production Python에서 일반 FAST 명령으로 실행해 auto routing부터 WAV까지 검증했다.
+
+- cgroup limit: `4,294,967,296 bytes`
+- selected backend: `lowmem`
+- response generation time: `61.823 s`
+- T3 phase: `21.140 s` / inference `8.564 s` / speech tokens `68`
+- S3 phase: `22.370 s` / inference `15.387 s`
+- output: `2.680 s`, `24,000 Hz`, mono, PCM16
+- WAV SHA-256: `f51f8e9c050946ee110057495c36f14fc6f219a7299ce41bc93fe2eccdc38c37`
+- `oom_kill`: `1 → 1` — 새 OOM kill 없음
+- 같은 fixed-seed 성공 경로와 T3 speech token `68/68` 동일 확인
+
+### 테스트
+
+```text
+engine/chatterbox-v3/venv/Scripts/python.exe -X utf8 -m unittest tests.luna_quality.unit.test_s12_fast_production_integration -v
+PASS — 9 tests
+```
+
+기존 S12 테스트에 다음을 추가했다.
+
+- 4 GiB FAST auto routing이 resident worker를 시작하지 않고 lowmem backend를 선택함
+- PRODUCTION은 기존 resident backend를 유지함
+
+실제 opt-in low-memory integration:
+
+```text
+RUN_LUNA_S12_LOWMEM_FAST=1 engine/chatterbox-v3/venv/Scripts/python.exe -X utf8 -m unittest tests.luna_quality.integration.test_s12_lowmem_korean_fast -v
+PASS — 1 test / 84.089 s
+```
+
+검증 내용: 실제 V3/Candidate B 합성, `runtime_backend=lowmem`, 24 kHz mono PCM16, non-empty WAV, OOM kill 증가 없음.
+
+Chat 사용 스토리 문서 반영 후 backend 자체를 별도 프로세스로 재검증했다. `오늘의 이야기는 냉장고가 말한다 입니다`가 `65.260 s`에 완료됐고 T3 `22.612 s`, S3 `23.343 s`, WAV SHA-256은 동일한 `f51f8e9c050946ee110057495c36f14fc6f219a7299ce41bc93fe2eccdc38c37`, `oom_kill`은 `1 → 1`이었다. unittest wrapper 재실행은 외부 tool timeout에 걸렸으나 backend 프로세스와 WAV 결과는 정상 완료됨을 별도 감시로 확인했다.
+
+### 전체 suite 참고
+
+현재 Chat Linux unpack에서 전체 unit discovery는 기존 Windows 전용 `AF_PIPE` fast-speaker worker 테스트 3개가 플랫폼 오류로 실패했다. 이번 low-memory 코드와 무관하며 targeted S12 9 tests는 PASS했다.
+
+release regression은 이 unpack에 동결 프로젝트 WAV 일부가 없고 baseline manifest 대비 기존 protected/hash drift가 있어 완전 PASS 판정에 사용할 수 없었다. 이번 후속 작업은 해당 파일을 수정하거나 baseline을 재기록하지 않았다.
+
+### 이번 follow-up 변경 파일
+
+- `scripts/luna_quality/voice_runtime/low_memory.py`
+- `scripts/luna_voice.py`
+- `tests/luna_quality/unit/test_s12_fast_production_integration.py`
+- `tests/luna_quality/integration/test_s12_lowmem_korean_fast.py`
+- `docs/luna_quality/integration/LOW_MEMORY_FAST.md`
+- `docs/luna_quality/integration/S12_FAST_PRODUCTION_INTEGRATION.md`
+- `.codex/reports/S12_REPORT.md`
+
+S12의 stage 상태는 기존 `COMPLETE_AWAITING_USER_APPROVAL`을 유지한다. 다음 Stage는 시작하지 않는다.
