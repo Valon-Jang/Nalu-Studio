@@ -30,6 +30,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.luna_quality.voice_runtime.contract import REQUEST_SCHEMA_VERSION, VoiceMode
 from scripts.luna_quality.voice_runtime.runtime import LunaVoiceRuntime, _atomic_write_json
+from scripts.luna_quality.voice_runtime.low_memory import run_low_memory_fast, should_use_low_memory_backend
 from scripts.luna_quality.voice_runtime.transport import DEFAULT_HOST, DEFAULT_PORT, send_request, serve
 
 
@@ -164,6 +165,15 @@ def ensure_worker(port: int = DEFAULT_PORT, timeout: float = 120.0) -> dict[str,
 
 
 def _dispatch(payload: Mapping[str, Any], port: int, *, auto_start: bool) -> dict[str, Any]:
+    backend = os.environ.get("LUNA_VOICE_BACKEND", "auto").strip().lower()
+    if backend not in {"auto", "resident", "lowmem"}:
+        raise ValueError("LUNA_VOICE_BACKEND must be auto, resident, or lowmem")
+    mode = VoiceMode(str(payload.get("mode", VoiceMode.FAST.value)))
+    use_lowmem = backend == "lowmem" or (backend == "auto" and should_use_low_memory_backend(mode=mode))
+    if use_lowmem:
+        if mode is not VoiceMode.FAST:
+            raise ValueError("lowmem backend supports FAST mode only")
+        return run_low_memory_fast(ROOT, payload)
     if auto_start:
         ensure_worker(port)
     return send_request(payload, port=port)
